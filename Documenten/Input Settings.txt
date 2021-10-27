@@ -1,0 +1,24 @@
+Als een gebruiker wil ik de input voor “Confirm Card” kunnen veranderen zodat ik mijn gekozen kaart kan bevestigen.
+Als een gebruiker wil ik de input voor “Cancel/Exit” kunnen verandernen zodat ik mijn actie kan annuleren.
+Als een gebruiker wil ik de input voor “Map” kunnen veranderen zodat ik te kaart te zien krijg.
+Als een gebruiker wil ik de input voor “View Deck” kunnen veranderen zodat ik al mijn kaarten kan zien.
+Als een gebruiker wil ik de input voor “Draw Pile” kunnen veranderen zodat ik mijn trekstapel kan zien.
+Als een gebruiker wil ik de input voor “Discard Pile” kunnen veranderen zodat ik mijn aflegstapel kan zien.
+Als een gebruiker wil ik de input voor “Exhaust Pile” kunnen veranderen zodat ik mijn uitputstapel kan zien.
+Als een gebruiker wil ik de input voor “End Turn” kunnen veranderen zodat ik mijn beurt kan beeindigen.
+Als een gebruiker wil ik de input voor “Peek” kunnen veranderen zodat ik een kaart kan bekijken.
+Als een gebruiker wil ik de input voor “Up” kunnen veranderen.
+Als een gebruiker wil ik de input voor “Down” kunnen veranderen.
+Als een gebruiker wil ik de input voor “Left” kunnen veranderen.
+Als een gebruiker wil ik de input voor “Right” kunnen veranderen.
+Als een gebruiker wil ik de input voor “Select Card #1” kunnen veranderen zodat ik kaart 1 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #2” kunnen veranderen zodat ik kaart 2 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #3” kunnen veranderen zodat ik kaart 3 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #4” kunnen veranderen zodat ik kaart 4 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #5” kunnen veranderen zodat ik kaart 5 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #6” kunnen veranderen zodat ik kaart 6 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #7” kunnen veranderen zodat ik kaart 7 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #8” kunnen veranderen zodat ik kaart 8 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #9” kunnen veranderen zodat ik kaart 9 kan kiezen.
+Als een gebruiker wil ik de input voor “Select Card #0” kunnen veranderen zodat ik kaart 0 kan kiezen.
+Als een gebruiker wil ik de input voor “Release Card” kunnen veranderen zodat ik een kaart los kan laten.
