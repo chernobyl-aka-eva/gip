@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-public class GipVersion0 extends ApplicationAdapter {
+public class GipGameProject extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	
