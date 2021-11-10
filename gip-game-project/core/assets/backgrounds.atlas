@@ -1,0 +1,41 @@
+
+backgrounds.png
+size: 4096, 4096
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+binary-bg-0
+  rotate: false
+  xy: 0, 1080
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+binary-bg-1
+  rotate: false
+  xy: 0, 0
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+binary-bg-2
+  rotate: false
+  xy: 1920, 2160
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+binary-bg-3
+  rotate: false
+  xy: 0, 2160
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+game-guidelines
+  rotate: false
+  xy: 1920, 1081
+  size: 1919, 1079
+  orig: 1919, 1079
+  offset: 0, 0
+  index: -1
