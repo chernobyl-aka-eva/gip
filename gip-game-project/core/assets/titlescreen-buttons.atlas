@@ -6,43 +6,43 @@ filter: Nearest, Nearest
 repeat: none
 exit-button-0
   rotate: false
-  xy: 1016, 43
-  size: 509, 40
-  orig: 509, 40
+  xy: 1020, 40
+  size: 510, 40
+  orig: 510, 40
   offset: 0, 0
   index: -1
 exit-button-1
   rotate: false
-  xy: 1016, 83
-  size: 509, 40
-  orig: 509, 40
+  xy: 1020, 80
+  size: 510, 40
+  orig: 510, 40
   offset: 0, 0
   index: -1
 menu-button-big-0
   rotate: false
   xy: 0, 40
-  size: 508, 83
-  orig: 508, 83
+  size: 510, 80
+  orig: 510, 80
   offset: 0, 0
   index: -1
 menu-button-big-1
   rotate: false
-  xy: 508, 42
-  size: 508, 81
-  orig: 508, 81
+  xy: 510, 40
+  size: 510, 80
+  orig: 510, 80
   offset: 0, 0
   index: -1
 menu-button-small-0
   rotate: false
   xy: 0, 0
-  size: 508, 40
-  orig: 508, 40
+  size: 510, 40
+  orig: 510, 40
   offset: 0, 0
   index: -1
 menu-button-small-1
   rotate: false
-  xy: 508, 2
-  size: 508, 40
-  orig: 508, 40
+  xy: 510, 0
+  size: 510, 40
+  orig: 510, 40
   offset: 0, 0
   index: -1

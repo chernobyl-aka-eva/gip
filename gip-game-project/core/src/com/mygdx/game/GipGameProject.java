@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Logger;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class GipGameProject extends Game {
 
@@ -26,11 +27,16 @@ public class GipGameProject extends Game {
 	//public logger
 	public Logger log;
 
+	//viewport
+	public ScreenViewport screenViewport;
+
 	@Override
 	public void create() {
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pcsenior.ttf"));
 		batch = new SpriteBatch();
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		screenViewport = new ScreenViewport();
+		log = new Logger(this.getClass().getName(), Logger.DEBUG);
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		this.setScreen(new TitleScreen(this));
 

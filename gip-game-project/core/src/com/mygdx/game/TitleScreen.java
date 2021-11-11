@@ -4,7 +4,9 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Logger;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 // class where all main menu logic goes
 
@@ -16,7 +18,12 @@ public class TitleScreen implements Screen {
     OrthographicCamera camera;
 
     private final TextureRegion[] backgrounds;
+
+    //setup buttons
     private final TextureRegion[] buttons;
+    private TextureRegionDrawable[] buttonsDrawable;
+    private Stage stage;
+    private ImageButton[] buttonObjects;
 
     private TextureRegion mainMenuTextureRegion; // add more later ?
 
@@ -29,8 +36,6 @@ public class TitleScreen implements Screen {
         this.game = game;
 
         camera = new OrthographicCamera();
-        //setup logger with current classname
-        game.log = new Logger(this.getClass().getName(), Logger.DEBUG);
 
         // set up texture atlas for background
 
@@ -55,6 +60,40 @@ public class TitleScreen implements Screen {
         buttons[3] = game.textureAtlas.findRegion("menu-button-small-1");
         buttons[4] = game.textureAtlas.findRegion("exit-button-0");
         buttons[5] = game.textureAtlas.findRegion("exit-button-1");
+
+
+        /* WORK IN PROGRESS
+        buttonsDrawable = new TextureRegionDrawable[buttons.length];
+        buttonObjects = new ImageButton[buttons.length]; //Set the buttons up
+        stage = new Stage(game.screenViewport);
+        for (int i = 0; i < buttons.length; i++) {
+            buttonsDrawable[i] = new TextureRegionDrawable(buttons[i]);
+            buttonObjects[i] = new ImageButton(buttonsDrawable[i]);
+        }
+        stage.addActor(buttonObjects[0]);
+        stage.addActor(buttonObjects[2]);
+        stage.addActor(buttonObjects[0]);
+        stage.addActor(buttonObjects[0]);
+        stage.addActor(buttonObjects[4]);
+        Array<Actor> actors = stage.getActors();
+        int lastY = 350;
+        int spaceBetweenButtons = 1;
+        for (int i = 0; i < actors.size; i++) {
+            actors.get(i).setPosition(100, lastY);
+            switch (i) {
+                case 0:
+                case 2:
+                case 3: lastY -= (buttons[0].getRegionHeight()) + spaceBetweenButtons; break;
+                case 1:
+                case 4: lastY = (buttons[2].getRegionHeight()) + spaceBetweenButtons; break;
+
+            }
+        }
+        Gdx.input.setInputProcessor(stage);
+
+         */
+
+
     }
 
     @Override
@@ -62,31 +101,26 @@ public class TitleScreen implements Screen {
         game.batch.begin();
         // scrolling background
         renderBackground(deltaTime);
-
+        //stage.draw(); WORK IN PROGRESS
 
         //buttons
-        int spaceBetweenButtons = 0;
-        int lastY = 430;
+
+        int lastY = 350;
+        int spaceBetweenButtons = 1;
+
         game.batch.draw(buttons[0], 100, lastY, buttons[0].getRegionWidth(), buttons[0].getRegionHeight());
-        game.log.debug(String.valueOf(lastY));
 
         lastY -= (buttons[2].getRegionHeight()) + spaceBetweenButtons;
         game.batch.draw(buttons[2], 100, lastY, buttons[2].getRegionWidth(), buttons[2].getRegionHeight());
-        game.log.debug(String.valueOf(lastY));
 
         lastY -= (buttons[0].getRegionHeight()) + spaceBetweenButtons;
         game.batch.draw(buttons[0], 100, lastY, buttons[0].getRegionWidth(), buttons[0].getRegionHeight());
-        game.log.debug(String.valueOf(lastY));
-
 
         lastY -= (buttons[0].getRegionHeight()) + spaceBetweenButtons;
         game.batch.draw(buttons[0], 100, lastY, buttons[0].getRegionWidth(), buttons[0].getRegionHeight());
-        game.log.debug(String.valueOf(lastY));
-
 
         lastY -= (buttons[4].getRegionHeight()) + spaceBetweenButtons;
         game.batch.draw(buttons[4], 100, lastY, buttons[4].getRegionWidth(), buttons[4].getRegionHeight());
-        game.log.debug(String.valueOf(lastY));
 
 
         game.batch.end();
