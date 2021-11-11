@@ -1,10 +1,12 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.utils.Logger;
 
 public class GipGameProject extends Game {
 
@@ -21,12 +23,17 @@ public class GipGameProject extends Game {
 	// graphics
 	public TextureAtlas textureAtlas;
 
+	//public logger
+	public Logger log;
+
 	@Override
 	public void create() {
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pcsenior.ttf"));
 		batch = new SpriteBatch();
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		this.setScreen(new TitleScreen(this));
+
 	}
 
 	@Override

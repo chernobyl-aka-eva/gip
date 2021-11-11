@@ -4,6 +4,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.utils.Logger;
 
 // class where all main menu logic goes
 
@@ -15,6 +16,7 @@ public class TitleScreen implements Screen {
     OrthographicCamera camera;
 
     private final TextureRegion[] backgrounds;
+    private final TextureRegion[] buttons;
 
     private TextureRegion mainMenuTextureRegion; // add more later ?
 
@@ -27,10 +29,13 @@ public class TitleScreen implements Screen {
         this.game = game;
 
         camera = new OrthographicCamera();
+        //setup logger with current classname
+        game.log = new Logger(this.getClass().getName(), Logger.DEBUG);
 
-        // set up texture atlas
+        // set up texture atlas for background
 
         game.textureAtlas = new TextureAtlas("backgrounds.atlas");
+
 
         backgrounds = new TextureRegion[4];
         backgrounds[0] = game.textureAtlas.findRegion("binary-bg-0");
@@ -39,6 +44,17 @@ public class TitleScreen implements Screen {
         backgrounds[3] = game.textureAtlas.findRegion("binary-bg-3");
 
         backgroundMaxScrollingSpeed = (float) 1080 / 4;
+
+
+        //setup texture atlas for buttons
+        game.textureAtlas = new TextureAtlas("titlescreen-buttons.atlas");
+        buttons = new TextureRegion[6];
+        buttons[0] = game.textureAtlas.findRegion("menu-button-big-0");
+        buttons[1] = game.textureAtlas.findRegion("menu-button-big-1");
+        buttons[2] = game.textureAtlas.findRegion("menu-button-small-0");
+        buttons[3] = game.textureAtlas.findRegion("menu-button-small-1");
+        buttons[4] = game.textureAtlas.findRegion("exit-button-0");
+        buttons[5] = game.textureAtlas.findRegion("exit-button-1");
     }
 
     @Override
@@ -46,7 +62,36 @@ public class TitleScreen implements Screen {
         game.batch.begin();
         // scrolling background
         renderBackground(deltaTime);
+
+
+        //buttons
+        int spaceBetweenButtons = 0;
+        int lastY = 430;
+        game.batch.draw(buttons[0], 100, lastY, buttons[0].getRegionWidth(), buttons[0].getRegionHeight());
+        game.log.debug(String.valueOf(lastY));
+
+        lastY -= (buttons[2].getRegionHeight()) + spaceBetweenButtons;
+        game.batch.draw(buttons[2], 100, lastY, buttons[2].getRegionWidth(), buttons[2].getRegionHeight());
+        game.log.debug(String.valueOf(lastY));
+
+        lastY -= (buttons[0].getRegionHeight()) + spaceBetweenButtons;
+        game.batch.draw(buttons[0], 100, lastY, buttons[0].getRegionWidth(), buttons[0].getRegionHeight());
+        game.log.debug(String.valueOf(lastY));
+
+
+        lastY -= (buttons[0].getRegionHeight()) + spaceBetweenButtons;
+        game.batch.draw(buttons[0], 100, lastY, buttons[0].getRegionWidth(), buttons[0].getRegionHeight());
+        game.log.debug(String.valueOf(lastY));
+
+
+        lastY -= (buttons[4].getRegionHeight()) + spaceBetweenButtons;
+        game.batch.draw(buttons[4], 100, lastY, buttons[4].getRegionWidth(), buttons[4].getRegionHeight());
+        game.log.debug(String.valueOf(lastY));
+
+
         game.batch.end();
+
+
 
 
         // this is where the code comes for changing screens !!!
