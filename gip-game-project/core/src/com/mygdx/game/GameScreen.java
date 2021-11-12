@@ -8,15 +8,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class GameScreen implements Screen {
 
-    private TextureRegion guideline;
+    private TextureRegion gameBackground;
 
     final GipGameProject game;
 
     public GameScreen(final GipGameProject game) {
         this.game = game;
-        game.textureAtlas = new TextureAtlas("backgrounds.atlas");
-        guideline = new TextureRegion();
-        guideline = game.textureAtlas.findRegion("game-guidelines");
+        game.textureAtlas = new TextureAtlas("gameGuidelines.atlas");
+        gameBackground = new TextureRegion();
+        gameBackground = game.textureAtlas.findRegion("guidelines");
     }
 
     @Override
@@ -27,7 +27,7 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         game.batch.begin();
-        game.batch.draw(guideline, 0,0,
+       game.batch.draw(gameBackground, 0,0,
                 1920, 1080);
         game.batch.end();
 
