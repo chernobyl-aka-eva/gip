@@ -34,8 +34,10 @@ public class GipGameProject extends Game {
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pcsenior.ttf"));
 		batch = new SpriteBatch();
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
 		//viewport WORK IN PROGRESS screenViewport = new ScreenViewport();
 		log = new Logger(this.getClass().getName(), Logger.DEBUG);
+
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);
 		this.setScreen(new TitleScreen(this));
 

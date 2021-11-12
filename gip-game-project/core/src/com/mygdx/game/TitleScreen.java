@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -107,7 +108,6 @@ public class TitleScreen implements Screen {
 
         int lastY = 350;
         int spaceBetweenButtons = 1;
-
         game.batch.draw(buttons[0], 100, lastY, buttons[0].getRegionWidth(), buttons[0].getRegionHeight());
 
         lastY -= (buttons[2].getRegionHeight()) + spaceBetweenButtons;
@@ -129,10 +129,10 @@ public class TitleScreen implements Screen {
 
 
         // this is where the code comes for changing screens !!!
-        /*if (...){
+        if (Gdx.input.isTouched()){
             game.setScreen(new GameScreen(game));
             dispose();
-        }*/
+        }
 
 
     }
