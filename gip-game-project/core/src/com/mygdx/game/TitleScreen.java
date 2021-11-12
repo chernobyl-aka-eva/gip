@@ -26,8 +26,6 @@ public class TitleScreen implements Screen {
     private Stage stage;
     private ImageButton[] buttonObjects;
 
-    private TextureRegion mainMenuTextureRegion; // add more later ?
-
     // timing
     private final float[] backgroundOffsets = {0, 0, 0, 0};
     private final float backgroundMaxScrollingSpeed;
