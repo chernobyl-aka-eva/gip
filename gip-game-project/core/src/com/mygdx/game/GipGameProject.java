@@ -56,6 +56,8 @@ public class GipGameProject extends Game {
 	public void dispose() {
 		batch.dispose();
 		generator.dispose();
+		skin.getAtlas().dispose();
+		skin.dispose();
 	}
 
 }

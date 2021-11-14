@@ -22,49 +22,46 @@ public class TitleScreen implements Screen {
     // screen
     OrthographicCamera camera;
 
-    private final TextureRegion[] backgrounds;
+    private Settings settingsScreen;
+
+    private final TextureRegion[] BACKGROUNDS = new TextureRegion[4];
 
     private Stage stage;
 
     // timing
-    private final float[] backgroundOffsets = {0, 0, 0, 0};
-    private final float backgroundMaxScrollingSpeed;
+    private final float[] BACKGROUNDOFFSETS = {0, 0, 0, 0};
+    private final float BACKGROUNDSCROLLINGSPEED = (float) 1080 / 4;;
 
     public TitleScreen(final GipGameProject game) {
 
         this.game = game;
-
         camera = new OrthographicCamera();
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
         // set up texture atlas for background
-
-        game.textureAtlas = new TextureAtlas("backgrounds.atlas");
-
-
-
-        backgrounds = new TextureRegion[4];
-        backgrounds[0] = game.textureAtlas.findRegion("binary-bg-0");
-        backgrounds[1] = game.textureAtlas.findRegion("binary-bg-1");
-        backgrounds[2] = game.textureAtlas.findRegion("binary-bg-2");
-        backgrounds[3] = game.textureAtlas.findRegion("binary-bg-3");
-
-        backgroundMaxScrollingSpeed = (float) 1080 / 4;
-
+        initBackground();
 
         //setup texture atlas and skin for buttons
-        game.skin = new Skin(Gdx.files.internal("menu-buttons.json"));
-        game.skin.addRegions(new TextureAtlas("menu-buttons.atlas"));
+        game.skin = new Skin(Gdx.files.internal("skin/ui-skin.json"));
+        game.skin.addRegions(new TextureAtlas("skin/ui-skin.atlas"));
         initMenuButtons();
 
     }
-    public void initMenuButtons() {
+    public void initBackground() {
+        game.textureAtlas = new TextureAtlas("backgrounds.atlas");
+        BACKGROUNDS[0] = game.textureAtlas.findRegion("binary-bg-0");
+        BACKGROUNDS[1] = game.textureAtlas.findRegion("binary-bg-1");
+        BACKGROUNDS[2] = game.textureAtlas.findRegion("binary-bg-2");
+        BACKGROUNDS[3] = game.textureAtlas.findRegion("binary-bg-3");
+
+    }
+    private void initMenuButtons() {
         //Creating button objects
-        Button newSession = new TextButton("New Session", game.skin,"menu-button-big");
+        Button newSession = new TextButton("New Session", game.skin,"default");
         newSession.setSize(510, 80);
 
-        Button settings = new TextButton("Settings", game.skin, "menu-button-small");
+        final Button settings = new TextButton("Settings", game.skin, "menu-button-small");
         settings.setSize(510, 40);
 
         Button quit = new TextButton("Quit", game.skin, "menu-button-exit");
@@ -85,16 +82,20 @@ public class TitleScreen implements Screen {
             }
         });
         //adding the button to the stage as an actor, so it can be drawn
+
         stage.addActor(newSession);
 
         lastY -= settings.getHeight()+1;
         settings.setPosition(100, lastY);
+        settingsScreen = new Settings(game, stage);
         settings.addListener(new InputListener() {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                //change to settings screen
+                Stage stageSettings = settingsScreen.getStageSettings();
+                Gdx.input.setInputProcessor(stageSettings);
+                settingsScreen.setEnabled(true);
                 return true;
             }
         });
@@ -108,6 +109,7 @@ public class TitleScreen implements Screen {
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 dispose();
+                game.dispose();
                 Gdx.app.exit();
                 return true;
             }
@@ -128,27 +130,34 @@ public class TitleScreen implements Screen {
         game.batch.end();
         game.batch.begin();
 
-        stage.draw();
-        stage.act();
+        if (!settingsScreen.isEnabled()) {
+            stage.draw();
+            stage.act();
+        }
+
 
         game.batch.end();
+
+        if (settingsScreen.isEnabled()) {
+            settingsScreen.render(deltaTime);
+        }
     }
 
     // code for rendering the background
-    private void renderBackground(float deltaTime) {
-        backgroundOffsets[0] += deltaTime * backgroundMaxScrollingSpeed / 8;
-        backgroundOffsets[1] += deltaTime * backgroundMaxScrollingSpeed / 4;
-        backgroundOffsets[2] += deltaTime * backgroundMaxScrollingSpeed / 2;
-        backgroundOffsets[3] += deltaTime * backgroundMaxScrollingSpeed;
+    public void renderBackground(float deltaTime) {
+        BACKGROUNDOFFSETS[0] += deltaTime * BACKGROUNDSCROLLINGSPEED / 8;
+        BACKGROUNDOFFSETS[1] += deltaTime * BACKGROUNDSCROLLINGSPEED / 4;
+        BACKGROUNDOFFSETS[2] += deltaTime * BACKGROUNDSCROLLINGSPEED / 2;
+        BACKGROUNDOFFSETS[3] += deltaTime * BACKGROUNDSCROLLINGSPEED;
 
-        for (int layer = 0; layer < backgroundOffsets.length; layer++) {
-            if (backgroundOffsets[layer] > 1080) {
-                backgroundOffsets[layer] = 0;
+        for (int layer = 0; layer < BACKGROUNDOFFSETS.length; layer++) {
+            if (BACKGROUNDOFFSETS[layer] > 1080) {
+                BACKGROUNDOFFSETS[layer] = 0;
             }
-            game.batch.draw(backgrounds[layer],
-                    0, -backgroundOffsets[layer],
+            game.batch.draw(BACKGROUNDS[layer],
+                    0, -BACKGROUNDOFFSETS[layer],
                     1920, 1080);
-            game.batch.draw(backgrounds[layer], 0, -backgroundOffsets[layer] + 1080,
+            game.batch.draw(BACKGROUNDS[layer], 0, -BACKGROUNDOFFSETS[layer] + 1080,
                     1920, 1080);
         }
     }
@@ -175,8 +184,10 @@ public class TitleScreen implements Screen {
     @Override
     public void dispose() {
         stage.dispose();
-        game.skin.getAtlas().dispose();
-        game.skin.dispose();
+        for (int i = 0; i < BACKGROUNDS.length; i++) {
+            BACKGROUNDS[i].getTexture().dispose();
+        }
+        settingsScreen.dispose();
     }
 
     @Override
