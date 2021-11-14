@@ -18,7 +18,8 @@ public class Settings {
     private boolean enabled;
     private Button exit;
 
-    private final TextureRegion textureRegion;
+
+    private TextureRegion textureRegion;
 
     public Settings(final GipGameProject game, final Stage stage) {
         this.game = game;
@@ -49,6 +50,7 @@ public class Settings {
 
     }
 
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -68,9 +70,6 @@ public class Settings {
         game.batch.begin();
         stageSettings.act();
         stageSettings.draw();
-
-
-
         game.batch.end();
 
     }
