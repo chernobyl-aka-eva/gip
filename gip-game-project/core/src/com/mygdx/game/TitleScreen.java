@@ -87,12 +87,12 @@ public class TitleScreen implements Screen {
 
         lastY -= settings.getHeight()+1;
         settings.setPosition(100, lastY);
-        settingsScreen = new Settings(game, stage);
         settings.addListener(new InputListener() {
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                settingsScreen = new Settings(game, stage);
                 Stage stageSettings = settingsScreen.getStageSettings();
                 Gdx.input.setInputProcessor(stageSettings);
                 settingsScreen.setEnabled(true);
@@ -128,19 +128,30 @@ public class TitleScreen implements Screen {
         renderBackground(deltaTime);
 
         game.batch.end();
-        game.batch.begin();
 
-        if (!settingsScreen.isEnabled()) {
+        if (settingsScreen == null) {
+            game.batch.begin();
             stage.draw();
             stage.act();
+            game.batch.end();
+        } else {
+            if (settingsScreen.isEnabled()) {
+                settingsScreen.render(deltaTime);
+            } else  {
+                game.batch.begin();
+                stage.draw();
+                stage.act();
+                this.settingsScreen = null;
+                game.batch.end();
+            }
         }
 
 
-        game.batch.end();
 
-        if (settingsScreen.isEnabled()) {
-            settingsScreen.render(deltaTime);
-        }
+
+
+
+
     }
 
     // code for rendering the background
@@ -187,7 +198,7 @@ public class TitleScreen implements Screen {
         for (int i = 0; i < BACKGROUNDS.length; i++) {
             BACKGROUNDS[i].getTexture().dispose();
         }
-        settingsScreen.dispose();
+
     }
 
     @Override

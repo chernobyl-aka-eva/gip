@@ -41,6 +41,7 @@ public class Settings {
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
                 enabled = false;
                 Gdx.input.setInputProcessor(stage);
+                dispose();
                 return true;
             }
         });
