@@ -30,7 +30,9 @@ public class TitleScreen implements Screen {
 
     // timing
     private final float[] BACKGROUNDOFFSETS = {0, 0, 0, 0};
-    private final float BACKGROUNDSCROLLINGSPEED = (float) 1080 / 4;;
+    private final float BACKGROUNDSCROLLINGSPEED = (float) 1080 / 4;
+
+
 
     public TitleScreen(final GipGameProject game) {
 
@@ -61,7 +63,7 @@ public class TitleScreen implements Screen {
         Button newSession = new TextButton("New Session", game.skin,"default");
         newSession.setSize(510, 80);
 
-        final Button settings = new TextButton("Settings", game.skin, "menu-button-small");
+        Button settings = new TextButton("Settings", game.skin, "menu-button-small");
         settings.setSize(510, 40);
 
         Button quit = new TextButton("Quit", game.skin, "menu-button-exit");
@@ -174,6 +176,7 @@ public class TitleScreen implements Screen {
     }
     @Override
     public void resize(int width, int height) {
+
 
     }
 
