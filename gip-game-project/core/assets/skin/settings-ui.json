@@ -1,0 +1,12 @@
+{
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: settings-0
+		checked: settings-1
+	}
+	settings-input: {
+		up: input-0
+		checked: input-1
+	}
+}
+}

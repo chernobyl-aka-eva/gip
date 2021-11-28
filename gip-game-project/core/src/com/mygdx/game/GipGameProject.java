@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -20,6 +21,7 @@ public class GipGameProject extends Game {
 	// https://www.dafont.com/corrupted-file.font needs to be yet included (title) ? -maybe picture instead
 	public FreeTypeFontGenerator generator;
 	public FreeTypeFontGenerator.FreeTypeFontParameter parameter;
+	public BitmapFont font;
 
 	//loading public skin for all buttons
 	public Skin skin;
@@ -37,6 +39,7 @@ public class GipGameProject extends Game {
 		generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pcsenior.ttf"));
 		batch = new SpriteBatch();
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+		font = generator.generateFont(parameter);
 
 
 		//viewport WORK IN PROGRESS screenViewport = new ScreenViewport();

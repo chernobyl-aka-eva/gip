@@ -1,76 +1,55 @@
 
-ui-skin.png
-size: 2048, 1024
+titlescreen-ui.png
+size: 512, 512
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Linear, Linear
 repeat: none
-X-0
-  rotate: false
-  xy: 510, 14
-  size: 39, 29
-  orig: 39, 29
-  offset: 0, 0
-  index: -1
-X-1
-  rotate: false
-  xy: 1623, 464
-  size: 39, 29
-  orig: 39, 29
-  offset: 0, 0
-  index: -1
 exit-button-0
-  rotate: true
-  xy: 1743, 493
+  rotate: false
+  xy: 1, 469
   size: 510, 40
   orig: 510, 40
   offset: 0, 0
   index: -1
 exit-button-1
-  rotate: true
-  xy: 1703, 493
+  rotate: false
+  xy: 1, 427
   size: 510, 40
   orig: 510, 40
   offset: 0, 0
   index: -1
 menu-button-big-0
   rotate: false
-  xy: 0, 40
+  xy: 1, 345
   size: 510, 80
   orig: 510, 80
   offset: 0, 0
   index: -1
 menu-button-big-1
-  rotate: true
-  xy: 1623, 493
+  rotate: false
+  xy: 1, 263
   size: 510, 80
   orig: 510, 80
   offset: 0, 0
   index: -1
 menu-button-small-0
   rotate: false
-  xy: 0, 0
+  xy: 1, 221
   size: 510, 40
   orig: 510, 40
   offset: 0, 0
   index: -1
 menu-button-small-1
   rotate: false
-  xy: 1015, 80
+  xy: 1, 179
   size: 510, 40
   orig: 510, 40
   offset: 0, 0
   index: -1
 pcsenior
   rotate: false
-  xy: 510, 43
+  xy: 1, 100
   size: 505, 77
   orig: 505, 77
-  offset: 0, 0
-  index: -1
-settings-background
-  rotate: false
-  xy: 0, 120
-  size: 1623, 883
-  orig: 1623, 883
   offset: 0, 0
   index: -1

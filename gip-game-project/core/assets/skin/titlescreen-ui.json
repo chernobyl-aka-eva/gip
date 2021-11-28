@@ -1,7 +1,7 @@
 {
 com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	pcsenior: {
-		file: fonts/pcsenior.fnt
+		file: pcsenior.fnt
 	}
 }
 com.badlogic.gdx.graphics.Color: {
@@ -18,15 +18,14 @@ com.badlogic.gdx.graphics.Color: {
 		a: 1
 	}
 }
-com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
-	default: {
-		up: X-0
-		down: X-1
-		over: X-1
-	}
-}
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 	default: {
+		font: pcsenior
+		fontColor: white
+		downFontColor: black
+		overFontColor: black
+	}
+	menu-button-big: {
 		font: pcsenior
 		fontColor: white
 		downFontColor: black
@@ -34,6 +33,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		up: menu-button-big-0
 		down: menu-button-big-1
 		over: menu-button-big-1
+		pressedOffsetX: 5
 	}
 	menu-button-small: {
 		font: pcsenior
@@ -43,6 +43,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		up: menu-button-small-0
 		down: menu-button-small-1
 		over: menu-button-small-1
+		pressedOffsetX: 5
 	}
 	menu-button-exit: {
 		font: pcsenior
@@ -52,6 +53,7 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		up: exit-button-0
 		down: exit-button-1
 		over: exit-button-1
+		pressedOffsetX: 5
 	}
 }
 }

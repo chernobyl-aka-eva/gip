@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,39 +16,70 @@ public class Settings {
 
     final GipGameProject game;
     private Stage stageSettings;
+    private Stage previousStage;
     private boolean enabled;
-    private Button exit;
+    private boolean isInputSettings;
 
 
-    private TextureRegion textureRegion;
+    private TextureRegion settingsTextureRegion;
+    private TextureRegion inputTextureRegion;
 
     public Settings(final GipGameProject game, final Stage stage) {
         this.game = game;
+        previousStage = stage;
         stageSettings = new Stage(new ScreenViewport());
         enabled = false;
-        game.skin = new Skin(Gdx.files.internal("skin/ui-skin.json"));
-        game.skin.addRegions(new TextureAtlas("skin/ui-skin.atlas"));
-        exit = new Button(game.skin, "default");
-        exit.setSize(39, 29);
-        exit.setSize(game.skin.getRegion("X-0").getRegionWidth(), game.skin.getRegion("X-0").getRegionHeight());
-        exit.setPosition((stageSettings.getWidth()-exit.getWidth())/2, (stageSettings.getHeight()-exit.getHeight())/2);
+        game.skin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/settings-ui.atlas"));
 
-        textureRegion = new TextureRegion(game.skin.getRegion("settings-background"));
-        exit.setPosition((stageSettings.getWidth()- textureRegion.getRegionWidth())/2+ textureRegion.getRegionWidth()-exit.getWidth()-2, (stageSettings.getHeight()- textureRegion.getRegionHeight())/2+ textureRegion.getRegionHeight()-exit.getHeight()-5);
-        exit.addListener(new InputListener() {
+        settingsTextureRegion = new TextureRegion(game.skin.getRegion("settings"));
+        inputTextureRegion= new TextureRegion(game.skin.getRegion("input-settings"));
+
+        isInputSettings = false;
+
+        final Button settings = new Button(game.skin);
+        settings.setPosition((stageSettings.getWidth()-settingsTextureRegion.getRegionWidth())/2+30, (stageSettings.getHeight()-settingsTextureRegion.getRegionHeight())/2+802);
+        settings.setChecked(true);
+
+
+        final Button inputSettings = new Button(game.skin, "settings-input");
+        inputSettings.setPosition(settings.getX()+settings.getWidth()+30, settings.getY());
+
+        settings.addListener(new InputListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                settings.setChecked(true);
+            }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                enabled = false;
-                Gdx.input.setInputProcessor(stage);
-                dispose();
+                settings.setChecked(true);
+                inputSettings.setChecked(false);
+                isInputSettings = false;
                 return true;
             }
         });
 
-        stageSettings.addActor(exit);
-        exit.setName("exit");
+        inputSettings.addListener(new InputListener() {
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+                inputSettings.setChecked(true);
+            }
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                inputSettings.setChecked(true);
+                settings.setChecked(false);
+                isInputSettings = true;
+                return true;
+            }
+        });
+
+
+
+
+
+        stageSettings.addActor(settings);
+        stageSettings.addActor(inputSettings);
+
 
     }
 
@@ -66,18 +98,37 @@ public class Settings {
 
     public void render(float delta) {
         game.batch.begin();
-        game.batch.draw(textureRegion, (stageSettings.getWidth()- textureRegion.getRegionWidth())/2, (stageSettings.getHeight()- textureRegion.getRegionHeight())/2);
+        if (isInputSettings) {
+            game.batch.draw(inputTextureRegion, (stageSettings.getWidth()-inputTextureRegion.getRegionWidth())/2, (stageSettings.getHeight()- inputTextureRegion.getRegionHeight())/2);
+
+        } else {
+            game.batch.draw(settingsTextureRegion, (stageSettings.getWidth()-settingsTextureRegion.getRegionWidth())/2, (stageSettings.getHeight()- settingsTextureRegion.getRegionHeight())/2);
+
+        }
         game.batch.end();
         game.batch.begin();
         stageSettings.act();
         stageSettings.draw();
         game.batch.end();
 
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            enabled = false;
+            Gdx.input.setInputProcessor(previousStage);
+            dispose();
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.F10)) {
+            enabled = false;
+            Gdx.input.setInputProcessor(previousStage);
+            dispose();
+        }
+
+
     }
 
     public void dispose() {
         stageSettings.dispose();
-        textureRegion.getTexture().dispose();
+        settingsTextureRegion.getTexture().dispose();
+        inputTextureRegion.getTexture().dispose();
     }
 
 }

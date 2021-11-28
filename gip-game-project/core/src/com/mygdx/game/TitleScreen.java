@@ -45,8 +45,8 @@ public class TitleScreen implements Screen {
         initBackground();
 
         //setup texture atlas and skin for buttons
-        game.skin = new Skin(Gdx.files.internal("skin/ui-skin.json"));
-        game.skin.addRegions(new TextureAtlas("skin/ui-skin.atlas"));
+        game.skin = new Skin(Gdx.files.internal("skin/titlescreen-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/titlescreen-ui.atlas"));
         initMenuButtons();
 
     }
@@ -60,7 +60,7 @@ public class TitleScreen implements Screen {
     }
     private void initMenuButtons() {
         //Creating button objects
-        Button newSession = new TextButton("New Session", game.skin,"default");
+        Button newSession = new TextButton("New Session", game.skin,"menu-button-big");
         newSession.setSize(510, 80);
 
         Button settings = new TextButton("Settings", game.skin, "menu-button-small");
