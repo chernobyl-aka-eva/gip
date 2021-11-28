@@ -1,0 +1,20 @@
+
+game-ui.png
+size: 256, 256
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+background
+  rotate: false
+  xy: 1, 179
+  size: 186, 6
+  orig: 186, 6
+  offset: 0, 0
+  index: -1
+knob
+  rotate: false
+  xy: 1, 171
+  size: 186, 6
+  orig: 186, 6
+  offset: 0, 0
+  index: -1
