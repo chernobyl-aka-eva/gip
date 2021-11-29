@@ -147,16 +147,18 @@ public class GameScreen implements Screen {
             }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                if (previousState){
-                    showMap = true;
-                    previousState = false;
-                    gameScreenGroup.setVisible(false);
-                    mapScreenGroup.setVisible(true);
-                }else{
-                    showMap = false;
-                    previousState = true;
-                    gameScreenGroup.setVisible(true);
-                    mapScreenGroup.setVisible(false);
+                if (!settingsScreen.getSettingsGroup().isVisible()) {
+                    if (previousState){
+                        showMap = true;
+                        previousState = false;
+                        gameScreenGroup.setVisible(false);
+                        mapScreenGroup.setVisible(true);
+                    }else{
+                        showMap = false;
+                        previousState = true;
+                        gameScreenGroup.setVisible(true);
+                        mapScreenGroup.setVisible(false);
+                    }
                 }
                 return true;
             }
@@ -289,8 +291,11 @@ public class GameScreen implements Screen {
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                pausescreen = true;
-                pauseGroup.setVisible(true);
+                if (!settingsScreen.getSettingsGroup().isVisible()) {
+                    pausescreen = true;
+                    pauseGroup.setVisible(true);
+
+                }
                 return true;
             }
         });
