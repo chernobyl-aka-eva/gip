@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -40,8 +41,11 @@ public class TitleScreen implements Screen {
 
     private Group titlescreenGroup;
 
+    private Sound wavSound = Gdx.audio.newSound(Gdx.files.internal("sound/main-title-theme.wav"));
+
 
     public TitleScreen(final GipGameProject game) {
+        wavSound.loop(0.05f);
 
         this.game = game;
         camera = new OrthographicCamera();
