@@ -3,7 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -20,13 +19,10 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 public class TitleScreen implements Screen {
 
     final GipGameProject game;
+
     // screen
-    OrthographicCamera camera;
-
     private Settings settingsScreen;
-
-    private final TextureRegion[] BACKGROUNDS = new TextureRegion[4];
-
+    private final TextureRegion[] BACKGROUNDS = new TextureRegion[4]; // textures for main menu background
     private Stage stage;
 
 
@@ -34,6 +30,7 @@ public class TitleScreen implements Screen {
     private final float[] BACKGROUNDOFFSETS = {0, 0, 0, 0};
     private final float BACKGROUNDSCROLLINGSPEED = (float) 1080 / 4;
 
+    // main menu buttons
     private Button newSession;
     private Button settings;
     private Button quit;
@@ -41,26 +38,26 @@ public class TitleScreen implements Screen {
     private Group titlescreenGroup;
 
 
-
     public TitleScreen(final GipGameProject game) {
 
         this.game = game;
-        camera = new OrthographicCamera();
 
-        stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
+        stage = new Stage(new ScreenViewport()); // creates new stage
+        Gdx.input.setInputProcessor(stage); // enables input in stage
         titlescreenGroup = new Group();
         settingsScreen = new Settings(game, stage);
+
         // set up texture atlas for background
         initBackground();
 
-        //setup texture atlas and skin for buttons
+        // setup texture atlas and skin for buttons
         game.skin = new Skin(Gdx.files.internal("skin/titlescreen-ui.json"));
         game.skin.addRegions(new TextureAtlas("skin/titlescreen-ui.atlas"));
         initMenuButtons();
 
     }
-    public void initBackground() {
+
+    public void initBackground() { // initializes backgrounds in array
         game.textureAtlas = new TextureAtlas("backgrounds.atlas");
         BACKGROUNDS[0] = game.textureAtlas.findRegion("binary-bg-0");
         BACKGROUNDS[1] = game.textureAtlas.findRegion("binary-bg-1");
@@ -68,9 +65,10 @@ public class TitleScreen implements Screen {
         BACKGROUNDS[3] = game.textureAtlas.findRegion("binary-bg-3");
 
     }
-    private void initMenuButtons() {
-        //Creating button objects
-        newSession = new TextButton("New Session", game.skin,"menu-button-big");
+
+    private void initMenuButtons() { // initializes main menu buttons
+        // creating button objects
+        newSession = new TextButton("New Session", game.skin, "menu-button-big");
         newSession.setSize(510, 80);
 
         settings = new TextButton("Settings", game.skin, "menu-button-small");
@@ -79,65 +77,64 @@ public class TitleScreen implements Screen {
         quit = new TextButton("Quit", game.skin, "menu-button-exit");
         settings.setSize(510, 40);
 
-        //setting position of button
+        // setting position of button
         float lastY = 250;
         newSession.setPosition(100, lastY);
-        //adding click listener
+
+        // adding click listener
         newSession.addListener(new InputListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
             @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 game.setScreen(new GameScreen(game));
                 dispose();
                 return true;
             }
         });
-        //adding the button to the stage as an actor, so it can be drawn
 
+        // adding the button to group as an actor
         titlescreenGroup.addActor(newSession);
 
-        lastY -= settings.getHeight()+1;
+        lastY -= settings.getHeight() + 1; // calculates height of next button
         settings.setPosition(100, lastY);
-        settings.addListener(new InputListener() {
+        settings.addListener(new InputListener() { // on click opens settings window
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-            }
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
             @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 settingsScreen.getSettingsGroup().setVisible(true);
                 titlescreenGroup.setVisible(false);
                 return true;
             }
         });
+
+        // adding the button to group as an actor
         titlescreenGroup.addActor(settings);
 
-        lastY -= quit.getHeight()+1;
+        lastY -= quit.getHeight() + 1; // calculates height of next button
         quit.setPosition(100, lastY);
-        quit.addListener(new InputListener() {
+        quit.addListener(new InputListener() { // on click, exits game and disposes
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
             @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 dispose();
                 game.dispose();
                 Gdx.app.exit();
                 return true;
             }
         });
+
+        // adding the button to group as an actor
         titlescreenGroup.addActor(quit);
+        // adding actor group to stage
         stage.addActor(titlescreenGroup);
     }
-    private void delMenuButtons() {
-        newSession = null;
-        settings = null;
-        quit = null;
-    }
-
 
     @Override
     public void render(float deltaTime) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // This cryptic line clears the screen
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // this cryptic line clears the screen
         game.batch.begin();
 
         // scrolling background
@@ -150,13 +147,9 @@ public class TitleScreen implements Screen {
         stage.act();
         game.batch.end();
 
-        if (settingsScreen.getSettingsGroup().isVisible()) {
+        if (settingsScreen.getSettingsGroup().isVisible()) { // renders settings screen if visible
             settingsScreen.render(deltaTime, titlescreenGroup);
         }
-
-
-
-
 
 
     }
@@ -179,6 +172,7 @@ public class TitleScreen implements Screen {
                     1920, 1080);
         }
     }
+
     @Override
     public void resize(int width, int height) {
 

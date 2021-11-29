@@ -23,13 +23,13 @@ public class GipGameProject extends Game {
 	public FreeTypeFontGenerator.FreeTypeFontParameter parameter;
 	public BitmapFont font;
 
-	//loading public skin for all buttons
+	// loading public skin for all buttons
 	public Skin skin;
 
 	// graphics
 	public TextureAtlas textureAtlas;
 
-	//public logger
+	// public logger
 	public Logger log;
 
 
@@ -59,6 +59,7 @@ public class GipGameProject extends Game {
 		generator.dispose();
 		skin.getAtlas().dispose();
 		skin.dispose();
+		textureAtlas.dispose();
 	}
 
 }

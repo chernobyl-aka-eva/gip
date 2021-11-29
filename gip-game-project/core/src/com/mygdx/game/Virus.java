@@ -1,15 +1,29 @@
 package com.mygdx.game;
 
-import java.util.ArrayList;
-
 public class Virus {
 
+    //position and dimension
+    private int positionX = 400;
+
+    // characterics
+    //name
+    private String name = "Virus";
+    //health
+    private int health = 75;
+    //block
+    private int block = 0;
+    //relics ?
+
+    //potions ?
+
+    // constructor
     public Virus(String name, int health, int block) {
         this.name = name;
         this.health = health;
         this.block = block;
     }
 
+    // setters & getters
     public String getName() {
         return name;
     }
@@ -41,21 +55,5 @@ public class Virus {
     public void setPositionX(int positionX) {
         this.positionX = positionX;
     }
-
-
-    //position and dimension
-    private int positionX = 400;
-
-    // characterics
-    //name
-    private String name = "Virus";
-    //health
-    private int health = 75;
-    //block
-    private int block = 0;
-    //relics ?
-
-    //potions ?
-
 
 }

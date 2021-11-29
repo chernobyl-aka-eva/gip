@@ -1,8 +1,21 @@
 package com.mygdx.game;
 
-import java.util.ArrayList;
-
 public class Enemy {
+
+    //position and dimension
+    private int positionX = 1480;
+
+    // characterics
+    //name
+    private String name = "Enemy";
+    //health
+    private int health = 100;
+    //block
+    private int block = 0;
+    //relics ?
+
+    //potions ?
+
     public Enemy(String name, int health, int block) {
         this.name = name;
         this.health = health;
@@ -41,17 +54,4 @@ public class Enemy {
         this.block = block;
     }
 
-    //position and dimension
-    private int positionX = 1480;
-
-    // characterics
-    //name
-    private String name = "Enemy";
-    //health
-    private int health = 100;
-    //block
-    private int block = 0;
-    //relics ?
-
-    //potions ?
 }

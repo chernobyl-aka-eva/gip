@@ -24,22 +24,23 @@ public class Effect {
 
     // =BLOCK TYPE EFFECTS=
     // Dexterity - Increases block gained from cards - Intensity
-    public int dexterityBuff(int dexterity, int amount, boolean multiply){
-        if (multiply){
+    public int dexterityBuff(int dexterity, int amount, boolean multiply) {
+        if (multiply) {
             dexterity *= amount;
             return dexterity;
-        }else{
+        } else {
             dexterity += amount;
             return dexterity;
         }
     }
+
     // =ATTACK TYPE EFFECTS=
     // Strength - Increases attack damage by X - Intensity
-    public int strengthBuff(int strength, int amount, boolean multiply){
-        if (multiply){
+    public int strengthBuff(int strength, int amount, boolean multiply) {
+        if (multiply) {
             strength *= amount;
             return strength;
-        }else{
+        } else {
             strength += amount;
             return strength;
         }
