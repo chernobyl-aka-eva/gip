@@ -2,24 +2,22 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 public class Settings {
 
 
     final GipGameProject game;
     private Stage stageSettings;
-    private Stage previousStage;
-    private boolean enabled;
     private boolean isInputSettings;
+    private Group settingsGroup;
 
 
     private TextureRegion settingsTextureRegion;
@@ -27,9 +25,9 @@ public class Settings {
 
     public Settings(final GipGameProject game, final Stage stage) {
         this.game = game;
-        previousStage = stage;
-        stageSettings = new Stage(new ScreenViewport());
-        enabled = false;
+        stageSettings = stage;
+        settingsGroup = new Group();
+        settingsGroup.setVisible(false);
         game.skin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
         game.skin.addRegions(new TextureAtlas("skin/settings-ui.atlas"));
 
@@ -78,26 +76,22 @@ public class Settings {
 
 
 
-        stageSettings.addActor(settings);
-        stageSettings.addActor(inputSettings);
+        settingsGroup.addActor(settings);
+        settingsGroup.addActor(inputSettings);
+        stageSettings.addActor(settingsGroup);
 
 
     }
 
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public Group getSettingsGroup() {
+        return settingsGroup;
     }
 
     public Stage getStageSettings() {
         return stageSettings;
     }
 
-    public void render(float delta) {
+    public void render(float delta, Group previousGroup) {
         game.batch.begin();
         if (isInputSettings) {
             game.batch.draw(inputTextureRegion, (stageSettings.getWidth()-inputTextureRegion.getRegionWidth())/2, (stageSettings.getHeight()- inputTextureRegion.getRegionHeight())/2);
@@ -113,21 +107,18 @@ public class Settings {
         game.batch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            enabled = false;
-            Gdx.input.setInputProcessor(previousStage);
-            dispose();
+            settingsGroup.setVisible(false);
+            previousGroup.setVisible(true);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.F10)) {
-            enabled = false;
-            Gdx.input.setInputProcessor(previousStage);
-            dispose();
+            settingsGroup.setVisible(false);
+            previousGroup.setVisible(true);
         }
 
 
     }
 
     public void dispose() {
-        stageSettings.dispose();
         settingsTextureRegion.getTexture().dispose();
         inputTextureRegion.getTexture().dispose();
     }

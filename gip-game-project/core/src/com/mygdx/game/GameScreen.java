@@ -35,9 +35,14 @@ public class GameScreen implements Screen {
     private ArrayList<TextureRegion> icons = new ArrayList<>();
     private ArrayList<TextureRegion> iconsEnemy = new ArrayList<>();
 
+    // Relics texture region
+    private ArrayList<TextureRegion> relicIcons = new ArrayList<>();
+
+
     // virus
     ArrayList<Effect> effects = new ArrayList<>();
     Virus eva = new Virus("Eva", 33, 0);
+    private ArrayList<Relic> relics = new ArrayList<>();
 
     // enemy
     ArrayList<Effect> effectsEnemy = new ArrayList<>();
@@ -46,6 +51,9 @@ public class GameScreen implements Screen {
     // effect
     Effect strength = new Effect("strength", 1, 1, 5);
     Effect dexterity = new Effect("dexterity", 1, 1, 5);
+
+    // Relic
+    Relic dataDisk = new Relic("data-disk", "common", "Gain 100 megabytes after every combat");
 
     // animation object virus
     Animation <TextureRegion> idleAnimation;
@@ -66,6 +74,21 @@ public class GameScreen implements Screen {
     private final Group gameScreenGroup;
     private final Group mapScreenGroup;
 
+    //Icons health & money
+    private final TextureRegion healthIcon;
+    private final TextureRegion moneyIcon;
+
+    //currency value
+
+    private Label healthVirus;
+    private Label moneyValue;
+
+    //group for ui so they can be shown and hidden
+    private final Group pauseGroup;
+    private final TextureRegion pausescreenBackground;
+    private boolean pausescreen;
+    private final Settings settingsScreen;
+
     public GameScreen(final GipGameProject game) {
         this.game = game;
 
@@ -75,6 +98,9 @@ public class GameScreen implements Screen {
 
         effectsEnemy.add(dexterity);
         effectsEnemy.add(strength);
+
+        //Adding relics
+        relics.add(dataDisk);
 
         // game stage
         stage = new Stage(new ScreenViewport());
@@ -99,6 +125,11 @@ public class GameScreen implements Screen {
 
         for (int i = 0; i < effectsEnemy.size(); i++){
             iconsEnemy.add(game.textureAtlas.findRegion(effectsEnemy.get(i).getEffectName()));
+        }
+
+        //Relic icons
+        for (int i = 0; i < relics.size(); i++) {
+            relicIcons.add(game.textureAtlas.findRegion(relics.get(i).getRelicName()));
         }
 
         // game UI
@@ -225,11 +256,100 @@ public class GameScreen implements Screen {
         healthEnemy.setValue(3);
         healthEnemy.setPosition(philip.getPositionX(), stage.getHeight()-780);
         gameScreenGroup.addActor(healthEnemy);
-
-
-
-
         stage.addActor(gameScreenGroup);
+
+        //money
+        int money = 5;
+
+        game.textureAtlas = new TextureAtlas(Gdx.files.internal("other/game-ui-2.atlas"));
+        healthVirus = new Label(String.valueOf((int)health.getValue()), new Label.LabelStyle(game.font, Color.RED));
+        healthIcon = game.textureAtlas.findRegion("health");
+        healthVirus.setPosition(100, stage.getHeight()-healthIcon.getRegionHeight()/2-30);
+        moneyValue = new Label(String.valueOf(money) + "\t MB", new Label.LabelStyle(game.font, Color.GOLD));
+        moneyIcon = game.textureAtlas.findRegion("data");
+        moneyValue.setPosition(healthVirus.getX()+healthVirus.getWidth()+50+10, stage.getHeight()-healthIcon.getRegionHeight()/2-30);
+
+        stage.addActor(healthVirus);
+        stage.addActor(moneyValue);
+
+        //disable pausescreen
+        pausescreen = false;
+
+        //actor group
+        pauseGroup = new Group();
+        settingsScreen = new Settings(game, stage);
+
+        //pause button
+        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+        Button pause = new Button(game.skin, "pause");
+        pause.setPosition(stage.getWidth()-50, stage.getHeight()-pause.getHeight()/2-30);
+        pause.addListener(new InputListener() {
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                pausescreen = true;
+                pauseGroup.setVisible(true);
+                return true;
+            }
+        });
+
+        stage.addActor(pause);
+
+        //pause menu
+        pausescreenBackground = game.skin.getRegion("pausescreen-background");
+        Button resume = new TextButton("Resume", game.skin, "pausescreen-button");
+        resume.setPosition((stage.getWidth()-pausescreenBackground.getRegionWidth())/2+(pausescreenBackground.getRegionWidth()-resume.getWidth())/2,
+                ((stage.getHeight() - pausescreenBackground.getRegionHeight())/2-50)+pausescreenBackground.getRegionHeight()-resume.getHeight());
+        final Button settings = new TextButton("Settings", game.skin, "pausescreen-button");
+        settings.setPosition(resume.getX(), resume.getY()-resume.getHeight()-35);
+        Button quit = new TextButton("Main Menu", game.skin, "pausescreen-button");
+        quit.setPosition(settings.getX(), settings.getY()-resume.getHeight()-35);
+
+        //pause menu button listeners
+        resume.addListener(new InputListener() {
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                pausescreen = false;
+                pauseGroup.setVisible(false);
+                return true;
+            }
+        });
+        settings.addListener(new InputListener() {
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                pausescreen = false;
+                pauseGroup.setVisible(false);
+                gameScreenGroup.setVisible(false);
+                settingsScreen.getSettingsGroup().setVisible(true);
+
+                return true;
+            }
+        });
+        quit.addListener(new InputListener() {
+            @Override
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
+            @Override
+            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new TitleScreen(game));
+                dispose();
+                return true;
+            }
+        });
+
+        //adding pausescreen buttons to actor group
+        pauseGroup.addActor(resume);
+        pauseGroup.addActor(settings);
+        pauseGroup.addActor(quit);
+        pauseGroup.setVisible(false);
+
+        //adding group to stage
+        stage.addActor(pauseGroup);
 
     }
 
@@ -283,6 +403,14 @@ public class GameScreen implements Screen {
             }
         }
 
+        if (relics.size() > 0) {
+            int padding = 0;
+            for (int i = 0; i < relics.size(); i++) {
+                game.batch.draw(relicIcons.get(i), 25, stage.getHeight()-hudbar.getRegionHeight()*2+3);
+                padding += 25;
+            }
+        }
+
         if (showMap){
             game.batch.draw(mapBackground, 0, 0, 1920, 1080);
         }
@@ -290,12 +418,26 @@ public class GameScreen implements Screen {
         // draw hud-bar
         game.batch.draw(hudbar, 0, stage.getHeight()-hudbar.getRegionHeight());
 
+
+
+        game.font.setColor(Color.RED);
+
+        game.batch.draw(healthIcon, healthVirus.getX()+healthVirus.getWidth()+10, stage.getHeight()-healthIcon.getRegionHeight()+healthIcon.getRegionHeight()/4-30);
+        game.font.setColor(Color.GOLD);
+        game.batch.draw(moneyIcon, moneyValue.getX()+moneyValue.getWidth()+10, stage.getHeight()-moneyIcon.getRegionHeight()+moneyIcon.getRegionHeight()/4-30);
+        if (pausescreen) {
+            game.batch.draw(pausescreenBackground, (stage.getWidth()-pausescreenBackground.getRegionWidth())/2, (stage.getHeight()-pausescreenBackground.getRegionHeight())/2);
+        }
+
         game.batch.end();
         game.batch.begin();
         stage.draw();
         stage.act(delta);
 
         game.batch.end();
+        if (settingsScreen.getSettingsGroup().isVisible()) {
+            settingsScreen.render(delta, gameScreenGroup);
+        }
     }
 
 

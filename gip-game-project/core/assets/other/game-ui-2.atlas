@@ -6,14 +6,21 @@ filter: Nearest, Nearest
 repeat: none
 data
   rotate: false
-  xy: 0, 0
+  xy: 1919, 61
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+data-disk
+  rotate: false
+  xy: 3838, 1140
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 dexterity
   rotate: false
-  xy: 1919, 73
+  xy: 3838, 1120
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
@@ -27,7 +34,7 @@ guidelines
   index: -1
 health
   rotate: false
-  xy: 3838, 1140
+  xy: 0, 0
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -48,7 +55,7 @@ map-background
   index: -1
 strength
   rotate: false
-  xy: 3838, 1120
+  xy: 3870, 1152
   size: 20, 20
   orig: 20, 20
   offset: 0, 0

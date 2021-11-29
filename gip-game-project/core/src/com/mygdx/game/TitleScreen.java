@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -28,10 +29,16 @@ public class TitleScreen implements Screen {
 
     private Stage stage;
 
+
     // timing
     private final float[] BACKGROUNDOFFSETS = {0, 0, 0, 0};
     private final float BACKGROUNDSCROLLINGSPEED = (float) 1080 / 4;
 
+    private Button newSession;
+    private Button settings;
+    private Button quit;
+
+    private Group titlescreenGroup;
 
 
     public TitleScreen(final GipGameProject game) {
@@ -41,6 +48,8 @@ public class TitleScreen implements Screen {
 
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
+        titlescreenGroup = new Group();
+        settingsScreen = new Settings(game, stage);
         // set up texture atlas for background
         initBackground();
 
@@ -60,13 +69,13 @@ public class TitleScreen implements Screen {
     }
     private void initMenuButtons() {
         //Creating button objects
-        Button newSession = new TextButton("New Session", game.skin,"menu-button-big");
+        newSession = new TextButton("New Session", game.skin,"menu-button-big");
         newSession.setSize(510, 80);
 
-        Button settings = new TextButton("Settings", game.skin, "menu-button-small");
+        settings = new TextButton("Settings", game.skin, "menu-button-small");
         settings.setSize(510, 40);
 
-        Button quit = new TextButton("Quit", game.skin, "menu-button-exit");
+        quit = new TextButton("Quit", game.skin, "menu-button-exit");
         settings.setSize(510, 40);
 
         //setting position of button
@@ -85,23 +94,22 @@ public class TitleScreen implements Screen {
         });
         //adding the button to the stage as an actor, so it can be drawn
 
-        stage.addActor(newSession);
+        titlescreenGroup.addActor(newSession);
 
         lastY -= settings.getHeight()+1;
         settings.setPosition(100, lastY);
         settings.addListener(new InputListener() {
             @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {}
+            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
+            }
             @Override
             public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                settingsScreen = new Settings(game, stage);
-                Stage stageSettings = settingsScreen.getStageSettings();
-                Gdx.input.setInputProcessor(stageSettings);
-                settingsScreen.setEnabled(true);
+                settingsScreen.getSettingsGroup().setVisible(true);
+                titlescreenGroup.setVisible(false);
                 return true;
             }
         });
-        stage.addActor(settings);
+        titlescreenGroup.addActor(settings);
 
         lastY -= quit.getHeight()+1;
         quit.setPosition(100, lastY);
@@ -116,7 +124,13 @@ public class TitleScreen implements Screen {
                 return true;
             }
         });
-        stage.addActor(quit);
+        titlescreenGroup.addActor(quit);
+        stage.addActor(titlescreenGroup);
+    }
+    private void delMenuButtons() {
+        newSession = null;
+        settings = null;
+        quit = null;
     }
 
 
@@ -130,24 +144,14 @@ public class TitleScreen implements Screen {
         renderBackground(deltaTime);
 
         game.batch.end();
+        game.batch.begin();
+        stage.draw();
+        stage.act();
+        game.batch.end();
 
-        if (settingsScreen == null) {
-            game.batch.begin();
-            stage.draw();
-            stage.act();
-            game.batch.end();
-        } else {
-            if (settingsScreen.isEnabled()) {
-                settingsScreen.render(deltaTime);
-            } else  {
-                game.batch.begin();
-                stage.draw();
-                stage.act();
-                this.settingsScreen = null;
-                game.batch.end();
-            }
+        if (settingsScreen.getSettingsGroup().isVisible()) {
+            settingsScreen.render(deltaTime, titlescreenGroup);
         }
-
 
 
 
@@ -201,6 +205,7 @@ public class TitleScreen implements Screen {
         for (int i = 0; i < BACKGROUNDS.length; i++) {
             BACKGROUNDS[i].getTexture().dispose();
         }
+        settingsScreen.dispose();
 
     }
 
