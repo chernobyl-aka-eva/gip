@@ -1,17 +1,25 @@
 package com.mygdx.game;
 
-public class Effects {
+public class Effect {
     //   NAME ------------------- EFFECT ------------------- STACKS?
     private String effectName;
     private int counter;
     private int intensity;
     private int duration;
 
-    public Effects(String effectName, int counter, int intensity, int duration) {
+    public Effect(String effectName, int counter, int intensity, int duration) {
         this.effectName = effectName;
         this.counter = counter;
         this.intensity = intensity;
         this.duration = duration;
+    }
+
+    public String getEffectName() {
+        return effectName;
+    }
+
+    public void setEffectName(String effectName) {
+        this.effectName = effectName;
     }
 
     // =BLOCK TYPE EFFECTS=

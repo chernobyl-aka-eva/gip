@@ -1,20 +1,76 @@
 
 game-ui.png
-size: 256, 256
+size: 1024, 1024
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 background
   rotate: false
-  xy: 1, 179
+  xy: 800, 1004
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
+pause-0
+  rotate: false
+  xy: 508, 126
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+pause-1
+  rotate: false
+  xy: 228, 47
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+pause-button-0
+  rotate: false
+  xy: 1, 162
+  size: 692, 127
+  orig: 692, 127
+  offset: 0, 0
+  index: -1
+pause-button-1
+  rotate: false
+  xy: 1, 291
+  size: 692, 127
+  orig: 692, 127
+  offset: 0, 0
+  index: -1
+pausescreen-background
+  rotate: false
+  xy: 1, 420
+  size: 797, 590
+  orig: 797, 590
+  offset: 0, 0
+  index: -1
 knob
   rotate: false
-  xy: 1, 171
+  xy: 1, 1
   size: 186, 6
   orig: 186, 6
+  offset: 0, 0
+  index: -1
+map-button
+  rotate: false
+  xy: 695, 367
+  size: 51, 51
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+return-button
+  rotate: false
+  xy: 1, 9
+  size: 225, 72
+  orig: 225, 72
+  offset: 0, 0
+  index: -1
+pcsenior
+  rotate: false
+  xy: 1, 83
+  size: 505, 77
+  orig: 505, 77
   offset: 0, 0
   index: -1

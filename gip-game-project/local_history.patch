@@ -1,0 +1,32 @@
+Index: core/src/com/mygdx/game/GameScreen.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/core/src/com/mygdx/game/GameScreen.java b/core/src/com/mygdx/game/GameScreen.java
+--- a/core/src/com/mygdx/game/GameScreen.java	
++++ b/core/src/com/mygdx/game/GameScreen.java	(date 1638143033844)
+@@ -61,11 +61,6 @@
+         gameBackground = new TextureRegion();
+         gameBackground = game.textureAtlas.findRegion("guidelines");
+ 
+-        // game UI
+-        game.textureAtlas = new TextureAtlas("skin/game-ui.atlas");
+-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+-
+         // game stage
+         stage = new Stage(new ScreenViewport());
+ 
+@@ -79,6 +74,11 @@
+         effectsEnemy.add(dexterity);
+         effectsEnemy.add(strength);
+ 
++        // game UI
++        game.textureAtlas = new TextureAtlas("skin/game-ui.atlas");
++        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
++        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
++
+         // adding names of the icons that are currently in effects array
+         for (int i = 0; i < effects.size(); i++){
+             icons.add(game.textureAtlas.findRegion(effects.get(i).getEffectName()));
