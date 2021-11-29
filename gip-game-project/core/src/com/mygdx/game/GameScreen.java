@@ -42,7 +42,7 @@ public class GameScreen implements Screen {
     // virus
     ArrayList<Effect> effects = new ArrayList<>();
     Virus eva = new Virus("Eva", 33, 0);
-    private ArrayList<Relic> relics = new ArrayList<>();
+    private ArrayList<Item> relics = new ArrayList<>();
 
     // enemy
     ArrayList<Effect> effectsEnemy = new ArrayList<>();
@@ -53,7 +53,7 @@ public class GameScreen implements Screen {
     Effect dexterity = new Effect("dexterity", 1, 1, 5);
 
     // Relic
-    Relic dataDisk = new Relic("data-disk", "common", "Gain 100 megabytes after every combat");
+    Item dataDisk = new Item("data-disk", "common", "Gain 100 megabytes after every combat");
 
     // animation object virus
     Animation <TextureRegion> idleAnimation;

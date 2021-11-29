@@ -3,7 +3,6 @@ package com.mygdx.game;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -42,8 +41,6 @@ public class GipGameProject extends Game {
 		parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 		font = generator.generateFont(parameter);
 
-
-		//viewport WORK IN PROGRESS screenViewport = new ScreenViewport();
 		log = new Logger(this.getClass().getName(), Logger.DEBUG);
 
 		Gdx.app.setLogLevel(Application.LOG_DEBUG);

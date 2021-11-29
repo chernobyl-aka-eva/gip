@@ -1,11 +1,11 @@
 package com.mygdx.game;
 
-public class Relic {
+public class Item {
     private String relicName;
     private String rarity;
     private String description;
 
-    public Relic(String relicName, String rarity, String description) {
+    public Item(String relicName, String rarity, String description) {
         this.relicName = relicName;
         this.rarity = rarity;
         this.description = description;
