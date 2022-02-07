@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.mygdx.game.cards.CardManager;
 
 import java.util.ArrayList;
 
@@ -88,8 +89,9 @@ public class GameScreen implements Screen {
     private boolean pausescreen; // decides whether pause screen should be shown
     private final Settings settingsScreen;
 
-    public GameScreen(final GipGameProject game) {
+    private CardManager cardManager;
 
+    public GameScreen(final GipGameProject game) {
         this.game = game;
 
         // adding effects (later this will be added by playing cards or having certain items)
@@ -389,6 +391,13 @@ public class GameScreen implements Screen {
         // adding group to stage
         stage.addActor(pauseGroup);
 
+        cardManager = new CardManager(game, eva, philip);
+        cardManager.addCard(0);
+        cardManager.addCard(1);
+        cardManager.drawcard(2);
+
+
+
     }
 
     @Override
@@ -489,8 +498,11 @@ public class GameScreen implements Screen {
         // renders settingsscreen if enabled
         if (settingsScreen.getSettingsGroup().isVisible()) {
             settingsScreen.render(delta, gameScreenGroup);
-
         }
+
+        cardManager.renderHand();
+
+
     }
 
 
