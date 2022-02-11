@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.item;
 
 public class Item {
     private String relicName;

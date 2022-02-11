@@ -12,6 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.cards.CardManager;
+import com.mygdx.game.effect.Effect;
+import com.mygdx.game.enemy.Enemy;
+import com.mygdx.game.item.Item;
+import com.mygdx.game.virus.Virus;
 
 import java.util.ArrayList;
 

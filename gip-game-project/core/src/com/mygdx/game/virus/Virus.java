@@ -1,35 +1,29 @@
-package com.mygdx.game;
+package com.mygdx.game.virus;
 
-public class Enemy {
+public class Virus {
 
     //position and dimension
-    private int positionX = 1480;
+    private int positionX = 400;
 
     // characterics
     //name
-    private String name = "Enemy";
+    private String name = "Virus";
     //health
-    private int health = 100;
+    private int health = 75;
     //block
     private int block = 0;
     //relics ?
 
     //potions ?
 
-    public Enemy(String name, int health, int block) {
+    // constructor
+    public Virus(String name, int health, int block) {
         this.name = name;
         this.health = health;
         this.block = block;
     }
 
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
-    }
-
+    // setters & getters
     public String getName() {
         return name;
     }
@@ -52,6 +46,14 @@ public class Enemy {
 
     public void setBlock(int block) {
         this.block = block;
+    }
+
+    public int getPositionX() {
+        return positionX;
+    }
+
+    public void setPositionX(int positionX) {
+        this.positionX = positionX;
     }
 
 }

@@ -1,11 +1,10 @@
 package com.mygdx.game.cards;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
-import com.mygdx.game.Enemy;
+import com.mygdx.game.enemy.Enemy;
 import com.mygdx.game.GipGameProject;
-import com.mygdx.game.Virus;
+import com.mygdx.game.virus.Virus;
 
 import java.util.Random;
 

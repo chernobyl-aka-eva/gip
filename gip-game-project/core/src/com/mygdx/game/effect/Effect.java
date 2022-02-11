@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.effect;
 
 public class Effect {
     //   NAME ------------------- EFFECT ------------------- STACKS?
