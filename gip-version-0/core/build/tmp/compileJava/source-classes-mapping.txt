@@ -1,0 +1,4 @@
+com/mygdx/game/ApplicationListenerSample.java
+ com.mygdx.game.ApplicationListenerSample
+com/mygdx/game/GipVersion0.java
+ com.mygdx.game.GipVersion0
