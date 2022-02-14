@@ -1,6 +1,9 @@
 package com.mygdx.game.cards;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.enemy.Enemy;
 import com.mygdx.game.GipGameProject;
@@ -27,17 +30,25 @@ public class CardManager {
         drawPile = new Array<>();
         discardPile = new Array<>();
         exhaustPile = new Array<>();
-        game.textureAtlas = new TextureAtlas("cards.atlas");
+        game.textureAtlas = new TextureAtlas("cards/cards.atlas");
+        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // skin
+
     }
 
     public void addCard(int id) {
         switch (id) {
-            case 0: Card strike = new Card(0, "Strike", CardType.ATTACK, "Deal 7 damage", 1, game.textureAtlas.findRegion("card-strike"));
-            playerCards.add(strike); drawPile.add(strike); break;
-            case 1: Card defend = new Card(1, "Defend", CardType.SKILL, "Gain 5 block", 1, game.textureAtlas.findRegion("card-defend"));
-            playerCards.add(defend); drawPile.add(defend); break;
+            case 0: Card strike = new Card(0, "Strike", CardType.ATTACK, "Deal 7 damage", 1, game.textureAtlas.findRegion("common"));
+            playerCards.add(strike); drawPile.add(strike); createCard(strike); break;
+            case 1: Card defend = new Card(1, "Defend", CardType.SKILL, "Gain 5 block", 1, game.textureAtlas.findRegion("common"));
+            playerCards.add(defend); drawPile.add(defend); createCard(defend); break;
         }
     }
+
+    public void createCard(Card card) {
+        Label title = new Label(card.getName(), game.skin);
+        title.set
+    }
+
     public void playCard (int id) {
         boolean inhand = false;
         for (Card card: hand) {
@@ -71,6 +82,16 @@ public class CardManager {
 
         game.batch.end();
     }
-    
 
+    public Virus getPlayer() {
+        return player;
+    }
+
+    public Enemy getEnemy() {
+        return enemy;
+    }
+
+    public GipGameProject getGame() {
+        return game;
+    }
 }

@@ -1,0 +1,55 @@
+
+cards.png
+size: 2048, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+common
+  rotate: false
+  xy: 377, 377
+  size: 375, 550
+  orig: 375, 550
+  offset: 0, 0
+  index: -1
+epic
+  rotate: false
+  xy: 0, 377
+  size: 375, 550
+  orig: 375, 550
+  offset: 0, 0
+  index: -1
+exotic
+  rotate: false
+  xy: 1508, 377
+  size: 375, 550
+  orig: 375, 550
+  offset: 0, 0
+  index: -1
+legendary
+  rotate: false
+  xy: 1131, 377
+  size: 375, 550
+  orig: 375, 550
+  offset: 0, 0
+  index: -1
+obsidian
+  rotate: false
+  xy: 754, 377
+  size: 375, 550
+  orig: 375, 550
+  offset: 0, 0
+  index: -1
+rare
+  rotate: true
+  xy: 552, 0
+  size: 375, 550
+  orig: 375, 550
+  offset: 0, 0
+  index: -1
+uncommon
+  rotate: true
+  xy: 0, 0
+  size: 375, 550
+  orig: 375, 550
+  offset: 0, 0
+  index: -1

@@ -1,75 +1,96 @@
 
 game-ui.png
-size: 1024, 1024
+size: 2048, 2048
 format: RGBA8888
 filter: Linear, Linear
 repeat: none
 background
-  rotate: false
-  xy: 800, 1004
-  size: 186, 6
-  orig: 186, 6
-  offset: 0, 0
-  index: -1
-pause-0
-  rotate: false
-  xy: 508, 126
-  size: 34, 34
-  orig: 34, 34
-  offset: 0, 0
-  index: -1
-pause-1
-  rotate: false
-  xy: 228, 47
-  size: 34, 34
-  orig: 34, 34
-  offset: 0, 0
-  index: -1
-pause-button-0
-  rotate: false
-  xy: 1, 162
-  size: 692, 127
-  orig: 692, 127
-  offset: 0, 0
-  index: -1
-pause-button-1
-  rotate: false
-  xy: 1, 291
-  size: 692, 127
-  orig: 692, 127
-  offset: 0, 0
-  index: -1
-pausescreen-background
-  rotate: false
-  xy: 1, 420
-  size: 797, 590
-  orig: 797, 590
-  offset: 0, 0
-  index: -1
-knob
   rotate: false
   xy: 1, 1
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
+knob
+  rotate: false
+  xy: 1494, 1750
+  size: 186, 6
+  orig: 186, 6
+  offset: 0, 0
+  index: -1
 map-button
   rotate: false
-  xy: 695, 367
+  xy: 695, 85
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
-return-button
+pause-0
+  rotate: false
+  xy: 753, 1204
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+pause-1
+  rotate: false
+  xy: 1307, 1667
+  size: 34, 34
+  orig: 34, 34
+  offset: 0, 0
+  index: -1
+pause-button-0
+  rotate: false
+  xy: 800, 1703
+  size: 692, 127
+  orig: 692, 127
+  offset: 0, 0
+  index: -1
+pause-button-1
   rotate: false
   xy: 1, 9
+  size: 692, 127
+  orig: 692, 127
+  offset: 0, 0
+  index: -1
+pausescreen-background
+  rotate: false
+  xy: 1, 1240
+  size: 797, 590
+  orig: 797, 590
+  offset: 0, 0
+  index: -1
+return-button
+  rotate: false
+  xy: 1494, 1758
   size: 225, 72
   orig: 225, 72
   offset: 0, 0
   index: -1
+Capture
+  rotate: false
+  xy: 800, 1320
+  size: 210, 302
+  orig: 210, 302
+  offset: 0, 0
+  index: -1
+Common Card Template
+  rotate: false
+  xy: 1, 138
+  size: 750, 1100
+  orig: 750, 1100
+  offset: 0, 0
+  index: -1
 pcsenior
   rotate: false
-  xy: 1, 83
+  xy: 800, 1624
+  size: 505, 77
+  orig: 505, 77
+  offset: 0, 0
+  index: -1
+pcsenior
+  rotate: false
+  xy: 800, 1624
   size: 505, 77
   orig: 505, 77
   offset: 0, 0

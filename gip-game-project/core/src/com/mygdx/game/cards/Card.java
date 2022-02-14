@@ -1,6 +1,7 @@
 package com.mygdx.game.cards;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class Card {
     private int id;
@@ -9,6 +10,7 @@ public class Card {
     private String description;
     private int cost;
     private TextureRegion textureRegion;
+    private boolean exhaust;
 
     public Card(int id, String name, CardType cardType, String description, int cost, TextureRegion textureRegion) {
         this.id = id;
@@ -17,16 +19,18 @@ public class Card {
         this.description = description;
         this.cost = cost;
         this.textureRegion = textureRegion;
+        this.exhaust = false;
     }
 
-    public Card(int id, String name, CardType cardType, String description, int cost) {
+    public Card(int id, String name, CardType cardType, String description, int cost, TextureRegion textureRegion, boolean exhaust) {
         this.id = id;
         this.name = name;
         this.cardType = cardType;
         this.description = description;
         this.cost = cost;
+        this.textureRegion = textureRegion;
+        this.exhaust = exhaust;
     }
-
     public int getId() {
         return id;
     }
