@@ -314,7 +314,7 @@ public class GameScreen implements Screen {
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // imports skin (json file)
         game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas")); // adds regions
 
-        Button pause = new Button(game.skin, "pause");
+        final Button pause = new Button(game.skin, "pause");
         pause.setPosition(stage.getWidth() - 50,
                 stage.getHeight() - pause.getHeight() / 2 - 30);
 
@@ -359,6 +359,7 @@ public class GameScreen implements Screen {
             }
         });
 
+
         settings.addListener(new InputListener() { // detects click and opens settings screen
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
@@ -395,13 +396,16 @@ public class GameScreen implements Screen {
         // adding group to stage
         stage.addActor(pauseGroup);
 
-        cardManager = new CardManager(game, eva, philip);
+        cardManager = new CardManager(eva, philip, game, stage);
         cardManager.addCard(0);
         cardManager.addCard(1);
-        cardManager.drawcard(2);
+        cardManager.addCard(0);
+        cardManager.addCard(1);
+        cardManager.addCard(0);
+        cardManager.drawcard(5);
 
-
-
+        gameScreenGroup.addActor(cardManager.getHand());
+        
     }
 
     @Override
