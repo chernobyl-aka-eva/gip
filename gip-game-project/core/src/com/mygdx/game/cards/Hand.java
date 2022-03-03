@@ -1,9 +1,7 @@
 package com.mygdx.game.cards;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 
 public class Hand extends Group {
@@ -15,7 +13,10 @@ public class Hand extends Group {
                 if (children.get(i) instanceof Card) {
                     Card card = (Card)children.get(i);
                     card.setHandslot(i);
-                    card.getBackground().setPosition(700 + card.getTextureRegion().getRegionWidth()* card.getHandslot(), 100);
+
+                    card.setPosition(700 + card.getTextureRegion().getRegionWidth()* card.getHandslot(), -300);
+                    setBounds(card.getImageX(), card.getImageY(), card.getWidth(), card.getHeight());
+                    /*
                     card.getTitle().setBounds(
                             card.getBackground().getX(),
                             card.getBackground().getY(),
@@ -28,6 +29,9 @@ public class Hand extends Group {
                             card.getBackground().getWidth(),
                             card.getBackground().getHeight());
                     card.getDescription().setAlignment(Align.bottom);
+                     */
+
+
                 }
             }
         }

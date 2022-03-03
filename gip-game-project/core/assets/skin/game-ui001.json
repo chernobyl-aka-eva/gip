@@ -1,0 +1,98 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	pcsenior: {
+		file: pcsenior.fnt
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	RGBA_255_0_0_255: {
+		r: 1
+		g: 1
+		b: 1
+		a: 1
+	}
+	RGBA_255_255_255_255: {
+		r: 0
+		g: 0
+		b: 0
+		a: 0
+	}
+}
+com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
+	knob-tiled: {
+		region: knob
+		color: RGBA_255_255_255_255
+		minWidth: 1
+		minHeight: 6
+	}
+	knob-tile: {
+		region: knob
+		color: RGBA_255_0_0_255
+		minWidth: 0
+		minHeight: 6
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: map-button
+		checked: map-button
+	}
+	return: {
+		up: return-button
+	}
+	pause: {
+		up: pause-0
+		over: pause-1
+	}
+	deck: {
+		up: deck-00
+		down: deck-01
+		over: deck-01
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: pcsenior
+		fontColor: RGBA_255_0_0_255
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+	default-horizontal: {
+		background: background
+		knobBefore: knob-tile
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: pausescreen-background
+		vScrollKnob: scrollBar
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: pcsenior
+		fontColor: RGBA_255_255_255_255
+		overFontColor: RGBA_255_0_0_255
+	}
+	pausescreen-button: {
+		font: pcsenior
+		up: pause-button-0
+		over: pause-button-1
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+	default: {
+		background: pausescreen-background
+		titleFont: pcsenior
+	}
+	deck: {
+		background: deck-background
+		titleFont: pcsenior
+	}
+}
+}

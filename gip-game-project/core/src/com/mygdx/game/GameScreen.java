@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.effect.Effect;
@@ -396,21 +398,111 @@ public class GameScreen implements Screen {
         // adding group to stage
         stage.addActor(pauseGroup);
 
+        game.skin = new Skin(Gdx.files.internal("skin/game-ui001.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui001.atlas"));
+        final Table table = new Table(game.skin);
+
+
+
+
+
+
+
+
+
+
+        final Button deck = new Button(game.skin, "deck");
+        deck.setPosition(1500, 100);
+
+        deck.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (table.isVisible()) {
+                    table.setVisible(false);
+                } else {
+                    table.setVisible(true);
+                }
+                return true;
+            }
+        });
+
+        gameScreenGroup.addActor(deck);
+
+
+
         cardManager = new CardManager(eva, philip, game, stage);
         cardManager.addCard(0);
         cardManager.addCard(1);
         cardManager.addCard(0);
         cardManager.addCard(1);
         cardManager.addCard(0);
-        cardManager.drawcard(5);
+
+        cardManager.addCard(0);
+        cardManager.addCard(1);
+        cardManager.addCard(0);
+        cardManager.addCard(1);
+        cardManager.addCard(0);
+        cardManager.addCard(0);
+        cardManager.addCard(1);
+        cardManager.addCard(0);
+        cardManager.addCard(1);
+        cardManager.addCard(0);
+        cardManager.addCard(0);
+        cardManager.addCard(1);
+        cardManager.addCard(0);
+        cardManager.addCard(1);
+        cardManager.addCard(0);
+        //cardManager.drawcard(2);
 
         gameScreenGroup.addActor(cardManager.getHand());
-        
+
+
+        game.skin = new Skin(Gdx.files.internal("skin/game-ui001.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui001.atlas"));
+
+        table.setVisible(false);
+        table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        table.setSize(stage.getWidth(), stage.getHeight());
+        table.setOrigin(Align.center);
+        table.align(Align.center);
+        table.debug();
+        Table displayDeck = cardManager.getdisplayDeck();
+        displayDeck.setSize(stage.getWidth(), stage.getHeight()-50);
+        displayDeck.setOrigin(Align.center);
+        displayDeck.align(Align.center);
+        ScrollPane scrollPane = new ScrollPane(displayDeck, game.skin);
+        scrollPane.setSize(stage.getWidth(), stage.getHeight());
+        scrollPane.setOrigin(Align.center);
+        scrollPane.validate();
+        table.add("Deck").row();
+        table.add(scrollPane);
+
+        stage.addActor(table);
+
+
+
+
+
+        Table table1 = new Table();
+        table1.setWidth(stage.getWidth());
+        table1.align(Align.center|Align.top);
+        table1.setPosition(0, Gdx.graphics.getHeight());
+        Texture texture = new Texture(Gdx.files.internal("cards/uncommon_0_card.png"));
+        Image image = new Image(texture);
+        Image image1 = new Image(texture);
+        Image image2 = new Image(texture);
+        table1.add(image).size(image.getWidth(), image.getHeight());
+        table1.add(image1);
+        //stage.addActor(table1);
     }
 
     @Override
     public void render(float delta) {
-
         // clear screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -499,8 +591,9 @@ public class GameScreen implements Screen {
 
         game.batch.end();
         game.batch.begin();
-        stage.draw(); // renders actors on screen
         stage.act(delta);
+        stage.draw(); // renders actors on screen
+
         game.batch.end();
 
         // renders settingsscreen if enabled
