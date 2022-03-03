@@ -465,6 +465,7 @@ public class GameScreen implements Screen {
         game.skin = new Skin(Gdx.files.internal("skin/game-ui001.json"));
         game.skin.addRegions(new TextureAtlas("skin/game-ui001.atlas"));
 
+        //setup deckscreen scollwindow
         table.setVisible(false);
         table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         table.setSize(stage.getWidth(), stage.getHeight());

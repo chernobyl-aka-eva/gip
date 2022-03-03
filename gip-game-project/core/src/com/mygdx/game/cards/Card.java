@@ -21,11 +21,11 @@ public class Card extends Image {
     private TextureRegion textureRegion;
     private boolean exhaust;
     private boolean deckDisplay = false;
-    private final UUID uniqueIdentifier = UUID.randomUUID();
+    private final UUID uniqueIdentifier = UUID.randomUUID(); //generates unique number to identify card
     private int handslot = 0;
 
 
-
+    //constructor for card without exhaust
     public Card(int id, String title, CardType cardType, int cost, TextureRegion textureRegion) {
         this.id = id;
         this.title = title;
@@ -43,6 +43,7 @@ public class Card extends Image {
         initCard();
     }
 
+    //constructor for card with specified exhaust
     public Card(int id, String title, CardType cardType, int cost, TextureRegion textureRegion, boolean exhaust) {
         this.id = id;
         this.title = title;
@@ -61,6 +62,7 @@ public class Card extends Image {
         initCard();
     }
 
+    //constructor used to make a copy of a card (deckscreen)
     public Card(Card handCard) {
         this.id = handCard.getId();
         this.title = handCard.getTitle();
@@ -80,12 +82,14 @@ public class Card extends Image {
         initCard();
     }
 
+    //initializes card boundaries + adds listeners
     public void initCard() {
 
         setBounds(getX(), getY(), getWidth(), getHeight());
         //setTouchable(Touchable.enabled);
         this.addListener(new ClickListener() {
             @Override
+            //called when mouse hovers over card
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 super.enter(event, x, y, pointer, fromActor);
                 ScaleByAction sba = new ScaleByAction();
@@ -97,6 +101,7 @@ public class Card extends Image {
             }
 
             @Override
+            //called when mouse stops hovering over card
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 super.exit(event, x, y, pointer, toActor);
                 System.out.println("oi exit");
@@ -110,30 +115,37 @@ public class Card extends Image {
         });
     }
 
+    //card draw
     @Override
     public void draw (Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
     }
 
+    //card act
     @Override
     public void act(float delta) {
         super.act(delta);
     }
 
+    //is called when position has changed
     @Override
     protected void positionChanged() {
         super.positionChanged();
     }
 
+    //is called when scale has changed
     @Override
     protected void scaleChanged() {
         super.scaleChanged();
     }
 
+    //is called when size has changed
     @Override
     protected void sizeChanged() {
         super.sizeChanged();
     }
+
+    //getters & setters
 
     public int getId() {
         return id;

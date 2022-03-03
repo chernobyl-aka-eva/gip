@@ -27,13 +27,14 @@ public class CardManager {
     private GipGameProject game;
     private Stage stage;
 
+    //constructor
     public CardManager(Virus player, Enemy enemy, GipGameProject game, Stage stage) {
         this.player = player;
         this.enemy = enemy;
         this.game = game;
         this.stage = stage;
         playerCards = new Array<>();
-        hand = new Hand();
+        hand = new Hand(); //extends group
         drawPile = new Group();
         discardPile = new Group();
         exhaustPile = new Group();
@@ -47,6 +48,7 @@ public class CardManager {
     }
 
 
+    //adds card to players deck
     public void addCard(int id) {
         switch (id) {
             case 0: final Card strike = new Card(0, "Strike", CardType.ATTACK, 1, game.textureAtlas.findRegion("strike"));
@@ -57,6 +59,7 @@ public class CardManager {
 
     }
 
+    //method for playing cards (I'm gonna rewrite this 100%)
     public void playCard (int id) {
         boolean inhand = false;
         SnapshotArray<Actor> cardActors = hand.getChildren();
@@ -68,6 +71,8 @@ public class CardManager {
         }
 
     }
+
+    //draws card in hand (later called by turnManager)
     public void drawcard(int amount) {
         Random random = new Random();
         System.out.println(drawPile.getChildren().size);
@@ -78,6 +83,7 @@ public class CardManager {
         //hand.getChild(0).
     }
 
+    //rendering hand actor group on screen
     public void renderHand() {
         game.batch.begin();
         stage.act(Gdx.graphics.getDeltaTime());
@@ -86,11 +92,13 @@ public class CardManager {
         game.batch.end();
     }
 
+    //constructs deckscreen with all cards of player
     public Table getdisplayDeck()  {
         game.skin = new Skin(Gdx.files.internal("skin/game-ui001.json"));
         game.skin.addRegions(new TextureAtlas("skin/game-ui001.atlas"));
         Table displayDeck = new Table(game.skin);
         for (int i = 1; i < playerCards.size+1; i++) {
+            //creates copy of card to render in deckscreen (--> uses copy card constructor)
             Card cardCopy = new Card(playerCards.get(i-1));
 
 
@@ -100,6 +108,7 @@ public class CardManager {
 
 
 
+            //adds cards to table displaydeck (WIP)
             if (i % 5 == 0) {
                 displayDeck.add(cardCopy).size((cardCopy.getWidth()*cardCopy.getScaleX())-(cardCopy.getWidth()*cardCopy.getScaleX())/4,
                         (cardCopy.getHeight()*cardCopy.getScaleY())-(cardCopy.getHeight()*cardCopy.getScaleY())/4).row();
@@ -140,6 +149,7 @@ public class CardManager {
 
     }
 
+    //getters & setters
     public Virus getPlayer() {
         return player;
     }
