@@ -17,6 +17,7 @@ import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.effect.Effect;
 import com.mygdx.game.monster.Monster;
 import com.mygdx.game.item.Item;
+import com.mygdx.game.monster.MonsterManager;
 import com.mygdx.game.virus.Virus;
 
 import java.util.ArrayList;
@@ -48,11 +49,12 @@ public class GameScreen implements Screen {
     // virus
     private ArrayList<Effect> effects = new ArrayList<>(); // buffs and debuffs arraylist
     private Virus eva = new Virus("Eva", 33, 0);
+    private Monster philip = new Monster(0, "Philip", 100, 0);
     private ArrayList<Item> items = new ArrayList<>(); // items arraylist
 
     // enemy
     private ArrayList<Effect> effectsEnemy = new ArrayList<>(); // buffs and debuffs arraylist
-    private Monster philip = new Monster(1,"Philip", 100, 0);
+
 
     // effects
     private Effect strength = new Effect("strength", 1, 1, 5); // strength buff
@@ -96,6 +98,8 @@ public class GameScreen implements Screen {
     private final Settings settingsScreen;
 
     private CardManager cardManager;
+
+    private MonsterManager monsterManager;
 
     public GameScreen(final GipGameProject game) {
         this.game = game;

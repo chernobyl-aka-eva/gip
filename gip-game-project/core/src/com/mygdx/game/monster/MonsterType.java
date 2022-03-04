@@ -1,4 +1,6 @@
 package com.mygdx.game.monster;
 
-public class MonsterType {
+public enum MonsterType {
+    SINGLE,
+    MULTIPLE
 }

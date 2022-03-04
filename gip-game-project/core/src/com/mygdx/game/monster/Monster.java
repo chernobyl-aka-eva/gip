@@ -1,6 +1,14 @@
 package com.mygdx.game.monster;
 
-public class Monster {
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+
+public class Monster extends Actor {
 
     private int id;
 
@@ -13,12 +21,20 @@ public class Monster {
     private int health = 100;
     //block
     private int block = 0;
+    //texture region
+    private Animation<TextureRegion> monsterIdleAnimation;
+
 
     public Monster(int id, String name, int health, int block) {
         this.id = id;
         this.name = name;
         this.health = health;
         this.block = block;
+        this.monsterIdleAnimation = monsterIdleAnimation;
+
+        TextureAtlas monsterIdleSet = new TextureAtlas(Gdx.files.internal("animation/enemyidle.atlas"));
+        monsterIdleAnimation = new Animation<TextureRegion>(1 / 10f, monsterIdleSet.findRegions(name));
+        monsterIdleAnimation.setFrameDuration(1 / 10f);
     }
 
     public int getPositionX() {
