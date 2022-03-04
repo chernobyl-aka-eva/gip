@@ -15,7 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.effect.Effect;
-import com.mygdx.game.enemy.Enemy;
+import com.mygdx.game.monster.Monster;
 import com.mygdx.game.item.Item;
 import com.mygdx.game.virus.Virus;
 
@@ -52,7 +52,7 @@ public class GameScreen implements Screen {
 
     // enemy
     private ArrayList<Effect> effectsEnemy = new ArrayList<>(); // buffs and debuffs arraylist
-    private Enemy philip = new Enemy("Philip", 100, 0);
+    private Monster philip = new Monster(1,"Philip", 100, 0);
 
     // effects
     private Effect strength = new Effect("strength", 1, 1, 5); // strength buff
@@ -247,7 +247,7 @@ public class GameScreen implements Screen {
                 enemyIdleAnimation.getKeyFrame(0).getRegionHeight() * 6);
         nameAreaEnemy.setPosition(philip.getPositionX(), stage.getHeight() - 750);
 
-        final Label nameEnemy = new Label("Enemy", new Label.LabelStyle(game.font, Color.WHITE));
+        final Label nameEnemy = new Label("Monster", new Label.LabelStyle(game.font, Color.WHITE));
 
         x = nameAreaEnemy.getX() + (nameAreaEnemy.getWidth() - nameEnemy.getWidth()) / 2;
         y = nameAreaEnemy.getY() - 70;

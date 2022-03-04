@@ -10,7 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.SnapshotArray;
 import com.mygdx.game.GipGameProject;
-import com.mygdx.game.enemy.Enemy;
+import com.mygdx.game.monster.Monster;
 import com.mygdx.game.virus.Virus;
 
 import java.util.Random;
@@ -23,14 +23,14 @@ public class CardManager {
     private Group exhaustPile;
     private Group deckDisplay;
     private Virus player;
-    private Enemy enemy;
+    private Monster monster;
     private GipGameProject game;
     private Stage stage;
 
     //constructor
-    public CardManager(Virus player, Enemy enemy, GipGameProject game, Stage stage) {
+    public CardManager(Virus player, Monster monster, GipGameProject game, Stage stage) {
         this.player = player;
-        this.enemy = enemy;
+        this.monster = monster;
         this.game = game;
         this.stage = stage;
         playerCards = new Array<>();
@@ -154,8 +154,8 @@ public class CardManager {
         return player;
     }
 
-    public Enemy getEnemy() {
-        return enemy;
+    public Monster getEnemy() {
+        return monster;
     }
 
     public GipGameProject getGame() {
@@ -206,7 +206,7 @@ public class CardManager {
         this.player = player;
     }
 
-    public void setEnemy(Enemy enemy) {
-        this.enemy = enemy;
+    public void setEnemy(Monster monster) {
+        this.monster = monster;
     }
 }

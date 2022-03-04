@@ -1,22 +1,21 @@
-package com.mygdx.game.enemy;
+package com.mygdx.game.monster;
 
-public class Enemy {
+public class Monster {
+
+    private int id;
 
     //position and dimension
     private int positionX = 1480;
-
     // characterics
     //name
-    private String name = "Enemy";
+    private String name = "Monster";
     //health
     private int health = 100;
     //block
     private int block = 0;
-    //relics ?
 
-    //potions ?
-
-    public Enemy(String name, int health, int block) {
+    public Monster(int id, String name, int health, int block) {
+        this.id = id;
         this.name = name;
         this.health = health;
         this.block = block;
