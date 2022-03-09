@@ -4,22 +4,17 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.effect.Effect;
-import com.mygdx.game.monster.Monster;
 import com.mygdx.game.item.Item;
-import com.mygdx.game.monster.MonsterManager;
-import com.mygdx.game.virus.Virus;
-import com.mygdx.game.virus.VirusManager;
 
 import java.util.ArrayList;
 
@@ -39,6 +34,8 @@ public class GameScreen implements Screen {
 
     private boolean showMap; // determines whether map should be shown
     private boolean previousState = true; // previous state of map button
+
+    private final Table table;
 
     // effects texture regions
     private ArrayList<TextureRegion> icons = new ArrayList<>();
@@ -154,7 +151,7 @@ public class GameScreen implements Screen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (!settingsScreen.getSettingsGroup().isVisible() && !pausescreen) {
+                if (!settingsScreen.getSettingsGroup().isVisible() && !pausescreen && !table.isVisible()) {
                     if (previousState) {
                         showMap = true;
                         previousState = false;
@@ -329,9 +326,11 @@ public class GameScreen implements Screen {
         deck.setPosition(map.getX() + map.getWidth() + 5, map.getY());
 
         final Group deckScreenGroup = new Group();
-        final Table table = new Table(game.skin);
+        table = new Table(game.skin);
 
-        /*deck.addListener(new InputListener() {
+
+        deck.addListener(new InputListener() {
+            boolean showDeck = false;
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 
@@ -339,54 +338,27 @@ public class GameScreen implements Screen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (table.isVisible()) {
+                if (showDeck) {
+                    showDeck = false;
                     table.setVisible(false);
                     turnManager.getCardManager().getMonsterManager().setVisible(true);
                     turnManager.getCardManager().getVirusManager().setVisible(true);
-                    deckScreenGroup.setVisible(true);
-                } else {
-                    table.setVisible(true);
-                    turnManager.getCardManager().getMonsterManager().setVisible(false);
-                    turnManager.getCardManager().getVirusManager().setVisible(false);
                     deckScreenGroup.setVisible(false);
+
+                } else {
+                    if (!mapScreenGroup.isVisible()) {
+                        showDeck = true;
+                        table.setVisible(true);
+                        turnManager.getCardManager().getMonsterManager().setVisible(false);
+                        turnManager.getCardManager().getVirusManager().setVisible(false);
+                        deckScreenGroup.setVisible(true);
+                    }
                 }
                 return true;
             }
-        });*/
-
-        /*deck.addListener(new InputListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-            }
-
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                table.setVisible(true);
-                turnManager.getCardManager().getMonsterManager().setVisible(false);
-                turnManager.getCardManager().getVirusManager().setVisible(false);
-                deckScreenGroup.setVisible(false);
-                return true;
-            }
-
         });
 
-        gameScreenGroup.addActor(deck);*/
-
-        deck.addListener(new InputListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-
-            }
-
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                table.setVisible(true);
-                deckScreenGroup.setVisible(true);
-                return true;
-            }
-        });
-
-        gameScreenGroup.addActor(deck);
+        stage.addActor(deck);
 
 
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
@@ -425,6 +397,9 @@ public class GameScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 deckScreenGroup.setVisible(false);
                 table.setVisible(false);
+                gameScreenGroup.setVisible(true);
+                turnManager.getCardManager().getMonsterManager().setVisible(true);
+                turnManager.getCardManager().getVirusManager().setVisible(true);
                 return true;
             }
         });

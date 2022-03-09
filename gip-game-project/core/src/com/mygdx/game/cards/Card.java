@@ -141,7 +141,9 @@ public class Card extends Image {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     super.enter(event, x, y, pointer, fromActor);
                     if (containingTable!=null) {
-
+                        containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() + currentCard.getWidth()/4);
+                        containingTable.invalidate();
+                        containingTable.validate();
                     }
 
                 }
@@ -150,7 +152,9 @@ public class Card extends Image {
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     super.exit(event, x, y, pointer, toActor);
                     if (containingTable!=null) {
-
+                        containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() - currentCard.getWidth()/4);
+                        containingTable.invalidate();
+                        containingTable.validate();
                     }
 
                 }
