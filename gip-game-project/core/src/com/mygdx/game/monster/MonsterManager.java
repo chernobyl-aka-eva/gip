@@ -1,29 +1,22 @@
 package com.mygdx.game.monster;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.GipGameProject;
-import com.mygdx.game.virus.Virus;
+
 
 public class MonsterManager {
     private Group monsterGroup;
-    private Virus player;
-    private Monster monster;
     private Stage stage;
     private GipGameProject game;
-    private ProgressBar monsterHealthBar;
-    private final Label monsterName;
 
-    public MonsterManager(GipGameProject game, Virus player, Monster monster, Stage stage) {
-        this.player = player;
-        this.monster = monster;
+
+
+    public MonsterManager(GipGameProject game, Stage stage) {
         this.stage = stage;
         this.game = game;
 
@@ -33,32 +26,49 @@ public class MonsterManager {
         game.textureAtlas = new TextureAtlas(Gdx.files.internal("animation/enemyidle.atlas"));
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
 
-        // Health Bar
-        monsterHealthBar = new ProgressBar(0, 100, 1, false, game.skin);
-        monsterName = new Label()
 
-        stage.addActor(monsterGroup); monsterGroup.setVisible(false);
+        stage.addActor(monsterGroup);
     }
 
     public void addMonster(int monsterId){
-        switch (monsterId) {
-            case 0:
-                final Monster single = new Monster(
+        switch (monsterId) { //545
+            case 0: final Monster single = new Monster(
+                        game,
                         0,
                         "Single",
                         100,
-                        0
-                );
-                monsterHealthBar.setValue(single.getHealth());
-                monsterGroup.addActor(single);
-                monsterGroup.addActor(monsterHealthBar);
+                        0,
+                             stage
+                ); monsterGroup.addActor(single);
 
         }
     }
 
+    public void drawMonster(){
+        game.batch.begin();
+        stage.act(Gdx.graphics.getDeltaTime());
+        stage.draw();
+        game.batch.end();
+    }
 
+    public void setVisible(boolean isVisible){
+        if (isVisible){
+            for (Actor actor:monsterGroup.getChildren()){
+                if (actor instanceof Monster){
+                    Monster monster = (Monster) actor;
+                    monster.setVisible(true);
+                }
+            }
+        }else{
+            for (Actor actor:monsterGroup.getChildren()){
+                if (actor instanceof Monster){
+                    Monster monster = (Monster) actor;
+                    monster.setVisible(false);
+                }
+            }
+        }
+    }
 
-
-
+    // getters and setters
 
 }

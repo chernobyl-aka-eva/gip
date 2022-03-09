@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleByAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
@@ -23,10 +24,12 @@ public class Card extends Image {
     private boolean deckDisplay = false;
     private final UUID uniqueIdentifier = UUID.randomUUID(); //generates unique number to identify card
     private int handslot = 0;
-
+    private float timeAdded;
+    private Table containingTable;
+    private CardManager cardManager;
 
     //constructor for card without exhaust
-    public Card(int id, String title, CardType cardType, int cost, TextureRegion textureRegion) {
+    public Card(int id, String title, CardType cardType, int cost, TextureRegion textureRegion, float timeAdded) {
         this.id = id;
         this.title = title;
         this.cardType = cardType;
@@ -40,11 +43,14 @@ public class Card extends Image {
         super.setName(title);
         this.setWidth(textureRegion.getRegionWidth());
         this.setHeight(textureRegion.getRegionHeight());
+        this.timeAdded = timeAdded;
+        this.deckDisplay = false;
+        this.containingTable = null;
         initCard();
     }
 
     //constructor for card with specified exhaust
-    public Card(int id, String title, CardType cardType, int cost, TextureRegion textureRegion, boolean exhaust) {
+    public Card(int id, String title, CardType cardType, int cost, TextureRegion textureRegion, boolean exhaust, float timeAdded) {
         this.id = id;
         this.title = title;
         this.cardType = cardType;
@@ -59,6 +65,9 @@ public class Card extends Image {
         this.setWidth(textureRegion.getRegionWidth());
         this.setHeight(textureRegion.getRegionHeight());
         this.setScale(super.getScaleX(), super.getScaleY());
+        this.timeAdded = timeAdded;
+        this.deckDisplay = false;
+        this.containingTable = null;
         initCard();
     }
 
@@ -79,6 +88,9 @@ public class Card extends Image {
         this.setWidth(textureRegion.getRegionWidth());
         this.setHeight(textureRegion.getRegionHeight());
         this.setScale(super.getScaleX(), super.getScaleY());
+        this.timeAdded = handCard.getTimeAdded();
+        this.deckDisplay = !handCard.deckDisplay;
+        this.containingTable = null;
         initCard();
     }
 
@@ -87,32 +99,64 @@ public class Card extends Image {
 
         setBounds(getX(), getY(), getWidth(), getHeight());
         //setTouchable(Touchable.enabled);
-        this.addListener(new ClickListener() {
-            @Override
-            //called when mouse hovers over card
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                super.enter(event, x, y, pointer, fromActor);
-                ScaleByAction sba = new ScaleByAction();
-                sba.setAmount(0.2F);
-                sba.setDuration(.2F);
-                setOrigin(Align.center);
-                setAlign(Align.center);
-                Card.this.addAction(sba);
-            }
 
-            @Override
-            //called when mouse stops hovering over card
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                super.exit(event, x, y, pointer, toActor);
-                System.out.println("oi exit");
-                ScaleByAction sba = new ScaleByAction();
-                sba.setAmount(-0.2F);
-                sba.setDuration(.2F);
-                setOrigin(Align.center);
-                setAlign(Align.center);
-                Card.this.addAction(sba);
-            }
-        });
+        if (deckDisplay) {
+            this.addListener(new ClickListener() {
+                boolean exited = true;
+
+                @Override
+                //called when mouse hovers over card
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    super.enter(event, x, y, pointer, fromActor);
+                    ScaleByAction sba = new ScaleByAction();
+                    sba.setAmount(0.1F);
+                    sba.setDuration(.2F);
+                    setOrigin(Align.center);
+                    setAlign(Align.center);
+                    Card.this.addAction(sba);
+                    System.out.println("enter");
+                    exited = false;
+
+                }
+
+                @Override
+                //called when mouse stops hovering over card
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    super.exit(event, x, y, pointer, toActor);
+                    System.out.println("oi exit");
+                    ScaleByAction sba = new ScaleByAction();
+                    sba.setAmount(-0.1F);
+                    sba.setDuration(.2F);
+                    setOrigin(Align.center);
+                    setAlign(Align.center);
+                    Card.this.addAction(sba);
+                    exited = true;
+
+                }
+            });
+        } else {
+            final Card currentCard = this;
+            this.addListener(new ClickListener() {
+                @Override
+                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                    super.enter(event, x, y, pointer, fromActor);
+                    if (containingTable!=null) {
+
+                    }
+
+                }
+
+                @Override
+                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                    super.exit(event, x, y, pointer, toActor);
+                    if (containingTable!=null) {
+
+                    }
+
+                }
+            });
+        }
+
     }
 
     //card draw
@@ -146,6 +190,7 @@ public class Card extends Image {
     }
 
     //getters & setters
+
 
     public int getId() {
         return id;
@@ -187,16 +232,24 @@ public class Card extends Image {
         this.textureRegion = textureRegion;
     }
 
-    public UUID getUniqueIdentifier() {
-        return uniqueIdentifier;
-    }
-
     public boolean isExhaust() {
         return exhaust;
     }
 
     public void setExhaust(boolean exhaust) {
         this.exhaust = exhaust;
+    }
+
+    public boolean isDeckDisplay() {
+        return deckDisplay;
+    }
+
+    public void setDeckDisplay(boolean deckDisplay) {
+        this.deckDisplay = deckDisplay;
+    }
+
+    public UUID getUniqueIdentifier() {
+        return uniqueIdentifier;
     }
 
     public int getHandslot() {
@@ -207,6 +260,19 @@ public class Card extends Image {
         this.handslot = handslot;
     }
 
+    public float getTimeAdded() {
+        return timeAdded;
+    }
 
+    public void setTimeAdded(float timeAdded) {
+        this.timeAdded = timeAdded;
+    }
 
+    public Table getContainingTable() {
+        return containingTable;
+    }
+
+    public void setContainingTable(Table containingTable) {
+        this.containingTable = containingTable;
+    }
 }

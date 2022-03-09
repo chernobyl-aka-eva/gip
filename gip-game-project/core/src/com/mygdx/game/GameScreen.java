@@ -19,6 +19,7 @@ import com.mygdx.game.monster.Monster;
 import com.mygdx.game.item.Item;
 import com.mygdx.game.monster.MonsterManager;
 import com.mygdx.game.virus.Virus;
+import com.mygdx.game.virus.VirusManager;
 
 import java.util.ArrayList;
 
@@ -48,8 +49,7 @@ public class GameScreen implements Screen {
 
     // virus
     private ArrayList<Effect> effects = new ArrayList<>(); // buffs and debuffs arraylist
-    private Virus eva = new Virus("Eva", 33, 0);
-    private Monster philip = new Monster(0, "Philip", 100, 0);
+
     private ArrayList<Item> items = new ArrayList<>(); // items arraylist
 
     // enemy
@@ -62,19 +62,6 @@ public class GameScreen implements Screen {
 
     // item
     private Item dataDisk = new Item("data-disk", "common", "Gain 100 megabytes after every combat");
-
-    // animation object virus
-    private Animation<TextureRegion> idleAnimation;
-
-    // animation object enemy
-    private Animation<TextureRegion> enemyIdleAnimation;
-
-    // health bars
-    private ProgressBar health;
-    private ProgressBar healthEnemy;
-
-    private float x;
-    private float y;
 
     // stage for drawing actors
     private Stage stage;
@@ -91,15 +78,17 @@ public class GameScreen implements Screen {
     private Label healthVirus;
     private Label moneyValue;
 
+    private int money;
+    private Label sessionTimer;
+
     // group for UI so they can be shown and hidden
     private final Group pauseGroup;
     private final TextureRegion pausescreenBackground;
     private boolean pausescreen; // decides whether pause screen should be shown
     private final Settings settingsScreen;
 
-    private CardManager cardManager;
-
-    private MonsterManager monsterManager;
+    // turnmanager (later sessionmanager) ☻
+    private TurnManager turnManager;
 
     public GameScreen(final GipGameProject game) {
         this.game = game;
@@ -122,6 +111,9 @@ public class GameScreen implements Screen {
         // groups determine which UI should be shown on screen
         gameScreenGroup = new Group();
         mapScreenGroup = new Group();
+
+        // initialize turnmanager
+        turnManager = new TurnManager(game, stage);
 
 
         // game background
@@ -168,11 +160,15 @@ public class GameScreen implements Screen {
                         previousState = false;
                         gameScreenGroup.setVisible(false);
                         mapScreenGroup.setVisible(true);
+                        turnManager.getCardManager().getMonsterManager().setVisible(false);
+                        turnManager.getCardManager().getVirusManager().setVisible(false);
                     } else {
                         showMap = false;
                         previousState = true;
                         gameScreenGroup.setVisible(true);
                         mapScreenGroup.setVisible(false);
+                        turnManager.getCardManager().getMonsterManager().setVisible(true);
+                        turnManager.getCardManager().getVirusManager().setVisible(true);
                     }
                 }
                 return true;
@@ -194,99 +190,14 @@ public class GameScreen implements Screen {
                 previousState = true;
                 mapScreenGroup.setVisible(false);
                 gameScreenGroup.setVisible(true);
+                turnManager.getCardManager().getMonsterManager().setVisible(true);
+                turnManager.getCardManager().getVirusManager().setVisible(true);
                 return true;
             }
         });
 
         mapScreenGroup.addActor(mapReturn); // adds return button to group
         stage.addActor(mapScreenGroup); // adds group to stage
-
-        // atlas for virus and enemy textures (animation)
-        TextureAtlas idleSet = new TextureAtlas(Gdx.files.internal("animation/idle.atlas"));
-        idleAnimation = new Animation<TextureRegion>(1 / 10f, idleSet.findRegions("idle"));
-        idleAnimation.setFrameDuration(1 / 10f);
-
-        TextureAtlas enemyIdleSet = new TextureAtlas(Gdx.files.internal("animation/enemyidle.atlas"));
-        enemyIdleAnimation = new Animation<TextureRegion>(1 / 10f, enemyIdleSet.findRegions("enemyidle"));
-        enemyIdleAnimation.setFrameDuration(1 / 10f);
-
-        // ghost actor (detects mouse hover to show name)
-        Actor nameAreaVirus = new Actor();
-
-        nameAreaVirus.setSize(idleAnimation.getKeyFrame(0).getRegionWidth() * 6, // sets size of area to check
-                idleAnimation.getKeyFrame(0).getRegionHeight() * 6);
-
-        nameAreaVirus.setPosition(eva.getPositionX(), stage.getHeight() - 750); // sets position of checking area
-
-        final Label nameVirus = new Label("Virus", new Label.LabelStyle(game.font, Color.WHITE)); // label to show name
-
-        x = nameAreaVirus.getX() + (nameAreaVirus.getWidth() - nameVirus.getWidth()) / 2;
-        y = nameAreaVirus.getY() - 70;
-        nameVirus.setPosition(x, y); // sets position of label
-
-        // adds actor to group
-        gameScreenGroup.addActor(nameVirus);
-        // player name invisible by default
-        nameVirus.setVisible(false);
-
-        nameAreaVirus.addListener(new ClickListener() { // detects if hovering over player
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                nameVirus.setVisible(true);
-                game.log.debug("hover " + idleAnimation.getKeyFrame(0).getRegionWidth() + " " + idleAnimation.getKeyFrame(0).getRegionHeight());
-            }
-
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                nameVirus.setVisible(false);
-                game.log.debug("not hover");
-            }
-        });
-
-        stage.addActor(nameAreaVirus); // adds actor to stage
-
-        Actor nameAreaEnemy = new Actor();
-
-        nameAreaEnemy.setSize(enemyIdleAnimation.getKeyFrame(0).getRegionWidth() * 6,
-                enemyIdleAnimation.getKeyFrame(0).getRegionHeight() * 6);
-        nameAreaEnemy.setPosition(philip.getPositionX(), stage.getHeight() - 750);
-
-        final Label nameEnemy = new Label("Monster", new Label.LabelStyle(game.font, Color.WHITE));
-
-        x = nameAreaEnemy.getX() + (nameAreaEnemy.getWidth() - nameEnemy.getWidth()) / 2;
-        y = nameAreaEnemy.getY() - 70;
-        nameEnemy.setPosition(x, y);
-
-        gameScreenGroup.addActor(nameEnemy);
-
-        nameEnemy.setVisible(false);
-        nameAreaEnemy.addListener(new ClickListener() { // detects if hovering over enemy
-            @Override
-            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                nameEnemy.setVisible(true);
-                game.log.debug("hover " + enemyIdleAnimation.getKeyFrame(0).getRegionWidth() + " " + enemyIdleAnimation.getKeyFrame(0).getRegionHeight());
-            }
-
-            @Override
-            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                nameEnemy.setVisible(false);
-                game.log.debug("nein hover");
-            }
-        });
-
-        stage.addActor(nameAreaEnemy); // adds actor to stage
-
-        // initializing health bar virus
-        health = new ProgressBar(0, eva.getHealth(), 1, false, game.skin); // health bar virus
-        health.setValue(eva.getHealth()); // sets current health
-        health.setPosition(eva.getPositionX(), stage.getHeight() - 780); // sets position of health bar
-        gameScreenGroup.addActor(health); // adds actor to group
-
-        // initializing health bar enemy
-        healthEnemy = new ProgressBar(0, 100, 1, false, game.skin); // health bar enemy
-        healthEnemy.setValue(philip.getHealth()); // sets current health
-        healthEnemy.setPosition(philip.getPositionX(), stage.getHeight() - 780); // sets position of health bar
-        gameScreenGroup.addActor(healthEnemy); // adds actor to group
 
         stage.addActor(gameScreenGroup); // adds group to stage
 
@@ -297,7 +208,8 @@ public class GameScreen implements Screen {
         game.textureAtlas = new TextureAtlas(Gdx.files.internal("other/game-ui-2.atlas"));
 
         // health
-        healthVirus = new Label(String.valueOf((int) health.getValue()), new Label.LabelStyle(game.font, Color.RED));
+        //healthVirus = new Label(String.valueOf((int) virusManager.getPlayer().getMaxHealth()), new Label.LabelStyle(game.font, Color.RED));
+        healthVirus = new Label(String.valueOf((int) turnManager.getCardManager().getVirusManager().getPlayer().getMaxHealth()), new Label.LabelStyle(game.font, Color.RED));
         healthIcon = game.textureAtlas.findRegion("health");
         healthVirus.setPosition(100, stage.getHeight() - healthIcon.getRegionHeight() / 2 - 30);
 
@@ -308,6 +220,14 @@ public class GameScreen implements Screen {
 
         stage.addActor(healthVirus); // adds actor to stage
         stage.addActor(moneyValue); // adds actor to stage
+
+        // session timer
+        sessionTimer = new Label("00:" + String.valueOf((int)elapsed_time), new Label.LabelStyle(game.font, Color.WHITE));
+        sessionTimer.setPosition(map.getX()-100, map.getY());
+
+        stage.addActor(sessionTimer);
+
+
 
         // disable pausescreen
         pausescreen = false;
@@ -350,7 +270,7 @@ public class GameScreen implements Screen {
         final Button settings = new TextButton("Settings", game.skin, "pausescreen-button"); // settings button in pause menu
         settings.setPosition(resume.getX(), resume.getY() - resume.getHeight() - 35); // sets position of settings button
 
-        Button quit = new TextButton("Main Menu", game.skin, "pausescreen-button"); // auit button in pause menu
+        Button quit = new TextButton("Main Menu", game.skin, "pausescreen-button"); // quit button in pause menu
         quit.setPosition(settings.getX(), settings.getY() - resume.getHeight() - 35); // sets position of quit button
 
         // pause menu button listeners
@@ -402,23 +322,16 @@ public class GameScreen implements Screen {
         // adding group to stage
         stage.addActor(pauseGroup);
 
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui001.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui001.atlas"));
-        final Table table = new Table(game.skin);
-
-
-
-
-
-
-
-
-
+        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
         final Button deck = new Button(game.skin, "deck");
-        deck.setPosition(1500, 100);
+        deck.setPosition(map.getX() + map.getWidth() + 5, map.getY());
 
-        deck.addListener(new InputListener() {
+        final Group deckScreenGroup = new Group();
+        final Table table = new Table(game.skin);
+
+        /*deck.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 
@@ -428,9 +341,47 @@ public class GameScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (table.isVisible()) {
                     table.setVisible(false);
+                    turnManager.getCardManager().getMonsterManager().setVisible(true);
+                    turnManager.getCardManager().getVirusManager().setVisible(true);
+                    deckScreenGroup.setVisible(true);
                 } else {
                     table.setVisible(true);
+                    turnManager.getCardManager().getMonsterManager().setVisible(false);
+                    turnManager.getCardManager().getVirusManager().setVisible(false);
+                    deckScreenGroup.setVisible(false);
                 }
+                return true;
+            }
+        });*/
+
+        /*deck.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                table.setVisible(true);
+                turnManager.getCardManager().getMonsterManager().setVisible(false);
+                turnManager.getCardManager().getVirusManager().setVisible(false);
+                deckScreenGroup.setVisible(false);
+                return true;
+            }
+
+        });
+
+        gameScreenGroup.addActor(deck);*/
+
+        deck.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                table.setVisible(true);
+                deckScreenGroup.setVisible(true);
                 return true;
             }
         });
@@ -438,48 +389,21 @@ public class GameScreen implements Screen {
         gameScreenGroup.addActor(deck);
 
 
-
-        cardManager = new CardManager(eva, philip, game, stage);
-        cardManager.addCard(0);
-        cardManager.addCard(1);
-        cardManager.addCard(0);
-        cardManager.addCard(1);
-        cardManager.addCard(0);
-
-        cardManager.addCard(0);
-        cardManager.addCard(1);
-        cardManager.addCard(0);
-        cardManager.addCard(1);
-        cardManager.addCard(0);
-        cardManager.addCard(0);
-        cardManager.addCard(1);
-        cardManager.addCard(0);
-        cardManager.addCard(1);
-        cardManager.addCard(0);
-        cardManager.addCard(0);
-        cardManager.addCard(1);
-        cardManager.addCard(0);
-        cardManager.addCard(1);
-        cardManager.addCard(0);
-        //cardManager.drawcard(2);
-
-        gameScreenGroup.addActor(cardManager.getHand());
-
-
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui001.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui001.atlas"));
+        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
         //setup deckscreen scollwindow
         table.setVisible(false);
         table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        table.setSize(stage.getWidth(), stage.getHeight());
+        table.setSize(stage.getWidth(), stage.getHeight()-60);
         table.setOrigin(Align.center);
         table.align(Align.center);
-        table.debug();
-        Table displayDeck = cardManager.getdisplayDeck();
-        displayDeck.setSize(stage.getWidth(), stage.getHeight()-50);
+        //table.debug();
+        Table displayDeck = turnManager.getCardManager().getdisplayDeck();
+        displayDeck.setSize(stage.getWidth(), stage.getHeight());
         displayDeck.setOrigin(Align.center);
         displayDeck.align(Align.center);
+        displayDeck.setBounds(displayDeck.getX(), displayDeck.getY(), stage.getWidth(), stage.getHeight()-60);
         ScrollPane scrollPane = new ScrollPane(displayDeck, game.skin);
         scrollPane.setSize(stage.getWidth(), stage.getHeight());
         scrollPane.setOrigin(Align.center);
@@ -488,22 +412,27 @@ public class GameScreen implements Screen {
         table.add(scrollPane);
 
         stage.addActor(table);
+        deckScreenGroup.addActor(table);
 
 
+        Button deckReturn = new Button(game.skin, "return");
+        deckReturn.setPosition(stage.getWidth()-deckReturn.getWidth(), 100);
+        deckReturn.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
 
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                deckScreenGroup.setVisible(false);
+                table.setVisible(false);
+                return true;
+            }
+        });
 
+        deckScreenGroup.setVisible(false);
+        deckScreenGroup.addActor(deckReturn);
+        stage.addActor(deckScreenGroup);
 
-        Table table1 = new Table();
-        table1.setWidth(stage.getWidth());
-        table1.align(Align.center|Align.top);
-        table1.setPosition(0, Gdx.graphics.getHeight());
-        Texture texture = new Texture(Gdx.files.internal("cards/uncommon_0_card.png"));
-        Image image = new Image(texture);
-        Image image1 = new Image(texture);
-        Image image2 = new Image(texture);
-        table1.add(image).size(image.getWidth(), image.getHeight());
-        table1.add(image1);
-        //stage.addActor(table1);
     }
 
     @Override
@@ -514,9 +443,21 @@ public class GameScreen implements Screen {
         // delta = the time in seconds since last render
         elapsed_time += delta;
 
-        // getting the right frame for the animation
-        TextureRegion currentFrame = idleAnimation.getKeyFrame(elapsed_time, true);
-        TextureRegion currentFrameEnemy = enemyIdleAnimation.getKeyFrame(elapsed_time, true);
+        turnManager.getCardManager().setElapsed_time(elapsed_time);
+
+        int mins = (int) elapsed_time/60;
+        int secs = (int) elapsed_time%60;
+
+        if (secs < 10) {
+            sessionTimer.setText(mins + ":0" + secs);
+        } else {
+            sessionTimer.setText(mins + ":" + secs);
+        }
+
+
+
+        moneyValue.setText(money);
+
 
         game.batch.begin();
 
@@ -527,25 +468,11 @@ public class GameScreen implements Screen {
                 1920,
                 1080);
 
-        // draw virus
-        game.batch.draw(currentFrame,
-                eva.getPositionX(),
-                stage.getHeight() - 750,
-                currentFrame.getRegionWidth() * 6,
-                currentFrame.getRegionHeight() * 6);
-
-        // draw enemy
-        game.batch.draw(currentFrameEnemy,
-                philip.getPositionX(),
-                stage.getHeight() - 750,
-                currentFrameEnemy.getRegionWidth() * 6,
-                currentFrameEnemy.getRegionHeight() * 6);
-
         // renders buffs and debuffs virus
         if (effects.size() > 0) {
             int padding = 0;
             for (int i = 0; i < effects.size(); i++) {
-                game.batch.draw(icons.get(i), eva.getPositionX() + padding, 1080 - 805);
+                game.batch.draw(icons.get(i), 400 + padding, 1080 - 805);
                 padding += 25;
             }
         }
@@ -554,7 +481,7 @@ public class GameScreen implements Screen {
         if (effectsEnemy.size() > 0) {
             int padding = 0;
             for (int i = 0; i < effectsEnemy.size(); i++) {
-                game.batch.draw(iconsEnemy.get(i), philip.getPositionX() + padding, 1080 - 805);
+                game.batch.draw(iconsEnemy.get(i), 1480 + padding, 1080 - 805);
                 padding += 25;
             }
         }
@@ -595,9 +522,16 @@ public class GameScreen implements Screen {
         }
 
         game.batch.end();
+
+        turnManager.drawMonster();
+        turnManager.drawVirus();
+
+
         game.batch.begin();
         stage.act(delta);
         stage.draw(); // renders actors on screen
+
+
 
         game.batch.end();
 
@@ -606,7 +540,8 @@ public class GameScreen implements Screen {
             settingsScreen.render(delta, gameScreenGroup);
         }
 
-        cardManager.renderHand();
+        turnManager.getCardManager().renderHand();
+
 
 
     }

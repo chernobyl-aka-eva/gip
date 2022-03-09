@@ -2,96 +2,110 @@
 game-ui.png
 size: 2048, 2048
 format: RGBA8888
-filter: Linear, Linear
+filter: Nearest, Nearest
 repeat: none
 background
-  rotate: false
-  xy: 1, 1
+  rotate: true
+  xy: 1627, 998
   size: 186, 6
   orig: 186, 6
+  offset: 0, 0
+  index: -1
+deck-background
+  rotate: false
+  xy: 2, 995
+  size: 1623, 883
+  orig: 1623, 883
+  offset: 0, 0
+  index: -1
+deck-button-00
+  rotate: false
+  xy: 1756, 1753
+  size: 51, 51
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+deck-button-01
+  rotate: false
+  xy: 1308, 942
+  size: 51, 51
+  orig: 51, 51
   offset: 0, 0
   index: -1
 knob
   rotate: false
-  xy: 1494, 1750
+  xy: 801, 908
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
-map-button
+map-button-00
   rotate: false
-  xy: 695, 85
+  xy: 696, 350
+  size: 51, 51
+  orig: 51, 51
+  offset: 0, 0
+  index: -1
+map-button-01
+  rotate: false
+  xy: 1983, 1827
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 pause-0
   rotate: false
-  xy: 753, 1204
+  xy: 13, 238
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pause-1
   rotate: false
-  xy: 1307, 1667
+  xy: 1635, 1150
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pause-button-0
   rotate: false
-  xy: 800, 1703
+  xy: 2, 274
   size: 692, 127
   orig: 692, 127
   offset: 0, 0
   index: -1
 pause-button-1
-  rotate: false
-  xy: 1, 9
+  rotate: true
+  xy: 1627, 1186
   size: 692, 127
   orig: 692, 127
   offset: 0, 0
   index: -1
 pausescreen-background
   rotate: false
-  xy: 1, 1240
+  xy: 2, 403
   size: 797, 590
   orig: 797, 590
   offset: 0, 0
   index: -1
+pcsenior
+  rotate: false
+  xy: 801, 916
+  size: 505, 77
+  orig: 505, 77
+  offset: 0, 0
+  index: -1
 return-button
   rotate: false
-  xy: 1494, 1758
+  xy: 1756, 1806
   size: 225, 72
   orig: 225, 72
   offset: 0, 0
   index: -1
-Capture
+scrollBar
   rotate: false
-  xy: 800, 1320
-  size: 210, 302
-  orig: 210, 302
-  offset: 0, 0
-  index: -1
-Common Card Template
-  rotate: false
-  xy: 1, 138
-  size: 750, 1100
-  orig: 750, 1100
-  offset: 0, 0
-  index: -1
-pcsenior
-  rotate: false
-  xy: 800, 1624
-  size: 505, 77
-  orig: 505, 77
-  offset: 0, 0
-  index: -1
-pcsenior
-  rotate: false
-  xy: 800, 1624
-  size: 505, 77
-  orig: 505, 77
+  xy: 2, 2
+  size: 9, 270
+  orig: 9, 270
   offset: 0, 0
   index: -1

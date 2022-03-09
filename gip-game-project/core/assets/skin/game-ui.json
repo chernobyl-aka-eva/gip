@@ -34,8 +34,8 @@ com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
-		up: map-button
-		checked: map-button
+		up: map-button-00
+		over: map-button-01
 	}
 	return: {
 		up: return-button
@@ -43,6 +43,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	pause: {
 		up: pause-0
 		over: pause-1
+	}
+	deck: {
+		up: deck-button-00
+		over: deck-button-01
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
@@ -55,6 +59,12 @@ com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {
 		background: background
 		knobBefore: knob-tile
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: pausescreen-background
+		vScrollKnob: scrollBar
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
@@ -77,6 +87,10 @@ com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	default: {
 		background: pausescreen-background
+		titleFont: pcsenior
+	}
+	deck: {
+		background: deck-background
 		titleFont: pcsenior
 	}
 }

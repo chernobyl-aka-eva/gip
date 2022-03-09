@@ -3,71 +3,76 @@ package com.mygdx.game.cards;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.SnapshotArray;
 import com.mygdx.game.GipGameProject;
-import com.mygdx.game.monster.Monster;
-import com.mygdx.game.virus.Virus;
+import com.mygdx.game.monster.MonsterManager;
+import com.mygdx.game.virus.VirusManager;
 
 import java.util.Random;
 
 public class CardManager {
     private Array<Card> playerCards;
-    private Hand hand;
-    private Group drawPile;
-    private Group discardPile;
-    private Group exhaustPile;
-    private Group deckDisplay;
-    private Virus player;
-    private Monster monster;
+    private Table handTable;
+    private Array<Card> hand;
+    private Array<Card> drawPile;
+    private Array<Card> discardPile;
+    private Array<Card> exhaustPile;
+    private VirusManager virusManager;
+    private MonsterManager monsterManager;
+
     private GipGameProject game;
     private Stage stage;
+    private float elapsed_time;
 
     //constructor
-    public CardManager(Virus player, Monster monster, GipGameProject game, Stage stage) {
-        this.player = player;
-        this.monster = monster;
+    public CardManager(GipGameProject game, Stage stage) {
         this.game = game;
         this.stage = stage;
+
+        virusManager = new VirusManager(game, stage);
+        monsterManager = new MonsterManager(game, stage);
+
         playerCards = new Array<>();
-        hand = new Hand(); //extends group
-        drawPile = new Group();
-        discardPile = new Group();
-        exhaustPile = new Group();
+        hand = new Hand(this);
+        drawPile = new Array<>();
+        discardPile = new Array<>();
+        exhaustPile = new Array<>();
         game.textureAtlas = new TextureAtlas("cards/cards.atlas");
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // skin
-        stage.addActor(hand);
-        stage.addActor(drawPile); drawPile.setVisible(false);
-        stage.addActor(discardPile); discardPile.setVisible(false);
-        stage.addActor(exhaustPile); exhaustPile.setVisible(false);
-        hand.setScale(0.5F);
+
+        handTable = new Table();
+        handTable.setBounds(0, 0, Gdx.graphics.getWidth(), 100);
+        handTable.center().top().align(Align.center);
+        //handTable.debugTable();
+        //handTable.debugActor();
+        handTable.setName("handTable");
+        stage.addActor(handTable);
     }
+
 
 
     //adds card to players deck
     public void addCard(int id) {
         switch (id) {
-            case 0: final Card strike = new Card(0, "Strike", CardType.ATTACK, 1, game.textureAtlas.findRegion("strike"));
-            playerCards.add(strike); drawPile.addActor(strike); strike.setScale(0.8F); /*strike.getImage().setScale(strike.getScaleX(), strike.getScaleY()); */ break;
-            case 1: final Card defend = new Card(1,"Defend", CardType.SKILL, 1, game.textureAtlas.findRegion("defend"));
-            playerCards.add(defend); drawPile.addActor(defend); defend.setScale(0.8F); /*defend.getImage().setScale(defend.getScaleX(), defend.getScaleY());*/ break;
+            case 0: final Card strike = new Card(0, "Strike", CardType.ATTACK, 1, game.textureAtlas.findRegion("strike"), elapsed_time);
+                playerCards.add(strike); drawPile.add(strike); break;
+            case 1: final Card defend = new Card(1,"Defend", CardType.SKILL, 1, game.textureAtlas.findRegion("defend"), elapsed_time);
+                playerCards.add(defend); drawPile.add(defend); break;
         }
+
+
 
     }
 
     //method for playing cards (I'm gonna rewrite this 100%)
     public void playCard (int id) {
         boolean inhand = false;
-        SnapshotArray<Actor> cardActors = hand.getChildren();
-        for (Actor actorCard: cardActors.items) {
-            if (actorCard instanceof Card) {
-                Card card = (Card) actorCard;
+        for (Actor actorCard: hand.items) {
 
-            }
         }
 
     }
@@ -75,12 +80,16 @@ public class CardManager {
     //draws card in hand (later called by turnManager)
     public void drawcard(int amount) {
         Random random = new Random();
-        System.out.println(drawPile.getChildren().size);
+        System.out.println(drawPile.size);
         for (int i = 0; i < amount; i++) {
-            int randomIndex = random.nextInt(drawPile.getChildren().size);
-            hand.addActor(drawPile.getChild(randomIndex));
+            if (hand.size < 10) {
+                int randomIndex = random.nextInt(drawPile.size);
+                hand.add(drawPile.get(randomIndex));
+                drawPile.removeIndex(randomIndex);
+            }
         }
         //hand.getChild(0).
+
     }
 
     //rendering hand actor group on screen
@@ -92,34 +101,47 @@ public class CardManager {
         game.batch.end();
     }
 
+    public void positionHand(int index) {
+        if (handTable.getCells().size < 10) {
+            Card card = hand.get(index);
+            card.setScale(0.6F);
+            card.setSize(card.getTextureRegion().getRegionWidth()*card.getScaleX(), card.getTextureRegion().getRegionHeight()*card.getScaleY());
+            card.setOrigin(Align.center);
+            double padWidth = 0 - card.getWidth()/2.5;
+            System.out.println("Padwidth: " + padWidth);
+            handTable.add(card).size(card.getWidth(), card.getHeight()).padLeft((float) padWidth).padRight((float) padWidth);
+            card.setContainingTable(handTable);
+        }
+    }
+
     //constructs deckscreen with all cards of player
     public Table getdisplayDeck()  {
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui001.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui001.atlas"));
+        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
         Table displayDeck = new Table(game.skin);
+        displayDeck.center().top().align(Align.center).clip(true);
+        //displayDeck.debugActor();
+        displayDeck.add().padTop(100F).row();
         for (int i = 1; i < playerCards.size+1; i++) {
             //creates copy of card to render in deckscreen (--> uses copy card constructor)
             Card cardCopy = new Card(playerCards.get(i-1));
-
-
             cardCopy.setScale(0.6F);
-
-
-
-
-
-            //adds cards to table displaydeck (WIP)
-            if (i % 5 == 0) {
-                displayDeck.add(cardCopy).size((cardCopy.getWidth()*cardCopy.getScaleX())-(cardCopy.getWidth()*cardCopy.getScaleX())/4,
-                        (cardCopy.getHeight()*cardCopy.getScaleY())-(cardCopy.getHeight()*cardCopy.getScaleY())/4).row();
-            } else {
-                displayDeck.add(cardCopy).size((cardCopy.getWidth()*cardCopy.getScaleX())-(cardCopy.getWidth()*cardCopy.getScaleX())/4,
-                        (cardCopy.getHeight()*cardCopy.getScaleY())-(cardCopy.getHeight()*cardCopy.getScaleY())/4).colspan(5);
+            //cardCopy.debug();
+            //adds cards to ta ble displaydeck (WIP)
+            cardCopy.setOrigin(Align.bottomLeft);
+            cardCopy.setSize(cardCopy.getWidth()*cardCopy.getScaleX(), cardCopy.getHeight()*cardCopy.getScaleY());
+            cardCopy.setOrigin(Align.center);
+            int amountPerRow = 5;
+            float padWidth = (float) ((stage.getWidth()-(cardCopy.getWidth()*amountPerRow))/5+53);
+            float padHeight = 0 - cardCopy.getHeight()/5;
+            displayDeck.add(cardCopy).size(cardCopy.getWidth(), cardCopy.getHeight()).colspan(amountPerRow).space(0).padRight(padWidth).padLeft(padWidth).padTop(padHeight).padBottom(padHeight).center();
+            if (i % amountPerRow == 0) {
+                displayDeck.add().row();
             }
 
-
-
         }
+        displayDeck.add().padBottom(100F).row();
+
 
         return displayDeck;
         /*
@@ -150,12 +172,22 @@ public class CardManager {
     }
 
     //getters & setters
-    public Virus getPlayer() {
-        return player;
+
+
+    public VirusManager getVirusManager() {
+        return virusManager;
     }
 
-    public Monster getEnemy() {
-        return monster;
+    public void setVirusManager(VirusManager virusManager) {
+        this.virusManager = virusManager;
+    }
+
+    public MonsterManager getMonsterManager() {
+        return monsterManager;
+    }
+
+    public void setMonsterManager(MonsterManager monsterManager) {
+        this.monsterManager = monsterManager;
     }
 
     public GipGameProject getGame() {
@@ -170,43 +202,11 @@ public class CardManager {
         this.playerCards = playerCards;
     }
 
-    public Hand getHand() {
-        return hand;
+    public float getElapsed_time() {
+        return elapsed_time;
     }
 
-    public void setHand(Hand hand) {
-        this.hand = hand;
-    }
-
-    public Group getDrawPile() {
-        return drawPile;
-    }
-
-    public void setDrawPile(Group drawPile) {
-        this.drawPile = drawPile;
-    }
-
-    public Group getDiscardPile() {
-        return discardPile;
-    }
-
-    public void setDiscardPile(Group discardPile) {
-        this.discardPile = discardPile;
-    }
-
-    public Group getExhaustPile() {
-        return exhaustPile;
-    }
-
-    public void setExhaustPile(Group exhaustPile) {
-        this.exhaustPile = exhaustPile;
-    }
-
-    public void setPlayer(Virus player) {
-        this.player = player;
-    }
-
-    public void setEnemy(Monster monster) {
-        this.monster = monster;
+    public void setElapsed_time(float elapsed_time) {
+        this.elapsed_time = elapsed_time;
     }
 }
