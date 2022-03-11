@@ -22,7 +22,7 @@ import java.util.Random;
 public class CardManager {
     private Array<Card> playerCards;
     private Table handTable;
-    private Array<Card> hand;
+    private Hand hand;
     private Array<Card> drawPile;
     private Array<Card> discardPile;
     private Array<Card> exhaustPile;
@@ -69,6 +69,8 @@ public class CardManager {
             case 1: final Card defend = new Card(1,"Defend", CardType.SKILL, 1, game.textureAtlas.findRegion("defend"), elapsed_time);
                 playerCards.add(defend); drawPile.add(defend); break;
         }
+
+
 
 
 
@@ -244,5 +246,45 @@ public class CardManager {
 
     public void setElapsed_time(float elapsed_time) {
         this.elapsed_time = elapsed_time;
+    }
+
+    public Table getHandTable() {
+        return handTable;
+    }
+
+    public void setHandTable(Table handTable) {
+        this.handTable = handTable;
+    }
+
+    public Hand getHand() {
+        return hand;
+    }
+
+    public void setHand(Hand hand) {
+        this.hand = hand;
+    }
+
+    public Array<Card> getDrawPile() {
+        return drawPile;
+    }
+
+    public void setDrawPile(Array<Card> drawPile) {
+        this.drawPile = drawPile;
+    }
+
+    public Array<Card> getDiscardPile() {
+        return discardPile;
+    }
+
+    public void setDiscardPile(Array<Card> discardPile) {
+        this.discardPile = discardPile;
+    }
+
+    public Array<Card> getExhaustPile() {
+        return exhaustPile;
+    }
+
+    public void setExhaustPile(Array<Card> exhaustPile) {
+        this.exhaustPile = exhaustPile;
     }
 }

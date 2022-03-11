@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleByAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -29,6 +30,7 @@ public class Card extends Image {
     private float timeAdded;
     private Table containingTable;
     private boolean isDragging;
+    private CardManager cardManager;
 
     //constructor for card without exhaust
     public Card(int id, String title, CardType cardType, int cost, TextureRegion textureRegion, float timeAdded) {
@@ -145,13 +147,14 @@ public class Card extends Image {
                             if (!isDragging) {
                                 //makes sure you aren't hovering over the last card in your hand
                                 if (containingTable.getCells().indexOf(containingTable.getCell(currentCard), false) != containingTable.getCells().size - 1) {
-                                    containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() + currentCard.getWidth() / 4);
+                                    containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() + currentCard.getWidth() / 3);
                                     containingTable.invalidate();
                                     containingTable.validate();
                                 }
-
-                                //System.out.println("Card position: " + getX() + " " + getY());
-                                //System.out.println("Card height" + getHeight());
+                                MoveToAction move = new MoveToAction();
+                                move.setPosition(getX(), -200);
+                                move.setDuration(0F);
+                                Card.this.addAction(move);
                             }
                         }
                     }
@@ -164,10 +167,13 @@ public class Card extends Image {
                         if (pointer == -1) {
                             if (!isDragging) {
                                 if (containingTable.getCells().indexOf(containingTable.getCell(currentCard), false) != containingTable.getCells().size - 1) {
-                                    containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() - currentCard.getWidth() / 4);
+                                    containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() - currentCard.getWidth() / 3);
                                     containingTable.invalidate();
                                     containingTable.validate();
                                 }
+                                Card.this.setPosition(getX(), -343.0F);
+                                containingTable.invalidate();
+                                containingTable.validate();
                             }
                         }
                     }
@@ -304,4 +310,5 @@ public class Card extends Image {
         containingTable.invalidate();
         containingTable.validate();
     }
+
 }
