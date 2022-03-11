@@ -71,4 +71,12 @@ public class MonsterManager {
 
     // getters and setters
 
+
+    public Group getMonsterGroup() {
+        return monsterGroup;
+    }
+
+    public void setMonsterGroup(Group monsterGroup) {
+        this.monsterGroup = monsterGroup;
+    }
 }

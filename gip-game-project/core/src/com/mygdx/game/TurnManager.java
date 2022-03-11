@@ -32,10 +32,10 @@ public class TurnManager {
         cardManager.addCard(1);
         cardManager.addCard(1);
 
-        cardManager.drawcard(10);
+
 
         cardManager.getMonsterManager().addMonster(0);
-
+        cardManager.drawcard(10);
 
     }
 

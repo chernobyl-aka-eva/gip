@@ -27,6 +27,7 @@ public class Monster extends Actor {
     //name
     private String name;
     //health
+    private int health;
     private int maxHealth;
     //block
     private int maxBlock;
@@ -46,6 +47,7 @@ public class Monster extends Actor {
         this.id = id;
         this.name = name;
         this.maxHealth = maxHealth;
+        this.health = maxHealth;
         this.maxBlock = maxBlock;
         this.game = game;
         this.stage = stage;
@@ -74,7 +76,7 @@ public class Monster extends Actor {
 
         // Health Bar
         monsterHealthBar = new ProgressBar(0, 100, 1, false, game.skin);
-        monsterHealthBar.setValue(50);
+        monsterHealthBar.setValue(health);
         monsterHealthBar.setPosition(positionX, stage.getHeight() - 780);
 
 
@@ -88,16 +90,20 @@ public class Monster extends Actor {
             GipGameProject gameProject = game; // detects if hovering over enemy
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                monsterName.setVisible(true);
-                gameProject.log.debug("hover " + monsterIdleAnimation.getKeyFrame(0).getRegionWidth() + " " + monsterIdleAnimation.getKeyFrame(0).getRegionHeight());
-                System.out.println("cock");
+                if (pointer == -1) {
+                    monsterName.setVisible(true);
+                    gameProject.log.debug("hover " + monsterIdleAnimation.getKeyFrame(0).getRegionWidth() + " " + monsterIdleAnimation.getKeyFrame(0).getRegionHeight());
+                    System.out.println("cock");
+                }
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                monsterName.setVisible(false);
-                gameProject.log.debug("nein hover");
-                System.out.println("non cock");
+                if (pointer == -1) {
+                    monsterName.setVisible(false);
+                    gameProject.log.debug("nein hover");
+                    System.out.println("non cock");
+                }
             }
         });
         stage.addActor(nameAreaMonster);
@@ -184,6 +190,15 @@ public class Monster extends Actor {
 
     public void setMaxHealth(int maxHealth) {
         this.maxHealth = maxHealth;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+        monsterHealthBar.setValue(health);
     }
 
     public int getMaxBlock() {

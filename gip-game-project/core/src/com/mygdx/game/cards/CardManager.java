@@ -3,13 +3,17 @@ package com.mygdx.game.cards;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
+import com.mygdx.game.monster.Monster;
 import com.mygdx.game.monster.MonsterManager;
+import com.mygdx.game.virus.Virus;
 import com.mygdx.game.virus.VirusManager;
 
 import java.util.Random;
@@ -69,12 +73,15 @@ public class CardManager {
     }
 
     //method for playing cards (I'm gonna rewrite this 100%)
-    public void playCard (int id) {
-        boolean inhand = false;
-        for (Actor actorCard: hand.items) {
+    public void playCard(int id, Virus player, Monster monster) {
+        switch (id) {
+            case 0:
+                monster.setHealth(monster.getHealth()-6);
+                break;
+            case 1:
 
+                break;
         }
-
     }
 
     //draws card in hand (later called by turnManager)
@@ -114,6 +121,59 @@ public class CardManager {
         }
     }
 
+    public void makeDragable(final Card card) {
+        DragAndDrop dragAndDrop = new DragAndDrop();
+        DragAndDrop.Source source = new DragAndDrop.Source(card) {
+            @Override
+            public DragAndDrop.Payload dragStart(InputEvent event, float x, float y, int pointer) {
+                DragAndDrop.Payload payload = new DragAndDrop.Payload();
+                payload.setDragActor(card);
+                for (Card allCards: hand) {
+                    allCards.setDragging(true);
+                }
+                return payload;
+            }
+            @Override
+            public void dragStop(InputEvent event, float x, float y, int pointer, DragAndDrop.Payload payload, DragAndDrop.Target target) {
+                super.dragStop(event, x, y, pointer, payload, target);
+                System.out.println("Test");
+                System.out.println("Card: " + card.getX() + " " + card.getY());
+                for (Actor actor: monsterManager.getMonsterGroup().getChildren()) {
+                    if (actor instanceof Monster) {
+                        Monster monster = (Monster) actor;
+                        System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
+                        if (card.getX()+260 >= monster.getNameAreaMonster().getX()) {
+                            if (card.getY()+150 <= monster.getNameAreaMonster().getY()) {
+                                hand.removeIndex(hand.indexOf(card, false));
+                                handTable.removeActor(card);
+                                double padWidth = 0 - card.getWidth()/2.5;
+                                handTable.clear();
+                                for (int i = 0; i < hand.size; i++) {
+                                    positionHand(i);
+                                }
+                                handTable.invalidate();
+                                handTable.validate();
+                                discardPile.add(card);
+                                playCard(card.getId(), virusManager.getPlayer(), monster);
+                            }
+                        }
+                        if (!(card.getCardType().equals(CardType.ATTACK))) {
+
+                        }
+                    }
+                }
+                for (Card allCards: hand) {
+                    allCards.setDragging(false);
+                }
+            }
+        };
+        dragAndDrop.addSource(source);
+        dragAndDrop.cancelTouchFocusExcept(source);
+        dragAndDrop.setDragActorPosition(card.getWidth() / 2, -card.getHeight() / 2); //centering actor on cursor
+
+
+    }
+
     //constructs deckscreen with all cards of player
     public Table getdisplayDeck()  {
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
@@ -144,31 +204,6 @@ public class CardManager {
 
 
         return displayDeck;
-        /*
-        int counter = 0;
-        for (Card card: playerCards) {
-            Card cardClone = new Card(card);
-            cardClone.setScale(0.5F);
-            cardClone.getImage().setScale(cardClone.getScaleX(), cardClone.getScaleY());
-            //deckDisplay.addActor(cardClone);
-            //deckDisplay.add(cardClone.getImage());
-            if (counter == 4) {
-                counter = 0;
-                deckDisplay.add(cardClone.getImage()).size(cardClone.getImage().getWidth()*cardClone.getImage().getScaleX(), cardClone.getImage().getHeight()*cardClone.getImage().getScaleY()).row();
-
-            }
-            deckDisplay.add(cardClone.getImage()).size(cardClone.getImage().getWidth()*cardClone.getScaleX(), cardClone.getImage().getHeight()*cardClone.getScaleY());
-            counter++;
-
-        }
-        deckDisplay.pad(0);
-        deckDisplay.padLeft(10F);
-        deckDisplay.getColumnWidth(0);
-        deckDisplay.getRowHeight(0);
-
-         */
-
-
     }
 
     //getters & setters

@@ -89,14 +89,18 @@ public class Virus extends Actor{
         nameAreaVirus.addListener(new ClickListener() { // detects if hovering over player
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                virusName.setVisible(true);
-                game.log.debug("hover " + idleAnimation.getKeyFrame(0).getRegionWidth() + " " + idleAnimation.getKeyFrame(0).getRegionHeight());
+                if (pointer == -1) {
+                    virusName.setVisible(true);
+                    game.log.debug("hover " + idleAnimation.getKeyFrame(0).getRegionWidth() + " " + idleAnimation.getKeyFrame(0).getRegionHeight());
+                }
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                virusName.setVisible(false);
-                game.log.debug("not hover");
+                if (pointer == -1) {
+                    virusName.setVisible(false);
+                    game.log.debug("not hover");
+                }
             }
         });
         stage.addActor(nameAreaVirus);

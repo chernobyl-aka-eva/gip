@@ -26,7 +26,7 @@ public class Card extends Image {
     private int handslot = 0;
     private float timeAdded;
     private Table containingTable;
-    private CardManager cardManager;
+    private boolean isDragging;
 
     //constructor for card without exhaust
     public Card(int id, String title, CardType cardType, int cost, TextureRegion textureRegion, float timeAdded) {
@@ -96,7 +96,7 @@ public class Card extends Image {
 
     //initializes card boundaries + adds listeners
     public void initCard() {
-
+        isDragging = false;
         setBounds(getX(), getY(), getWidth(), getHeight());
         //setTouchable(Touchable.enabled);
 
@@ -114,7 +114,6 @@ public class Card extends Image {
                     setOrigin(Align.center);
                     setAlign(Align.center);
                     Card.this.addAction(sba);
-                    System.out.println("enter");
                     exited = false;
 
                 }
@@ -123,7 +122,6 @@ public class Card extends Image {
                 //called when mouse stops hovering over card
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     super.exit(event, x, y, pointer, toActor);
-                    System.out.println("oi exit");
                     ScaleByAction sba = new ScaleByAction();
                     sba.setAmount(-0.1F);
                     sba.setDuration(.2F);
@@ -141,20 +139,31 @@ public class Card extends Image {
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     super.enter(event, x, y, pointer, fromActor);
                     if (containingTable!=null) {
-                        containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() + currentCard.getWidth()/4);
-                        containingTable.invalidate();
-                        containingTable.validate();
+                        if (pointer == -1) {
+                            if (!isDragging) {
+                                if (containingTable.getCells().indexOf(containingTable.getCell(currentCard), false) != containingTable.getCells().size - 1) {
+                                    containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() + currentCard.getWidth() / 4);
+                                    containingTable.invalidate();
+                                    containingTable.validate();
+                                }
+                            }
+                        }
                     }
 
                 }
-
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     super.exit(event, x, y, pointer, toActor);
                     if (containingTable!=null) {
-                        containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() - currentCard.getWidth()/4);
-                        containingTable.invalidate();
-                        containingTable.validate();
+                        if (pointer == -1) {
+                            if (!isDragging) {
+                                if (containingTable.getCells().indexOf(containingTable.getCell(currentCard), false) != containingTable.getCells().size - 1) {
+                                    containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() - currentCard.getWidth() / 4);
+                                    containingTable.invalidate();
+                                    containingTable.validate();
+                                }
+                            }
+                        }
                     }
 
                 }
@@ -278,5 +287,15 @@ public class Card extends Image {
 
     public void setContainingTable(Table containingTable) {
         this.containingTable = containingTable;
+    }
+
+    public boolean isDragging() {
+        return isDragging;
+    }
+
+    public void setDragging(boolean dragging) {
+        isDragging = dragging;
+        containingTable.invalidate();
+        containingTable.validate();
     }
 }

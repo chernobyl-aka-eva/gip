@@ -7,7 +7,6 @@ public class Hand extends Array<Card> {
     public Hand(CardManager cardManager) {
         super();
         this.cardManager = cardManager;
-
     }
 
     @Override
@@ -15,5 +14,6 @@ public class Hand extends Array<Card> {
         super.add(value);
         int index = this.lastIndexOf(value, false);
         cardManager.positionHand(index);
+        cardManager.makeDragable(value);
     }
 }
