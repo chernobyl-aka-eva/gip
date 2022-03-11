@@ -3,6 +3,7 @@ package com.mygdx.game.cards;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -30,15 +31,16 @@ public class CardManager {
 
     private GipGameProject game;
     private Stage stage;
+    private Group gameScreenGroup;
     private float elapsed_time;
 
     //constructor
-    public CardManager(GipGameProject game, Stage stage) {
+    public CardManager(GipGameProject game, Stage stage, Group gameScreenGroup) {
         this.game = game;
         this.stage = stage;
-
-        virusManager = new VirusManager(game, stage);
-        monsterManager = new MonsterManager(game, stage);
+        this.gameScreenGroup = gameScreenGroup;
+        virusManager = new VirusManager(game, stage, gameScreenGroup);
+        monsterManager = new MonsterManager(game, stage, gameScreenGroup);
 
         playerCards = new Array<>();
         hand = new Hand(this);
@@ -54,7 +56,7 @@ public class CardManager {
         //handTable.debugTable();
         //handTable.debugActor();
         handTable.setName("handTable");
-        stage.addActor(handTable);
+        gameScreenGroup.addActor(handTable);
     }
 
 
@@ -114,6 +116,7 @@ public class CardManager {
             card.setScale(0.6F);
             card.setSize(card.getTextureRegion().getRegionWidth()*card.getScaleX(), card.getTextureRegion().getRegionHeight()*card.getScaleY());
             card.setOrigin(Align.center);
+            System.out.println("Width: " + card.getWidth() + " Height: " + card.getHeight());
             double padWidth = 0 - card.getWidth()/2.5;
             System.out.println("Padwidth: " + padWidth);
             handTable.add(card).size(card.getWidth(), card.getHeight()).padLeft((float) padWidth).padRight((float) padWidth);
@@ -201,8 +204,6 @@ public class CardManager {
 
         }
         displayDeck.add().padBottom(100F).row();
-
-
         return displayDeck;
     }
 

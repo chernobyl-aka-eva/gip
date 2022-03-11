@@ -12,12 +12,14 @@ import com.mygdx.game.GipGameProject;
 public class MonsterManager {
     private Group monsterGroup;
     private Stage stage;
+    private Group gameScreenGroup;
     private GipGameProject game;
 
 
 
-    public MonsterManager(GipGameProject game, Stage stage) {
+    public MonsterManager(GipGameProject game, Stage stage, Group gameScreenGroup) {
         this.stage = stage;
+        this.gameScreenGroup = gameScreenGroup;
         this.game = game;
 
         monsterGroup = new Group();
@@ -27,7 +29,7 @@ public class MonsterManager {
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
 
 
-        stage.addActor(monsterGroup);
+        gameScreenGroup.addActor(monsterGroup);
     }
 
     public void addMonster(int monsterId){
@@ -38,7 +40,8 @@ public class MonsterManager {
                         "Single",
                         100,
                         0,
-                             stage
+                             stage,
+                        gameScreenGroup
                 ); monsterGroup.addActor(single);
 
         }

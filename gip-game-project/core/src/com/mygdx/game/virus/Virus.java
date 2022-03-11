@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -40,21 +41,21 @@ public class Virus extends Actor{
 
     //stage
     Stage stage;
+    private Group gameScreenGroup;
 
     private final Label virusName;
     private ProgressBar virusHealthBar;
     private Actor nameAreaVirus;
-
     private float elapsed_time;
 
     // constructor
-    public Virus(GipGameProject game, String name, int maxHealth, int maxBlock, Stage stage) {
+    public Virus(GipGameProject game, String name, int maxHealth, int maxBlock, Stage stage, Group gameScreenGroup) {
         this.name = name;
         this.maxHealth = maxHealth;
         this.maxBlock = maxBlock;
         this.game = game;
         this.stage = stage;
-
+        this.gameScreenGroup = gameScreenGroup;
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
 
         elapsed_time = 0f;
@@ -103,7 +104,7 @@ public class Virus extends Actor{
                 }
             }
         });
-        stage.addActor(nameAreaVirus);
+        gameScreenGroup.addActor(nameAreaVirus);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -35,6 +36,7 @@ public class Monster extends Actor {
     private Animation<TextureRegion> monsterIdleAnimation;
     //stage
     Stage stage;
+    private Group gameScreenGroup;
 
     private final Label monsterName;
     private ProgressBar monsterHealthBar;
@@ -43,7 +45,7 @@ public class Monster extends Actor {
     private float elapsed_time;
 
 
-    public Monster(final GipGameProject game, int id, String name, int maxHealth, int maxBlock, Stage stage) {
+    public Monster(final GipGameProject game, int id, String name, int maxHealth, int maxBlock, Stage stage, Group gameScreenGroup) {
         this.id = id;
         this.name = name;
         this.maxHealth = maxHealth;
@@ -51,6 +53,7 @@ public class Monster extends Actor {
         this.maxBlock = maxBlock;
         this.game = game;
         this.stage = stage;
+        this.gameScreenGroup = gameScreenGroup;
 
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
 
@@ -106,7 +109,7 @@ public class Monster extends Actor {
                 }
             }
         });
-        stage.addActor(nameAreaMonster);
+        gameScreenGroup.addActor(nameAreaMonster);
     }
 
     //rip setvisible 05/03/2022 - 05/03/2022 🥺

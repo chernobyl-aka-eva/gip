@@ -1,5 +1,6 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.mygdx.game.cards.CardManager;
 
@@ -7,12 +8,14 @@ public class TurnManager {
 
     private GipGameProject game;
     private Stage stage;
+    private Group group;
     private CardManager cardManager;
 
-    public TurnManager(GipGameProject game, Stage stage) {
+    public TurnManager(GipGameProject game, Stage stage, Group group) {
         this.game = game;
         this.stage = stage;
-        cardManager = new CardManager(game, stage);
+        this.group = group;
+        cardManager = new CardManager(game, stage, group);
 
         // starting deck
         cardManager.addCard(0);

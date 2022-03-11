@@ -1,6 +1,7 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -110,7 +111,7 @@ public class GameScreen implements Screen {
         mapScreenGroup = new Group();
 
         // initialize turnmanager
-        turnManager = new TurnManager(game, stage);
+        turnManager = new TurnManager(game, stage, gameScreenGroup);
 
 
         // game background
@@ -253,11 +254,26 @@ public class GameScreen implements Screen {
                 return true;
             }
         });
-
         stage.addActor(pause); // adds actor to stage
 
         // pause menu
         pausescreenBackground = game.skin.getRegion("pausescreen-background"); // sets region for pause screen background
+        Window pauseScreenWindow = new Window("",game.skin);
+        pauseScreenWindow.setPosition((stage.getWidth() - pausescreenBackground.getRegionWidth()) / 2,
+                (stage.getHeight() - pausescreenBackground.getRegionHeight()) / 2);
+        pauseScreenWindow.setSize(pausescreenBackground.getRegionWidth(), pausescreenBackground.getRegionHeight());
+        pauseGroup.addActor(pauseScreenWindow);
+
+        pauseScreenWindow.addListener(new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Input.Keys.ESCAPE) {
+                    pauseGroup.setVisible(false);
+                }
+                return super.keyDown(event, keycode);
+            }
+        });
+
 
         Button resume = new TextButton("Resume", game.skin, "pausescreen-button"); // pause screen button
         resume.setPosition(
@@ -292,6 +308,8 @@ public class GameScreen implements Screen {
                 pauseGroup.setVisible(false);
                 gameScreenGroup.setVisible(false);
                 settingsScreen.getSettingsGroup().setVisible(true);
+                //turnManager.getCardManager().getMonsterManager().setVisible(false);
+                //turnManager.getCardManager().getVirusManager().setVisible(false);
                 mapScreenGroup.setVisible(false);
                 showMap = false;
                 previousState = true;
@@ -489,12 +507,15 @@ public class GameScreen implements Screen {
                 stage.getHeight() - moneyIcon.getRegionHeight() + moneyIcon.getRegionHeight() / 4 - 30);
 
         // shows pausescreen if enabled
+        /*
         if (pausescreen) {
             game.batch.draw(
                     pausescreenBackground,
                     (stage.getWidth() - pausescreenBackground.getRegionWidth()) / 2,
                     (stage.getHeight() - pausescreenBackground.getRegionHeight()) / 2);
         }
+
+         */
 
         game.batch.end();
 

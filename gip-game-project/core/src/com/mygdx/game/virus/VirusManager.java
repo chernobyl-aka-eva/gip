@@ -2,6 +2,7 @@ package com.mygdx.game.virus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.GipGameProject;
@@ -13,13 +14,15 @@ public class VirusManager {
     private Virus player;
 
     private Stage stage;
+    private Group gameScreenGroup;
 
-    public VirusManager(GipGameProject game, Stage stage) {
+    public VirusManager(GipGameProject game, Stage stage, Group group) {
         this.game = game;
         this.stage = stage;
+        this.gameScreenGroup = group;
 
-        player = new Virus(game, "Poopiehead", 100, 100, stage);
-        stage.addActor(player);
+        player = new Virus(game, "Poopiehead", 100, 100, stage, gameScreenGroup);
+        gameScreenGroup.addActor(player);
 
         // Animation Textures
         game.textureAtlas = new TextureAtlas(Gdx.files.internal("animation/idle.atlas"));
