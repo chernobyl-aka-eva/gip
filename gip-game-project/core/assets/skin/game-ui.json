@@ -48,6 +48,12 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		up: deck-button-00
 		over: deck-button-01
 	}
+	drawpile: {
+		up: drawpile
+	}
+	discardpile: {
+		up: discardpile
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {

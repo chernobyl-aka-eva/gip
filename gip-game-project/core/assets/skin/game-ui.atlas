@@ -5,107 +5,127 @@ format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 background
-  rotate: true
-  xy: 1627, 998
+  rotate: false
+  xy: 509, 73
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
 deck-background
   rotate: false
-  xy: 2, 995
+  xy: 2, 1157
   size: 1623, 883
   orig: 1623, 883
   offset: 0, 0
   index: -1
 deck-button-00
   rotate: false
-  xy: 1756, 1753
+  xy: 1465, 1104
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 deck-button-01
   rotate: false
-  xy: 1308, 942
+  xy: 1854, 1989
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
+discardpile
+  rotate: false
+  xy: 2, 210
+  size: 726, 945
+  orig: 726, 945
+  offset: 0, 0
+  index: -1
+drawpile
+  rotate: false
+  xy: 730, 210
+  size: 722, 945
+  orig: 722, 945
+  offset: 0, 0
+  index: -1
 knob
   rotate: false
-  xy: 801, 908
+  xy: 1627, 1960
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
 map-button-00
   rotate: false
-  xy: 696, 350
+  xy: 1390, 157
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 map-button-01
   rotate: false
-  xy: 1983, 1827
+  xy: 509, 20
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 pause-0
   rotate: false
-  xy: 13, 238
+  xy: 1627, 1924
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pause-1
   rotate: false
-  xy: 1635, 1150
+  xy: 1390, 121
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pause-button-0
   rotate: false
-  xy: 2, 274
+  xy: 696, 81
   size: 692, 127
   orig: 692, 127
   offset: 0, 0
   index: -1
 pause-button-1
-  rotate: true
-  xy: 1627, 1186
+  rotate: false
+  xy: 2, 81
   size: 692, 127
   orig: 692, 127
   offset: 0, 0
   index: -1
-pausescreen-background
-  rotate: false
-  xy: 2, 403
-  size: 797, 590
-  orig: 797, 590
-  offset: 0, 0
-  index: -1
 pcsenior
   rotate: false
-  xy: 801, 916
+  xy: 2, 2
   size: 505, 77
   orig: 505, 77
   offset: 0, 0
   index: -1
 return-button
   rotate: false
-  xy: 1756, 1806
+  xy: 1627, 1968
   size: 225, 72
   orig: 225, 72
   offset: 0, 0
   index: -1
 scrollBar
   rotate: false
-  xy: 2, 2
+  xy: 1454, 885
   size: 9, 270
   orig: 9, 270
+  offset: 0, 0
+  index: -1
+
+game-ui2.png
+size: 1024, 1024
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+pausescreen-background
+  rotate: false
+  xy: 2, 2
+  size: 797, 590
+  orig: 797, 590
   offset: 0, 0
   index: -1
