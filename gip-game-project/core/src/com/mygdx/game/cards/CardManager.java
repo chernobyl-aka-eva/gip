@@ -51,7 +51,7 @@ public class CardManager {
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // skin
 
         handTable = new Table();
-        handTable.setBounds(0, 0, Gdx.graphics.getWidth(), 100);
+        handTable.setBounds(0, 0, stage.getWidth(), 100);
         handTable.center().top().align(Align.center);
         //handTable.debugTable();
         //handTable.debugActor();
@@ -80,7 +80,9 @@ public class CardManager {
     public void playCard(int id, Virus player, Monster monster) {
         switch (id) {
             case 0:
-                monster.setHealth(monster.getHealth()-6);
+                if (monster!=null) {
+                    monster.setHealth(monster.getHealth()-6);
+                }
                 break;
             case 1:
 
@@ -118,9 +120,9 @@ public class CardManager {
             card.setScale(0.7F);
             card.setSize(card.getTextureRegion().getRegionWidth()*card.getScaleX(), card.getTextureRegion().getRegionHeight()*card.getScaleY());
             card.setOrigin(Align.center);
-            System.out.println("Width: " + card.getWidth() + " Height: " + card.getHeight());
+            //System.out.println("Width: " + card.getWidth() + " Height: " + card.getHeight());
             double padWidth = 0 - card.getWidth()/2.5;
-            System.out.println("Padwidth: " + padWidth);
+            //System.out.println("Padwidth: " + padWidth);
             handTable.add(card).size(card.getWidth(), card.getHeight()).padLeft((float) padWidth).padRight((float) padWidth);
             card.setContainingTable(handTable);
         }
@@ -146,7 +148,7 @@ public class CardManager {
                 for (Actor actor: monsterManager.getMonsterGroup().getChildren()) {
                     if (actor instanceof Monster) {
                         Monster monster = (Monster) actor;
-                        System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
+                        //System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
                         if (card.getX()+250 >= monster.getNameAreaMonster().getX()) {
                             if (card.getY()+150 <= monster.getNameAreaMonster().getY()) {
                                 hand.removeIndex(hand.indexOf(card, false));
@@ -158,9 +160,21 @@ public class CardManager {
                                 playCard(card.getId(), virusManager.getPlayer(), monster);
                             }
                         }
-                        if (!(card.getCardType().equals(CardType.ATTACK))) {
-
-                        }
+                    }
+                }
+                if (!(card.getCardType().equals(CardType.ATTACK))) {
+                    Virus player = virusManager.getPlayer();
+                    System.out.println("Card: " + card.getX() + " " + card.getY());
+                    System.out.println("Virus X:\t" + player.getNameAreaVirus().getX() + " max x:\t" + (player.getNameAreaVirus().getX() + player.getNameAreaVirus().getWidth()));
+                    System.out.print("Virus Y:\t" + player.getNameAreaVirus().getY() + " max y:\t" + (player.getNameAreaVirus().getY() + player.getNameAreaVirus().getHeight()));
+                    if (card.getX() <= 280 && card.getY() <= 280) {
+                        hand.removeIndex(hand.indexOf(card, false));
+                        handTable.removeActor(card);
+                        double padWidth = 0 - card.getWidth()/2.5;
+                        handTable.invalidate();
+                        handTable.validate();
+                        discardPile.add(card);
+                        playCard(card.getId(), virusManager.getPlayer(), null);
                     }
                 }
                 for (Card allCards: hand) {
