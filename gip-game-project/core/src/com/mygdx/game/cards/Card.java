@@ -143,11 +143,15 @@ public class Card extends Image {
                     if (containingTable!=null) {
                         if (pointer == -1) {
                             if (!isDragging) {
+                                //makes sure you aren't hovering over the last card in your hand
                                 if (containingTable.getCells().indexOf(containingTable.getCell(currentCard), false) != containingTable.getCells().size - 1) {
                                     containingTable.getCell(currentCard).padRight(containingTable.getCell(currentCard).getPadRight() + currentCard.getWidth() / 4);
                                     containingTable.invalidate();
                                     containingTable.validate();
                                 }
+
+                                //System.out.println("Card position: " + getX() + " " + getY());
+                                //System.out.println("Card height" + getHeight());
                             }
                         }
                     }

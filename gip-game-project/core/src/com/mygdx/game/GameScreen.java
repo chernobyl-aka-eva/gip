@@ -268,6 +268,7 @@ public class GameScreen implements Screen {
             @Override
             public boolean keyDown(InputEvent event, int keycode) {
                 if (keycode == Input.Keys.ESCAPE) {
+                    pausescreen = false;
                     pauseGroup.setVisible(false);
                 }
                 return super.keyDown(event, keycode);
@@ -359,17 +360,15 @@ public class GameScreen implements Screen {
                 if (showDeck) {
                     showDeck = false;
                     table.setVisible(false);
-                    turnManager.getCardManager().getMonsterManager().setVisible(true);
-                    turnManager.getCardManager().getVirusManager().setVisible(true);
                     deckScreenGroup.setVisible(false);
+                    gameScreenGroup.setVisible(true);
 
                 } else {
                     if (!mapScreenGroup.isVisible()) {
                         showDeck = true;
                         table.setVisible(true);
-                        turnManager.getCardManager().getMonsterManager().setVisible(false);
-                        turnManager.getCardManager().getVirusManager().setVisible(false);
                         deckScreenGroup.setVisible(true);
+                        gameScreenGroup.setVisible(false);
                     }
                 }
                 return true;
@@ -416,8 +415,6 @@ public class GameScreen implements Screen {
                 deckScreenGroup.setVisible(false);
                 table.setVisible(false);
                 gameScreenGroup.setVisible(true);
-                turnManager.getCardManager().getMonsterManager().setVisible(true);
-                turnManager.getCardManager().getVirusManager().setVisible(true);
                 return true;
             }
         });

@@ -113,7 +113,7 @@ public class CardManager {
     public void positionHand(int index) {
         if (handTable.getCells().size < 10) {
             Card card = hand.get(index);
-            card.setScale(0.6F);
+            card.setScale(0.7F);
             card.setSize(card.getTextureRegion().getRegionWidth()*card.getScaleX(), card.getTextureRegion().getRegionHeight()*card.getScaleY());
             card.setOrigin(Align.center);
             System.out.println("Width: " + card.getWidth() + " Height: " + card.getHeight());
@@ -145,15 +145,11 @@ public class CardManager {
                     if (actor instanceof Monster) {
                         Monster monster = (Monster) actor;
                         System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
-                        if (card.getX()+260 >= monster.getNameAreaMonster().getX()) {
+                        if (card.getX()+250 >= monster.getNameAreaMonster().getX()) {
                             if (card.getY()+150 <= monster.getNameAreaMonster().getY()) {
                                 hand.removeIndex(hand.indexOf(card, false));
                                 handTable.removeActor(card);
                                 double padWidth = 0 - card.getWidth()/2.5;
-                                handTable.clear();
-                                for (int i = 0; i < hand.size; i++) {
-                                    positionHand(i);
-                                }
                                 handTable.invalidate();
                                 handTable.validate();
                                 discardPile.add(card);
@@ -167,6 +163,10 @@ public class CardManager {
                 }
                 for (Card allCards: hand) {
                     allCards.setDragging(false);
+                }
+                handTable.clear();
+                for (int i = 0; i < hand.size; i++) {
+                    positionHand(i);
                 }
             }
         };
