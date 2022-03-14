@@ -38,7 +38,7 @@ public class VirusManager {
 
     public void setVisible(boolean isVisible){
         player.setVisible(isVisible);
-        System.out.println(isVisible);
+        //.out.println(isVisible);
     }
 
    //getters and setter

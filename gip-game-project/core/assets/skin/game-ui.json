@@ -68,6 +68,12 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 		over: end turn hover
 	}
 }
+com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
+	default: {
+		font: pcsenior
+		up: exhaust_pile
+	}
+}
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 	default: {
 		font: pcsenior

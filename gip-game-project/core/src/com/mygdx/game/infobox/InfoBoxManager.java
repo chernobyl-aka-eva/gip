@@ -29,22 +29,14 @@ public class InfoBoxManager {
             Actor actor = cell.getActor();
             if (actor instanceof Card) {
                 Card card = (Card) actor;
-                System.out.println("Actor XY " + cards.getCell(card).getActorX() + cards.getCell(card).getActorY());
                 String[] words = card.getDescription().replaceAll("[.]", "").split("\\s");
-                System.out.println();
                 boolean isCardInfo = false;
-                System.out.println("-------------- " + card.getName() + " ---------------");
                 for (String word : words) {
-                    System.out.print(word + " ");
-                    System.out.println();
                     for (CardInfoType value : CardInfoType.values()) {
                         if (value.name().equals(word)) {
                             final InfoBox infoBox = new InfoBox("", game.skin, "card-info", word, game, stage);
                             infoBox.setPosition(cards.getCell(card).getActorX() + cards.getCell(card).getActorWidth()/2 + 120,
                                     cards.getCell(card).getActorY() + cards.getCell(card).getActorHeight()/2 + 80);
-
-
-
                             infoBox.setVisible(false);
                             card.addListener(new ClickListener() {
                                 @Override
@@ -63,7 +55,6 @@ public class InfoBoxManager {
                                     }
                                 }
                             });
-                            System.out.println("Info XY " + infoBox.getX() + infoBox.getY());
                             stage.addActor(infoBox);
                         }
                     }
@@ -73,33 +64,5 @@ public class InfoBoxManager {
 
 
         }
-
-
-        /*
-        for (Card card : cards) {
-            String[] words = card.getDescription().replaceAll("[.]", "").split("\\s");
-            System.out.println();
-            boolean isCardInfo = false;
-            System.out.println("-------------- " + card.getName() + " ---------------");
-            for (String word : words) {
-                System.out.print(word + " ");
-                System.out.println();
-
-            }
-            canInfoTable = new Table();
-            System.out.println((getWidth()*0.6F) + " " + (getHeight()*0.6F));
-            canInfoTable.setSize(147, (getHeight()*0.6F));
-            canInfoTable.setPosition(getX()+getWidth()*0.6F, getY()+getHeight()*0.6F-200);
-            for (Actor child : cardInfo.getChildren()) {
-                Window window = (Window) child;
-                canInfoTable.add(window).size(window.getWidth(), window.getHeight());
-            }
-        }
-
-         */
-
-
-
-
     }
 }

@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.cards.Card;
 import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.monster.MonsterIntent;
 import com.mygdx.game.screen.DeathScreen;
@@ -50,9 +49,12 @@ public class TurnManager {
             }
         });
 
+        /*
         for (Card playerCard : cardManager.getPlayerCards()) {
             cardManager.getDrawPile().add(playerCard);
         }
+
+         */
     }
 
     public void emptyHand(){

@@ -193,7 +193,7 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!settingsScreen.getSettingsGroup().isVisible() && !pausescreen) {
-                    if (!sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(0).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(1).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(2).isVisible()){
+                    if (!sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(0).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(1).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(2).isVisible() /* && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(3).isVisible()*/){
                         if (previousState) {
                             showMap = true;
                             previousState = false;

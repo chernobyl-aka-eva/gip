@@ -78,9 +78,9 @@ public class CardManager {
             case 2: final Card replicate = new Card(2, "Replicate", "ENCODE", CardType.ATTACK, 0, game.textureAtlas.findRegion("replicate"), elapsed_time, game);
                 playerCards.add(replicate); drawPile.add(replicate); break;
             case 3: final Card gotoCard = new Card(3, "Go To", "ENCODE. COMPILE", CardType.SKILL, 1, game.textureAtlas.findRegion("go to"), elapsed_time, game);
-                playerCards.add(gotoCard); drawPile.add(gotoCard);break;
+                playerCards.add(gotoCard); drawPile.add(gotoCard); break;
             case 4: final Card piercingShot = new Card(4, "Piercing Shot", "EXHAUST", CardType.ATTACK, 1, game.textureAtlas.findRegion("piercing shot"), true, elapsed_time, game);
-                playerCards.add(piercingShot); drawPile.add(piercingShot);
+                playerCards.add(piercingShot); drawPile.add(piercingShot); break;
             case 5: final Card fineTuning = new Card(5, "Fine Tuning", "DEXTERITY", CardType.POWER, 2, game.textureAtlas.findRegion("fine tuning"),elapsed_time, game);
                 playerCards.add(fineTuning); drawPile.add(fineTuning);
         }
@@ -88,16 +88,12 @@ public class CardManager {
 
     //method for playing cards (I'm gonna rewrite this 100%)
     public void playCard(Card card, Virus player, Monster monster) {
-        if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0){
+        int damage;
+        if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() < 1){
             switch (card.getId()) {
                 case 0:
-                    monster.setHealth(monster.getHealth()-6);
-                    virusManager.getPlayer().getEnergyManager().setEnergy(virusManager.getPlayer().getEnergyManager().getEnergy()
-                            - card.getCost());
-                    if (monster.getHealth() <= 0){
-                        monster.remove();
-                        monsterManager.setIntentVisible(false);
-                    }
+                    damage  = 6; // + multiplier (later)
+                    playAttackCard(damage, monster);
                     break;
                 case 1:
                     player.setBlock(player.getBlock()+6);
@@ -113,14 +109,21 @@ public class CardManager {
                     // encode
                     break;
                 case 4:
+                    damage = 10; // + multiplier (later)
                     for (int m = 0; m < monsterManager.getMonsterGroup().getChildren().size; m++){
                         Actor actor = monsterManager.getMonsterGroup().getChild(m);
                         if (actor instanceof Monster){
                             Monster monsterActor = (Monster) actor;
-                            monsterActor.setHealth(monsterActor.getHealth()-10);
+                            playAttackCard(damage, monsterActor);
                         }
                     }break;
                 case 5:game.log.debug("case 3");break;
+            }
+
+            // is enemy ded?
+            if (monster.getHealth() <= 0){
+                monster.remove();
+                monsterManager.setIntentVisible(false);
             }
 
             if (!card.isExhaust()){
@@ -133,23 +136,49 @@ public class CardManager {
         }
     }
 
+    public void playAttackCard(int damage, Monster monster){
+        if (monster.getblock() > 0) { // if the enemy has block
+            game.log.debug("block before damage : " + monster.getBlock());
+            if (monster.getblock() >= damage) {
+                monster.setblock(monster.getblock()-damage);
+            } else { // else if the enemy can't block fully but can block some...
+                int damageAfterBlock;
+                int damageBeforeBlock;
+                damageBeforeBlock = damage - monster.getblock();
+                game.log.debug("damage : " + damage);
+                monster.setblock(monster.getblock()-damageBeforeBlock);
+                damageAfterBlock = damage - damageBeforeBlock;
+                game.log.debug("damage after block : " + damageAfterBlock);
+                game.log.debug("health before damage : " + monster.getHealth());
+                monster.setHealth(monster.getHealth() - damageAfterBlock);
+                game.log.debug("health after damage : " + monster.getHealth());
+            }
+        } else { // if the enemy doesn't have block
+            game.log.debug("health before damage : " + monster.getHealth());
+            monster.setHealth(monster.getHealth() - damage);
+            game.log.debug("health after damage : " + monster.getHealth());
+        }
+    }
+
     //draws card in hand (later called by turnManager)
     public void drawcard(int amount) {
-        if (drawPile.size <= amount) {
-            for (Card card : discardPile) {
-                drawPile.add(card);
-            }
-            discardPile.clear();
-        }
         Random random = new Random();
-        System.out.println(drawPile.size);
+        //System.out.println(drawPile.size);
         for (int i = 0; i < amount; i++) {
             if (hand.size < 10) {
+                if (drawPile.size <= 0) {
+                    for (Card card : discardPile) {
+                        drawPile.add(card);
+                    }
+                    discardPile.clear();
+                    refreshDisplayTable();
+                }
                 int randomIndex = random.nextInt(drawPile.size);
                 hand.add(drawPile.get(randomIndex));
                 drawPile.removeIndex(randomIndex);
             }
         }
+        refreshDisplayTable();
     }
 
     //rendering hand actor group on screen
@@ -272,10 +301,12 @@ public class CardManager {
         Table table = displayCards(0);
         Table drawTable = displayCards(1);
         Table discardTable = displayCards(2);
+        Table exhaustTable = displayCards(3);
 
         tableGroup.addActor(table);
         tableGroup.addActor(drawTable);
         tableGroup.addActor(discardTable);
+        tableGroup.addActor(exhaustTable);
 
 
         Button deckReturn = new Button(game.skin, "return");
@@ -290,6 +321,7 @@ public class CardManager {
                 tableGroup.getChild(0).setVisible(false);
                 tableGroup.getChild(1).setVisible(false);
                 tableGroup.getChild(2).setVisible(false);
+                //tableGroup.getChild(3).setVisible(false);
                 gameScreenGroup.setVisible(true);
                 return true;
             }
@@ -325,6 +357,9 @@ public class CardManager {
             case 2:
                 title = "Discard pile";
                 displayList = discardPile; break;
+            case 3:
+                title = "Exhaust pile";
+                displayList = exhaustPile; break;
         }
 
 
