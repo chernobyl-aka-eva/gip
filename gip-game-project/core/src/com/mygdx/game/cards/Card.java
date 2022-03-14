@@ -36,10 +36,6 @@ public class Card extends Image {
     private Table containingTable;
     private boolean isDragging;
     private CardManager cardManager;
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
     private int damage = 0;
     private int block = 0;
 
@@ -52,11 +48,6 @@ public class Card extends Image {
     //private Table canInfoTable;
     //private Group cardInfo;
     //private CardInfoType cardInfoType;
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> 80246bd5905bdf143251ea28e8eacdfa58cf805f
->>>>>>> Stashed changes
 
     //constructor for card without exhaust
     public Card(int id, String title, String descriptionText, CardType cardType, int cost, TextureRegion textureRegion, float timeAdded, GipGameProject game) {
@@ -429,10 +420,6 @@ public class Card extends Image {
         containingTable.validate();
     }
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
     public String getTitle() {
         return title;
     }
@@ -466,9 +453,4 @@ public class Card extends Image {
         this.block = block;
     }
 
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> 80246bd5905bdf143251ea28e8eacdfa58cf805f
->>>>>>> Stashed changes
 }

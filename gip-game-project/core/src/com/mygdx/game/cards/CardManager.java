@@ -85,7 +85,6 @@ public class CardManager {
             case 5: final Card fineTuning = new Card(5, "Fine Tuning", "", CardType.POWER, 2, game.textureAtlas.findRegion("fine tuning"),elapsed_time, game);
                 playerCards.add(fineTuning); drawPile.add(fineTuning);
         }
-<<<<<<< Updated upstream
     }
 
     //method for playing cards (I'm gonna rewrite this 100%)
@@ -111,52 +110,6 @@ public class CardManager {
                 case 3: game.log.debug("case 3");break;
                 case 4: game.log.debug("case 3");break;
                 case 5:game.log.debug("case 3");break;
-=======
-<<<<<<< HEAD
-    }
-
-    //method for playing cards (I'm gonna rewrite this 100%)
-    public void playCard(Card card, Virus player, Monster monster) {
-        if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0){
-            switch (card.getId()) {
-                case 0:
-                    monster.setHealth(monster.getHealth()-6);
-                    virusManager.getPlayer().getEnergyManager().setEnergy(virusManager.getPlayer().getEnergyManager().getEnergy()
-                            - card.getCost());
-                    if (monster.getHealth() <= 0){
-                        monster.remove();
-                        monsterManager.setIntentVisible(false);
-                    }
-                    break;
-                case 1:
-                    player.setBlock(player.getBlock()+6);
-                    virusManager.getPlayer().getEnergyManager().setEnergy(virusManager.getPlayer().getEnergyManager().getEnergy()
-                            - card.getCost());
-                    break;
-                case 2:
-
-                case 3: game.log.debug("case 3");break;
-                case 4: game.log.debug("case 3");break;
-                case 5:game.log.debug("case 3");break;
-=======
-
-
-
-
-
-    }
-
-    //method for playing cards (I'm gonna rewrite this 100%)
-    public void playCard(int id, Virus player, Monster monster) {
-        switch (id) {
-            case 0:
-                if (monster!=null) {
-                    monster.setHealth(monster.getHealth()-6);
-                }
-                break;
-            case 1:
->>>>>>> 80246bd5905bdf143251ea28e8eacdfa58cf805f
->>>>>>> Stashed changes
 
             }
 
@@ -261,7 +214,6 @@ public class CardManager {
                                 }
                             }
                         }
-<<<<<<< HEAD
                         if (!(card.getCardType().equals(CardType.ATTACK))) {
                             Virus player = virusManager.getPlayer();
                             //System.out.println("Card: " + card.getX() + " " + card.getY());
@@ -278,23 +230,6 @@ public class CardManager {
                                 }
                             }
                         }
-=======
-                    }
-                }
-                if (!(card.getCardType().equals(CardType.ATTACK))) {
-                    Virus player = virusManager.getPlayer();
-                    System.out.println("Card: " + card.getX() + " " + card.getY());
-                    System.out.println("Virus X:\t" + player.getNameAreaVirus().getX() + " max x:\t" + (player.getNameAreaVirus().getX() + player.getNameAreaVirus().getWidth()));
-                    System.out.print("Virus Y:\t" + player.getNameAreaVirus().getY() + " max y:\t" + (player.getNameAreaVirus().getY() + player.getNameAreaVirus().getHeight()));
-                    if (card.getX() <= 280 && card.getY() <= 280) {
-                        hand.removeIndex(hand.indexOf(card, false));
-                        handTable.removeActor(card);
-                        double padWidth = 0 - card.getWidth()/2.5;
-                        handTable.invalidate();
-                        handTable.validate();
-                        discardPile.add(card);
-                        playCard(card.getId(), virusManager.getPlayer(), null);
->>>>>>> 80246bd5905bdf143251ea28e8eacdfa58cf805f
                     }
                 }
                 for (Card allCards: hand) {
@@ -311,7 +246,6 @@ public class CardManager {
         Table table = displayCards(0);
         Table drawTable = displayCards(1);
         Table discardTable = displayCards(2);
-<<<<<<< Updated upstream
 
         tableGroup.addActor(table);
         tableGroup.addActor(drawTable);
@@ -340,36 +274,6 @@ public class CardManager {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
 
-=======
-
-        tableGroup.addActor(table);
-        tableGroup.addActor(drawTable);
-        tableGroup.addActor(discardTable);
-    }
-
-    public void initTables() {
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
-
-
-        deckScreenGroup = new Group();
-        tableGroup = new Group();
-        Table table = displayCards(0);
-        Table drawTable = displayCards(1);
-        Table discardTable = displayCards(2);
-
-        tableGroup.addActor(table);
-        tableGroup.addActor(drawTable);
-        tableGroup.addActor(discardTable);
-
-
-        Button deckReturn = new Button(game.skin, "return");
-        deckReturn.setPosition(stage.getWidth()-deckReturn.getWidth(), 100);
-        deckReturn.addListener(new InputListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
-
->>>>>>> Stashed changes
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 deckScreenGroup.setVisible(false);
@@ -539,10 +443,6 @@ public class CardManager {
     public void setExhaustPile(Array<Card> exhaustPile) {
         this.exhaustPile = exhaustPile;
     }
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
->>>>>>> Stashed changes
 
     public Group getTableGroup() {
         return tableGroup;
@@ -559,9 +459,4 @@ public class CardManager {
     public void setDeckScreenGroup(Group deckScreenGroup) {
         this.deckScreenGroup = deckScreenGroup;
     }
-<<<<<<< Updated upstream
-=======
-=======
->>>>>>> 80246bd5905bdf143251ea28e8eacdfa58cf805f
->>>>>>> Stashed changes
 }
