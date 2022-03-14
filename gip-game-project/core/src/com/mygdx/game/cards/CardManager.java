@@ -76,13 +76,13 @@ public class CardManager {
                 playerCards.add(strike); drawPile.add(strike); break;
             case 1: final Card defend = new Card(1,"Defend", "", CardType.SKILL, 1, game.textureAtlas.findRegion("defend"), elapsed_time, game);
                 playerCards.add(defend); drawPile.add(defend); break;
-            case 2: final Card replicate = new Card(2, "Replicate", "", CardType.ATTACK, 0, game.textureAtlas.findRegion("replicate"), elapsed_time, game);
+            case 2: final Card replicate = new Card(2, "Replicate", "ENCODE", CardType.ATTACK, 0, game.textureAtlas.findRegion("replicate"), elapsed_time, game);
                 playerCards.add(replicate); drawPile.add(replicate); break;
-            case 3: final Card gotoCard = new Card(3, "Go To", "", CardType.SKILL, 1, game.textureAtlas.findRegion("go to"), elapsed_time, game);
+            case 3: final Card gotoCard = new Card(3, "Go To", "ENCODE. COMPILE", CardType.SKILL, 1, game.textureAtlas.findRegion("go to"), elapsed_time, game);
                 playerCards.add(gotoCard); drawPile.add(gotoCard);break;
-            case 4: final Card piercingShot = new Card(4, "Piercing Shot", "", CardType.ATTACK, 1, game.textureAtlas.findRegion("piercing shot"), true, elapsed_time, game);
+            case 4: final Card piercingShot = new Card(4, "Piercing Shot", "EXHAUST", CardType.ATTACK, 1, game.textureAtlas.findRegion("piercing shot"), true, elapsed_time, game);
                 playerCards.add(piercingShot); drawPile.add(piercingShot);
-            case 5: final Card fineTuning = new Card(5, "Fine Tuning", "", CardType.POWER, 2, game.textureAtlas.findRegion("fine tuning"),elapsed_time, game);
+            case 5: final Card fineTuning = new Card(5, "Fine Tuning", "DEXTERITY", CardType.POWER, 2, game.textureAtlas.findRegion("fine tuning"),elapsed_time, game);
                 playerCards.add(fineTuning); drawPile.add(fineTuning);
         }
     }

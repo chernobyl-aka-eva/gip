@@ -78,7 +78,7 @@ public class Monster extends Actor {
         // Health Bar
         monsterHealthBar = new ProgressBar(0, 100, 1, false, game.skin);
         monsterHealthBar.setValue(health);
-        monsterHealthBar.setPosition(positionX, stage.getHeight() - 780);
+        monsterHealthBar.setPosition(positionX, stage.getHeight() - 730);
 
 
 
