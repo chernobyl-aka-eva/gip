@@ -88,12 +88,11 @@ public class Card extends Image {
         super.setDrawable(new TextureRegionDrawable(textureRegion));
         //titleGroup = new Group();
         //descriptionGroup = new Group();
-        this.exhaust = exhaust;
         generateTextTable(title);
         super.setAlign(1);
         super.setScaling(Scaling.fill);
         super.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
-        this.exhaust = false;
+        this.exhaust = exhaust;
         super.setName(title);
         this.setWidth(textureRegion.getRegionWidth());
         this.setHeight(textureRegion.getRegionHeight());

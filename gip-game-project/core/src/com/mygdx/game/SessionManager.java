@@ -27,7 +27,7 @@ public class SessionManager {
 
         Array<Integer> startingDeck = cardManager.getVirusManager().getPlayer().getStartingDeck();
         endTurn = new Button(game.skin, "end-turn");
-        endTurn.setPosition(stage.getWidth()-50-endTurn.getWidth(), 150);
+        endTurn.setPosition(stage.getWidth()-120-endTurn.getWidth(), 150);
         group.addActor(endTurn);
 
         for (int i = 0; i < startingDeck.size; i++) {

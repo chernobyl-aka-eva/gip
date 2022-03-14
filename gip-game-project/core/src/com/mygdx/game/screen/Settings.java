@@ -9,7 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.GipGameProject;
 
 public class Settings {
@@ -24,6 +26,8 @@ public class Settings {
     // settings backgrounds
     private final TextureRegion settingsTextureRegion;
     private final TextureRegion inputTextureRegion;
+    private Image settingsBackground;
+    private Image inputBackground;
 
     public Settings(final GipGameProject game, final Stage stage) {
 
@@ -32,22 +36,30 @@ public class Settings {
         stageSettings = stage;
         settingsGroup = new Group(); // actor group
         settingsGroup.setVisible(false); // prevents settings showing up without clicking
-        game.skin = new Skin(Gdx.files.internal("skin/settings-ui.json")); // skin
-        game.skin.addRegions(new TextureAtlas("skin/settings-ui.atlas")); // texture atlas (skin)
 
-        settingsTextureRegion = new TextureRegion(game.skin.getRegion("settings"));
-        inputTextureRegion = new TextureRegion(game.skin.getRegion("input-settings"));
+        Skin skin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
+        TextureAtlas atlas = new TextureAtlas("skin/settings-ui.atlas");
+
+        settingsTextureRegion = new TextureRegion(atlas.findRegion("settings"));
+        inputTextureRegion = new TextureRegion(atlas.findRegion("input-settings"));
+        settingsBackground = new Image(new TextureRegionDrawable(settingsTextureRegion));
+        settingsBackground.setPosition((stageSettings.getWidth() - settingsBackground.getWidth()) / 2, (stageSettings.getHeight() - settingsBackground.getHeight()) / 2);
+        settingsBackground.setVisible(true);
+
+        inputBackground = new Image(new TextureRegionDrawable(inputTextureRegion));
+        inputBackground.setPosition((stageSettings.getWidth() - inputBackground.getWidth()) / 2, (stageSettings.getHeight() - inputBackground.getHeight()) / 2);
+        inputBackground.setVisible(false);
 
         isInputSettings = false; // shows settings instead of input settings
 
-        final Button settings = new Button(game.skin); // settings button
+        final Button settings = new Button(skin); // settings button
         settings.setPosition(
-                (stageSettings.getWidth() - settingsTextureRegion.getRegionWidth()) / 2 + 30,
-                (stageSettings.getHeight() - settingsTextureRegion.getRegionHeight()) / 2 + 802);
+                (stageSettings.getWidth() - settingsBackground.getWidth() / 2 + 30),
+                (stageSettings.getHeight() - settingsBackground.getHeight()) / 2 + 802);
         settings.setChecked(true); // enables toggling
 
 
-        final Button inputSettings = new Button(game.skin, "settings-input"); // input button
+        final Button inputSettings = new Button(skin, "settings-input"); // input button
         inputSettings.setPosition(settings.getX() + settings.getWidth() + 30,
                 settings.getY());
 
@@ -61,7 +73,7 @@ public class Settings {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) { // listens to input
                 settings.setChecked(true);
                 inputSettings.setChecked(false);
-                isInputSettings = false;
+                setInputSettings(false);
                 return true;
             }
         });
@@ -76,12 +88,14 @@ public class Settings {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 inputSettings.setChecked(true);
                 settings.setChecked(false);
-                isInputSettings = true;
+                setInputSettings(true);
                 return true;
             }
         });
 
         // adds buttons to actor group
+        settingsGroup.addActor(settingsBackground);
+        settingsGroup.addActor(inputBackground);
         settingsGroup.addActor(settings);
         settingsGroup.addActor(inputSettings);
         stageSettings.addActor(settingsGroup); // adding actor group to stage
@@ -100,14 +114,6 @@ public class Settings {
     public void render(float delta, Group previousGroup) {
 
         game.batch.begin();
-        // displays correct settings screen
-        if (isInputSettings) {
-            game.batch.draw(inputTextureRegion, (stageSettings.getWidth() - inputTextureRegion.getRegionWidth()) / 2, (stageSettings.getHeight() - inputTextureRegion.getRegionHeight()) / 2);
-
-        } else {
-            game.batch.draw(settingsTextureRegion, (stageSettings.getWidth() - settingsTextureRegion.getRegionWidth()) / 2, (stageSettings.getHeight() - settingsTextureRegion.getRegionHeight()) / 2);
-
-        }
         game.batch.end();
         game.batch.begin();
         stageSettings.act(); // draws actors
@@ -124,6 +130,17 @@ public class Settings {
         }
 
 
+    }
+
+    public boolean isInputSettings() {
+
+        return isInputSettings;
+    }
+
+    public void setInputSettings(boolean inputSettings) {
+        isInputSettings = inputSettings;
+        settingsBackground.setVisible(!inputSettings);
+        inputBackground.setVisible(inputSettings);
     }
 
     public void dispose() {

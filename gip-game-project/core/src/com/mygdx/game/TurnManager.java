@@ -1,11 +1,13 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.cards.CardManager;
+import com.mygdx.game.monster.Monster;
 import com.mygdx.game.monster.MonsterIntent;
 import com.mygdx.game.screen.DeathScreen;
 
@@ -71,6 +73,13 @@ public class TurnManager {
 
     public void monsterTurnStart() {
         monsterTurn = true;
+        // set block
+        for (Actor actor : cardManager.getMonsterManager().getMonsterGroup().getChildren()) {
+            if (actor instanceof Monster) {
+                Monster monster = (Monster) actor;
+                monster.setblock(0);
+            }
+        }
         monsterIntent.monsterTurn(cardManager.getMonsterManager().getMonsterIntents());
         cardManager.getMonsterManager().setIntentVisible(false);
         if (cardManager.getVirusManager().getPlayer().getHealth() <= 0) {
@@ -84,18 +93,20 @@ public class TurnManager {
         playerTurnStart();
     }
 
-   public void playerTurnStart() {
+    public void playerTurnStart() {
         // ♦ is listening to end turn button press ♦
         playerTurn = true;
         turnCounter++;
         game.log.debug("TURN " + turnCounter + "\n==============");
         endTurn.setVisible(true); // sets end turn button visible
         // draw cards
-       if (turnCounter != 1){
-           cardManager.drawcard(cardManager.getVirusManager().getPlayer().getAmountToDraw());
-       }
+        if (turnCounter != 1){
+            cardManager.drawcard(cardManager.getVirusManager().getPlayer().getAmountToDraw());
+        }
         // set energy
         cardManager.getVirusManager().getPlayer().getEnergyManager().setEnergy(cardManager.getVirusManager().getPlayer().getEnergy());
+        // set block
+        cardManager.getVirusManager().getPlayer().setBlock(0);
         // get monster intents
         cardManager.getMonsterManager().intent();
         // refresh hand
@@ -111,11 +122,11 @@ public class TurnManager {
         }
 
 
-   }
+    }
 
-   public void playerTurnEnd() {
+    public void playerTurnEnd() {
         playerTurn = false;
-   }
+    }
 
     public int getTurnCounter() {
         return turnCounter;

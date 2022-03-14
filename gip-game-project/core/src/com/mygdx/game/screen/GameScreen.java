@@ -68,6 +68,7 @@ public class GameScreen implements Screen {
     private Group gameScreenGroup;
     private Group mapScreenGroup;
     private Group backgroundGroup;
+    private ImageTextButton exhaustpile;
 
     // icons health & money texture regions
     private final Image healthIcon;
@@ -193,7 +194,7 @@ public class GameScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!settingsScreen.getSettingsGroup().isVisible() && !pausescreen) {
-                    if (!sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(0).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(1).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(2).isVisible() /* && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(3).isVisible()*/){
+                    if (!sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(0).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(1).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(2).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(3).isVisible()){
                         if (previousState) {
                             showMap = true;
                             previousState = false;
@@ -469,6 +470,30 @@ public class GameScreen implements Screen {
                 return true;
             }
         });
+        exhaustpile = new ImageTextButton(String.valueOf(sessionManager.getTurnManager().getCardManager().getExhaustPile().size), game.skin);
+        exhaustpile.setPosition(stage.getWidth()-exhaustpile.getWidth() ,discardpile.getY()+discardpile.getHeight());
+        gameScreenGroup.addActor(exhaustpile);
+        exhaustpile.addListener(new InputListener() {
+            boolean showDeck = false;
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (!mapScreenGroup.isVisible()) {
+                    showDeck = true;
+                    sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(3).setVisible(true);
+                    sessionManager.getTurnManager().getCardManager().getDeckScreenGroup().setVisible(true);
+                    gameScreenGroup.setVisible(false);
+                }
+
+                return true;
+            }
+        });
+
+        gameScreenGroup.addActor(exhaustpile);
     }
 
     @Override
@@ -491,7 +516,7 @@ public class GameScreen implements Screen {
         }
 
 
-
+        exhaustpile.setText(String.valueOf(sessionManager.getTurnManager().getCardManager().getExhaustPile().size));
         moneyValue.setText(sessionManager.getTurnManager().getCardManager().getVirusManager().getPlayer().getSTARTING_MONEY());
 
 
@@ -513,13 +538,12 @@ public class GameScreen implements Screen {
 
         game.batch.end();
 
+        sessionManager.getTurnManager().getCardManager().renderHand();
+
         // renders settingsscreen if enabled
         if (settingsScreen.getSettingsGroup().isVisible()) {
             settingsScreen.render(delta, gameScreenGroup);
         }
-
-        sessionManager.getTurnManager().getCardManager().renderHand();
-
 
 
     }

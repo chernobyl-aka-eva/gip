@@ -98,10 +98,9 @@ public class CardManager {
                 case 1:
                     player.setBlock(player.getBlock()+6);
                     virusManager.getPlayer().getEnergyManager().setEnergy(virusManager.getPlayer().getEnergyManager().getEnergy()
-                            - card.getCost());
+                            - card.getCost());;
                     break;
-                case 2 :monster.setHealth(monster.getHealth()-4);
-                    discardPile.add(card);
+                case 2 : ;
                     // encode
                     break;
                 case 3:
@@ -116,8 +115,8 @@ public class CardManager {
                             Monster monsterActor = (Monster) actor;
                             playAttackCard(damage, monsterActor);
                         }
-                    }break;
-                case 5:game.log.debug("case 3");break;
+                    };break;
+                case 5:game.log.debug("case 3");;break;
             }
 
             // is enemy ded?
@@ -285,10 +284,12 @@ public class CardManager {
         Table table = displayCards(0);
         Table drawTable = displayCards(1);
         Table discardTable = displayCards(2);
+        Table exhaustTable = displayCards(3);
 
         tableGroup.addActor(table);
         tableGroup.addActor(drawTable);
         tableGroup.addActor(discardTable);
+        tableGroup.addActor(exhaustTable);
     }
 
     public void initTables() {
@@ -298,15 +299,7 @@ public class CardManager {
 
         deckScreenGroup = new Group();
         tableGroup = new Group();
-        Table table = displayCards(0);
-        Table drawTable = displayCards(1);
-        Table discardTable = displayCards(2);
-        Table exhaustTable = displayCards(3);
-
-        tableGroup.addActor(table);
-        tableGroup.addActor(drawTable);
-        tableGroup.addActor(discardTable);
-        tableGroup.addActor(exhaustTable);
+        refreshDisplayTable();
 
 
         Button deckReturn = new Button(game.skin, "return");
@@ -321,6 +314,7 @@ public class CardManager {
                 tableGroup.getChild(0).setVisible(false);
                 tableGroup.getChild(1).setVisible(false);
                 tableGroup.getChild(2).setVisible(false);
+                tableGroup.getChild(3).setVisible(false);
                 //tableGroup.getChild(3).setVisible(false);
                 gameScreenGroup.setVisible(true);
                 return true;

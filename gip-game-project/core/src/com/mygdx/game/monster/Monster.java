@@ -10,10 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.GipGameProject;
 
 public class Monster extends Actor {
@@ -41,6 +43,11 @@ public class Monster extends Actor {
     private ProgressBar monsterHealthBar;
     private Actor nameAreaMonster;
 
+    private Label blockLabel;
+    private boolean blockActive;
+    private Image blockImage;
+    private ProgressBar monsterBlockBar;
+
     private float elapsed_time;
 
 
@@ -54,6 +61,7 @@ public class Monster extends Actor {
         this.gameScreenGroup = gameScreenGroup;
 
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
         elapsed_time = 0f;
         // Animation
@@ -66,6 +74,7 @@ public class Monster extends Actor {
         nameAreaMonster.setSize(monsterIdleAnimation.getKeyFrame(0).getRegionWidth() * 6,
                 monsterIdleAnimation.getKeyFrame(0).getRegionHeight() * 6);
         nameAreaMonster.setPosition(positionX, stage.getHeight() - 700);
+
         // Monster Name
         monsterName = new Label(name, new Label.LabelStyle(game.font, Color.WHITE));
         float x = nameAreaMonster.getX() + (nameAreaMonster.getWidth() - monsterName.getWidth()) / 2;
@@ -76,12 +85,29 @@ public class Monster extends Actor {
         initMonster();
 
         // Health Bar
-        monsterHealthBar = new ProgressBar(0, 100, 1, false, game.skin);
+        monsterHealthBar = new ProgressBar(0, 100, 1, false, game.skin, "red-knob");
         monsterHealthBar.setValue(health);
         monsterHealthBar.setPosition(positionX, stage.getHeight() - 730);
 
+        monsterBlockBar = new ProgressBar(0, 100, 1, false, game.skin, "blue-knob");
+        monsterBlockBar.setValue(health);
+        monsterBlockBar.setPosition(monsterHealthBar.getX(), monsterHealthBar.getY());
 
+        // Block Bar
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));
+        //TextureRegion textureRegion = game.textureAtlas.findRegion("block");
+        TextureRegion textureRegion = atlas.findRegion("block");
+        blockImage = new Image(new TextureRegionDrawable(textureRegion));
+        blockImage.setPosition(monsterHealthBar.getX() - blockImage.getWidth() + 3, monsterHealthBar.getY() - (blockImage.getHeight() / 2));
+        //blockImage.setPosition(500,500);
 
+        blockLabel = new Label(String.valueOf(block), game.skin);
+        blockLabel.setPosition(blockImage.getX(), blockImage.getY());
+        //Color color = Color.rgba8888(57.0F, 45.0F, 63.0F, 1.0F);
+        //color.set(57, 45, 63, 1);
+        //System.out.println("Color: " + color.r + ", " + color.g + ", " + color.b + ", " + color.a);
+        blockLabel.setColor(Color.PURPLE);
+        blockActive = false;
 
     }
 
@@ -114,10 +140,19 @@ public class Monster extends Actor {
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (visible) {
-            //monsterName.setVisible(true);
+            if (blockActive) {
+                monsterBlockBar.setVisible(true);
+                blockLabel.setVisible(true);
+                blockImage.setVisible(true);
+            }
             nameAreaMonster.setVisible(true);
             monsterHealthBar.setVisible(true);
         } else {
+            if (blockActive) {
+                monsterBlockBar.setVisible(false);
+                blockLabel.setVisible(false);
+                blockImage.setVisible(false);
+            }
             monsterName.setVisible(false);
             nameAreaMonster.setVisible(false);
             monsterHealthBar.setVisible(false);
@@ -128,7 +163,15 @@ public class Monster extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
+        monsterHealthBar.setValue(health);
+        if (blockActive) {
+            monsterBlockBar.setValue(health);
+            blockLabel.setText(String.valueOf(block));
+        }
+        blockLabel.setText(block);
         if (this.isVisible()){
+            monsterHealthBar.setValue(health);
+
             elapsed_time += Gdx.graphics.getDeltaTime();
             TextureRegion currentFrameMonster = monsterIdleAnimation.getKeyFrame(elapsed_time, true);
             game.batch.draw(currentFrameMonster,
@@ -137,11 +180,17 @@ public class Monster extends Actor {
                     currentFrameMonster.getRegionWidth() * 6,
                     currentFrameMonster.getRegionHeight() * 6);
 
-
             if (monsterName.isVisible()) {
                 monsterName.draw(batch, parentAlpha);
             }
-            monsterHealthBar.draw(batch, parentAlpha);
+
+            if (!blockActive) {
+                monsterHealthBar.draw(batch, parentAlpha);
+            } else {
+                monsterBlockBar.draw(batch, parentAlpha);
+                blockImage.draw(batch, parentAlpha);
+                blockLabel.draw(batch, parentAlpha);
+            }
         }
 
     }
@@ -246,6 +295,12 @@ public class Monster extends Actor {
 
     public void setblock(int block) {
         this.block = block;
+        if (block > 0) {
+            setBlockActive(true);
+        } else {
+            block = 0;
+            setBlockActive(false);
+        }
     }
 
     public Animation<TextureRegion> getMonsterIdleAnimation() {
@@ -274,6 +329,38 @@ public class Monster extends Actor {
 
     public void setNameAreaMonster(Actor nameAreaMonster) {
         this.nameAreaMonster = nameAreaMonster;
+    }
+
+    public Label getBlockLabel() {
+        return blockLabel;
+    }
+
+    public void setBlockLabel(Label blockLabel) {
+        this.blockLabel = blockLabel;
+    }
+
+    public boolean isBlockActive() {
+        return blockActive;
+    }
+
+    public void setBlockActive(boolean blockActive) {
+        this.blockActive = blockActive;
+    }
+
+    public Image getBlockImage() {
+        return blockImage;
+    }
+
+    public void setBlockImage(Image blockImage) {
+        this.blockImage = blockImage;
+    }
+
+    public ProgressBar getMonsterBlockBar() {
+        return monsterBlockBar;
+    }
+
+    public void setMonsterBlockBar(ProgressBar monsterBlockBar) {
+        this.monsterBlockBar = monsterBlockBar;
     }
 }
 
