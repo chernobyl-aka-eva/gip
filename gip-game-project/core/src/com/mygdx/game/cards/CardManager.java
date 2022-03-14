@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.DragAndDrop;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -285,6 +284,7 @@ public class CardManager {
             }
         });
         deckScreenGroup.addActor(deckReturn);
+        deckScreenGroup.setVisible(false);
         stage.addActor(tableGroup);
         stage.addActor(deckScreenGroup);
     }
