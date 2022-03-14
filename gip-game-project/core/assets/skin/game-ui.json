@@ -31,6 +31,12 @@ com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
 		minWidth: 0
 		minHeight: 6
 	}
+	knob-block-tiled: {
+		region: knob-block
+		color: RGBA_255_0_0_255
+		minWidth: 0
+		minHeight: 6
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	default: {
@@ -50,9 +56,16 @@ com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
 	}
 	drawpile: {
 		up: drawpile
+		down: drawpile
 	}
 	discardpile: {
 		up: discardpile
+		down: discardpile
+	}
+	end-turn: {
+		up: end turn button
+		down: end turn hover
+		over: end turn hover
 	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
@@ -63,6 +76,14 @@ com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
 }
 com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
 	default-horizontal: {
+		background: background
+		knobBefore: knob-tile
+	}
+	blue-knob: {
+		background: background
+		knobBefore: knob-block-tiled
+	}
+	red-knob: {
 		background: background
 		knobBefore: knob-tile
 	}
@@ -97,6 +118,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	}
 	deck: {
 		background: deck-background
+		titleFont: pcsenior
+	}
+	card-info: {
+		background: card-infobox
 		titleFont: pcsenior
 	}
 }

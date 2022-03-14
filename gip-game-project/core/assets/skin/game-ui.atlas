@@ -1,98 +1,168 @@
 
 game-ui.png
-size: 2048, 2048
+size: 4096, 2048
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
+attack
+  rotate: false
+  xy: 2048, 1163
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
 background
   rotate: false
-  xy: 509, 73
+  xy: 3417, 2040
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
+block
+  rotate: false
+  xy: 2201, 1285
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+card-infobox
+  rotate: false
+  xy: 2723, 1770
+  size: 147, 147
+  orig: 147, 147
+  offset: 0, 0
+  index: -1
 deck-background
   rotate: false
-  xy: 2, 1157
+  xy: 2, 81
   size: 1623, 883
   orig: 1623, 883
   offset: 0, 0
   index: -1
 deck-button-00
   rotate: false
-  xy: 1465, 1104
+  xy: 1627, 639
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 deck-button-01
   rotate: false
-  xy: 1854, 1989
+  xy: 2872, 1866
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
+defend
+  rotate: false
+  xy: 1924, 1001
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
 discardpile
   rotate: false
-  xy: 2, 210
-  size: 726, 945
-  orig: 726, 945
+  xy: 1924, 1053
+  size: 122, 160
+  orig: 122, 160
   offset: 0, 0
   index: -1
 drawpile
   rotate: false
-  xy: 730, 210
-  size: 722, 945
-  orig: 722, 945
+  xy: 1627, 692
+  size: 122, 160
+  orig: 122, 160
+  offset: 0, 0
+  index: -1
+end turn button
+  rotate: false
+  xy: 1627, 854
+  size: 275, 110
+  orig: 275, 110
+  offset: 0, 0
+  index: -1
+end turn hover
+  rotate: false
+  xy: 1924, 1215
+  size: 275, 110
+  orig: 275, 110
   offset: 0, 0
   index: -1
 knob
   rotate: false
-  xy: 1627, 1960
+  xy: 2201, 1319
+  size: 186, 6
+  orig: 186, 6
+  offset: 0, 0
+  index: -1
+knob-block
+  rotate: false
+  xy: 736, 73
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
 map-button-00
   rotate: false
-  xy: 1390, 157
+  xy: 2618, 1403
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 map-button-01
   rotate: false
-  xy: 509, 20
+  xy: 1751, 801
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
+melted-block
+  rotate: false
+  xy: 736, 39
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+new turn rectangle
+  rotate: false
+  xy: 2, 966
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
 pause-0
   rotate: false
-  xy: 1627, 1924
+  xy: 2734, 1734
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pause-1
   rotate: false
-  xy: 1390, 121
+  xy: 3417, 2004
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pause-button-0
   rotate: false
-  xy: 696, 81
+  xy: 2723, 1919
   size: 692, 127
   orig: 692, 127
   offset: 0, 0
   index: -1
 pause-button-1
   rotate: false
-  xy: 2, 81
+  xy: 1924, 1327
   size: 692, 127
   orig: 692, 127
+  offset: 0, 0
+  index: -1
+pausescreen-background
+  rotate: false
+  xy: 1924, 1456
+  size: 797, 590
+  orig: 797, 590
   offset: 0, 0
   index: -1
 pcsenior
@@ -104,28 +174,15 @@ pcsenior
   index: -1
 return-button
   rotate: false
-  xy: 1627, 1968
+  xy: 509, 7
   size: 225, 72
   orig: 225, 72
   offset: 0, 0
   index: -1
 scrollBar
   rotate: false
-  xy: 1454, 885
+  xy: 2723, 1498
   size: 9, 270
   orig: 9, 270
-  offset: 0, 0
-  index: -1
-
-game-ui2.png
-size: 1024, 1024
-format: RGBA8888
-filter: Nearest, Nearest
-repeat: none
-pausescreen-background
-  rotate: false
-  xy: 2, 2
-  size: 797, 590
-  orig: 797, 590
   offset: 0, 0
   index: -1

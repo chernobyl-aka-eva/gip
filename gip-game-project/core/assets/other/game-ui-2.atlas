@@ -1,61 +1,82 @@
 
 game-ui-2.png
-size: 2048, 2048
+size: 4096, 2048
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 data
   rotate: false
-  xy: 1923, 1980
+  xy: 1600, 920
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 data-disk
   rotate: false
-  xy: 1923, 2014
+  xy: 0, 20
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 dexterity
   rotate: false
-  xy: 1957, 2026
+  xy: 0, 0
   size: 20, 20
   orig: 20, 20
   offset: 0, 0
   index: -1
 guidelines
   rotate: false
-  xy: 2, 65
+  xy: 0, 52
   size: 1600, 900
   orig: 1600, 900
   offset: 0, 0
   index: -1
 health
   rotate: false
-  xy: 1604, 933
+  xy: 3839, 1999
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 hud-bar
   rotate: false
-  xy: 2, 2
-  size: 1919, 61
-  orig: 1919, 61
+  xy: 1919, 1431
+  size: 1920, 300
+  orig: 1920, 300
+  offset: 0, 0
+  index: -1
+hud-bar-binary-0
+  rotate: false
+  xy: 1919, 1731
+  size: 1920, 300
+  orig: 1920, 300
+  offset: 0, 0
+  index: -1
+hud-bar-binary-01
+  rotate: false
+  xy: 1919, 831
+  size: 1920, 300
+  orig: 1920, 300
+  offset: 0, 0
+  index: -1
+hud-bar-binary-1
+  rotate: false
+  xy: 1919, 1131
+  size: 1920, 300
+  orig: 1920, 300
   offset: 0, 0
   index: -1
 map-background
   rotate: false
-  xy: 2, 967
+  xy: 0, 952
   size: 1919, 1079
   orig: 1919, 1079
   offset: 0, 0
   index: -1
 strength
   rotate: false
-  xy: 1604, 911
+  xy: 32, 32
   size: 20, 20
   orig: 20, 20
   offset: 0, 0

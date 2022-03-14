@@ -29,9 +29,8 @@ public class Monster extends Actor {
     private String name;
     //health
     private int health;
-    private int maxHealth;
     //block
-    private int maxBlock;
+    private int block;
     //texture region
     private Animation<TextureRegion> monsterIdleAnimation;
     //stage
@@ -45,12 +44,11 @@ public class Monster extends Actor {
     private float elapsed_time;
 
 
-    public Monster(final GipGameProject game, int id, String name, int maxHealth, int maxBlock, Stage stage, Group gameScreenGroup) {
+    public Monster(final GipGameProject game, int id, String name, int health, int block, Stage stage, Group gameScreenGroup) {
         this.id = id;
         this.name = name;
-        this.maxHealth = maxHealth;
-        this.health = maxHealth;
-        this.maxBlock = maxBlock;
+        this.health = health;
+        this.block = block;
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = gameScreenGroup;
@@ -67,7 +65,7 @@ public class Monster extends Actor {
 
         nameAreaMonster.setSize(monsterIdleAnimation.getKeyFrame(0).getRegionWidth() * 6,
                 monsterIdleAnimation.getKeyFrame(0).getRegionHeight() * 6);
-        nameAreaMonster.setPosition(positionX, stage.getHeight() - 750);
+        nameAreaMonster.setPosition(positionX, stage.getHeight() - 700);
         // Monster Name
         monsterName = new Label(name, new Label.LabelStyle(game.font, Color.WHITE));
         float x = nameAreaMonster.getX() + (nameAreaMonster.getWidth() - monsterName.getWidth()) / 2;
@@ -90,13 +88,12 @@ public class Monster extends Actor {
     public void initMonster() {
 
         nameAreaMonster.addListener(new ClickListener() {
-            GipGameProject gameProject = game; // detects if hovering over enemy
+            final GipGameProject gameProject = game; // detects if hovering over enemy
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 if (pointer == -1) {
                     monsterName.setVisible(true);
-                    gameProject.log.debug("hover " + monsterIdleAnimation.getKeyFrame(0).getRegionWidth() + " " + monsterIdleAnimation.getKeyFrame(0).getRegionHeight());
-                    System.out.println("cock");
+                    gameProject.log.debug("hovering monster " + monsterIdleAnimation.getKeyFrame(0).getRegionWidth() + " " + monsterIdleAnimation.getKeyFrame(0).getRegionHeight());
                 }
             }
 
@@ -104,8 +101,7 @@ public class Monster extends Actor {
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 if (pointer == -1) {
                     monsterName.setVisible(false);
-                    gameProject.log.debug("nein hover");
-                    System.out.println("non cock");
+                    gameProject.log.debug("not hovering monster");
                 }
             }
         });
@@ -137,7 +133,7 @@ public class Monster extends Actor {
             TextureRegion currentFrameMonster = monsterIdleAnimation.getKeyFrame(elapsed_time, true);
             game.batch.draw(currentFrameMonster,
                     1480,
-                    Gdx.graphics.getHeight() - 750,
+                    Gdx.graphics.getHeight() - 700,
                     currentFrameMonster.getRegionWidth() * 6,
                     currentFrameMonster.getRegionHeight() * 6);
 
@@ -169,6 +165,46 @@ public class Monster extends Actor {
     // getters and setters
 
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public GipGameProject getGame() {
+        return game;
+    }
+
+    public void setGame(GipGameProject game) {
+        this.game = game;
+    }
+
+    public int getBlock() {
+        return block;
+    }
+
+    public void setBlock(int block) {
+        this.block = block;
+    }
+
+    public Group getGameScreenGroup() {
+        return gameScreenGroup;
+    }
+
+    public void setGameScreenGroup(Group gameScreenGroup) {
+        this.gameScreenGroup = gameScreenGroup;
+    }
+
+    public float getElapsed_time() {
+        return elapsed_time;
+    }
+
+    public void setElapsed_time(float elapsed_time) {
+        this.elapsed_time = elapsed_time;
+    }
+
     public int getPositionX() {
         return positionX;
     }
@@ -187,12 +223,12 @@ public class Monster extends Actor {
         this.name = name;
     }
 
-    public int getMaxHealth() {
-        return maxHealth;
+    public int gethealth() {
+        return health;
     }
 
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
+    public void sethealth(int health) {
+        this.health = health;
     }
 
     public int getHealth() {
@@ -204,12 +240,12 @@ public class Monster extends Actor {
         monsterHealthBar.setValue(health);
     }
 
-    public int getMaxBlock() {
-        return maxBlock;
+    public int getblock() {
+        return block;
     }
 
-    public void setMaxBlock(int maxBlock) {
-        this.maxBlock = maxBlock;
+    public void setblock(int block) {
+        this.block = block;
     }
 
     public Animation<TextureRegion> getMonsterIdleAnimation() {
