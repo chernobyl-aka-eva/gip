@@ -104,12 +104,23 @@ public class CardManager {
                     virusManager.getPlayer().getEnergyManager().setEnergy(virusManager.getPlayer().getEnergyManager().getEnergy()
                             - card.getCost());
                     break;
-                case 2:
-
-                case 3: game.log.debug("case 3");break;
-                case 4: game.log.debug("case 3");break;
+                case 2 :monster.setHealth(monster.getHealth()-4);
+                    discardPile.add(card);
+                    // encode
+                    break;
+                case 3:
+                    drawcard(1);
+                    // encode
+                    break;
+                case 4:
+                    for (int m = 0; m < monsterManager.getMonsterGroup().getChildren().size; m++){
+                        Actor actor = monsterManager.getMonsterGroup().getChild(m);
+                        if (actor instanceof Monster){
+                            Monster monsterActor = (Monster) actor;
+                            monsterActor.setHealth(monsterActor.getHealth()-10);
+                        }
+                    }break;
                 case 5:game.log.debug("case 3");break;
-
             }
 
             if (!card.isExhaust()){
