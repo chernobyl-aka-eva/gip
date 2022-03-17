@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.GipGameProject;
-import com.mygdx.game.effect.EffectManager;
 
 public class Monster extends Actor {
 
@@ -48,7 +47,6 @@ public class Monster extends Actor {
     private boolean blockActive;
     private Image blockImage;
     private ProgressBar monsterBlockBar;
-    private EffectManager effectManager;
 
     private float elapsed_time;
 
@@ -61,7 +59,6 @@ public class Monster extends Actor {
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = gameScreenGroup;
-
 
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
         game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
@@ -91,8 +88,6 @@ public class Monster extends Actor {
         monsterHealthBar = new ProgressBar(0, 100, 1, false, game.skin, "red-knob");
         monsterHealthBar.setValue(health);
         monsterHealthBar.setPosition(positionX, stage.getHeight() - 730);
-
-        this.effectManager = new EffectManager(this, game, stage);
 
         monsterBlockBar = new ProgressBar(0, 100, 1, false, game.skin, "blue-knob");
         monsterBlockBar.setValue(health);
@@ -137,10 +132,6 @@ public class Monster extends Actor {
             }
         });
         gameScreenGroup.addActor(nameAreaMonster);
-    }
-
-    public void addEffect(int id) {
-        effectManager.addEffect(id);
     }
 
     //rip setvisible 05/03/2022 - 05/03/2022 🥺
@@ -229,14 +220,6 @@ public class Monster extends Actor {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public EffectManager getEffectManager() {
-        return effectManager;
-    }
-
-    public void setEffectManager(EffectManager effectManager) {
-        this.effectManager = effectManager;
     }
 
     public GipGameProject getGame() {

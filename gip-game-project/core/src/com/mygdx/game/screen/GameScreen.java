@@ -377,11 +377,10 @@ public class GameScreen implements Screen {
         });
 
         // adding pausescreen buttons to actor group
-        pauseScreenWindow.add(resume).pad(20).row();
-        pauseScreenWindow.add(settings).pad(20).row();
-        pauseScreenWindow.add(quit).pad(20).row();
-        //pauseScreenWindow.setVisible(false); // makes pausescreen invisible by default
-        pauseGroup.setVisible(false);
+        pauseGroup.addActor(resume);
+        pauseGroup.addActor(settings);
+        pauseGroup.addActor(quit);
+        pauseGroup.setVisible(false); // makes pausescreen invisible by default
 
         // adding group to stage
         stage.addActor(pauseGroup);
