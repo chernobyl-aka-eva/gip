@@ -1,11 +1,9 @@
 package com.mygdx.game.infobox;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
 import com.mygdx.game.cards.Card;
 import com.mygdx.game.cards.CardInfoType;
@@ -13,7 +11,7 @@ import com.mygdx.game.cards.CardInfoType;
 public class InfoBoxManager {
     private GipGameProject game;
     private Stage stage;
-    private Table infoBoxTable;
+    private Group infoBoxTableGroup;
     private Table cards;
     private CardInfoType cardInfoType;
 
@@ -24,45 +22,54 @@ public class InfoBoxManager {
         this.cards = cards;
         //cards.debugTable();
         //cards.debugActor();
+        infoBoxTableGroup = new Group();
 
-        for (Cell cell : cards.getCells()) {
-            Actor actor = cell.getActor();
-            if (actor instanceof Card) {
-                Card card = (Card) actor;
-                String[] words = card.getDescription().replaceAll("[.]", "").split("\\s");
-                boolean isCardInfo = false;
-                for (String word : words) {
-                    for (CardInfoType value : CardInfoType.values()) {
-                        if (value.name().equals(word)) {
-                            final InfoBox infoBox = new InfoBox("", game.skin, "card-info", word, game, stage);
-                            infoBox.setPosition(cards.getCell(card).getActorX() + cards.getCell(card).getActorWidth()/2 + 120,
-                                    cards.getCell(card).getActorY() + cards.getCell(card).getActorHeight()/2 + 80);
-                            infoBox.setVisible(false);
-                            card.addListener(new ClickListener() {
-                                @Override
-                                public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                                    super.enter(event, x, y, pointer, fromActor);
-                                    if (pointer == -1) {
-                                        infoBox.setVisible(true);
-                                    }
-                                }
+        //cards.addActor(infoBoxTableGroup);
+    }
+    public Table getInfoBoxTable(Card card) {
+        Array<InfoBox> infoBoxes = new Array<>();
+        Table infoBoxTable = new Table();
+        infoBoxTable.left();
+        //infoBoxTable.debug();
+        //infoBoxTable.debugActor();
 
-                                @Override
-                                public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                                    super.exit(event, x, y, pointer, toActor);
-                                    if (pointer == -1) {
-                                        infoBox.setVisible(false);
-                                    }
-                                }
-                            });
-                            stage.addActor(infoBox);
-                        }
-                    }
+        String[] words = card.getDescription().replaceAll("[.]", "").split("\\s");
+        boolean isCardInfo = false;
+        for (String word : words) {
+            for (CardInfoType value : CardInfoType.values()) {
+                if (value.name().equals(word)) {
+                    final InfoBox infoBox = new InfoBox("", game.skin, "card-info", word, game, stage);
+                    //infoBox.setVisible(false);
+                    InfoBoxListener infoBoxListener = new InfoBoxListener(infoBoxTable);
+                    card.addListener(infoBoxListener);
+                    infoBoxes.add(infoBox);
                 }
             }
+        }
+        infoBoxTable.setSize(300, 300);
+
+        infoBoxTable.setVisible(false);
+        float maxHeight = 0;
+        for (int i = 0; i < infoBoxes.size; i++) {
+            float currentHeight = infoBoxes.get(i).getHeight();
+            if (currentHeight > maxHeight) {
+                maxHeight = currentHeight + 5;
+            }
+            infoBoxTable.setHeight(maxHeight);
+            infoBoxTable.add(infoBoxes.get(i)).left().row();
+        }
+        if (infoBoxTable.getChildren().size>0) {
+            //infoBoxTable.getCell().set
+            infoBoxTable.setPosition(cards.getCell(card).getActorX() + cards.getCell(card).getActorWidth()/2 + 120,
+                    cards.getCell(card).getActorY() + cards.getCell(card).getActorHeight()/2 + 80);
+            //cards.addActor(infoBoxTable);
 
 
 
         }
+
+        return infoBoxTable;
+
     }
 }
+

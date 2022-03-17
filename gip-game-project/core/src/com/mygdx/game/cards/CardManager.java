@@ -5,10 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -71,17 +68,17 @@ public class CardManager {
     public void addCard(int id) {
         game.textureAtlas = new TextureAtlas("cards/cards.atlas");
         switch (id) {
-            case 0: final Card strike = new Card(0, "Strike", "", CardType.ATTACK, 1, game.textureAtlas.findRegion("strike"), elapsed_time, game);
+            case 0: Card strike = new Card(0, "Strike", "", CardType.ATTACK, 1, game.textureAtlas.findRegion("strike"), elapsed_time, game);
                 playerCards.add(strike); drawPile.add(strike); break;
-            case 1: final Card defend = new Card(1,"Defend", "", CardType.SKILL, 1, game.textureAtlas.findRegion("defend"), elapsed_time, game);
+            case 1: Card defend = new Card(1,"Defend", "", CardType.SKILL, 1, game.textureAtlas.findRegion("defend"), elapsed_time, game);
                 playerCards.add(defend); drawPile.add(defend); break;
-            case 2: final Card replicate = new Card(2, "Replicate", "ENCODE", CardType.ATTACK, 0, game.textureAtlas.findRegion("replicate"), elapsed_time, game);
+            case 2: Card replicate = new Card(2, "Replicate", "ENCODE", CardType.ATTACK, 0, game.textureAtlas.findRegion("replicate"), elapsed_time, game);
                 playerCards.add(replicate); drawPile.add(replicate); break;
-            case 3: final Card gotoCard = new Card(3, "Go To", "ENCODE. COMPILE", CardType.SKILL, 1, game.textureAtlas.findRegion("go to"), elapsed_time, game);
+            case 3: Card gotoCard = new Card(3, "Go To", "ENCODE. COMPILE", CardType.SKILL, 1, game.textureAtlas.findRegion("go to"), elapsed_time, game);
                 playerCards.add(gotoCard); drawPile.add(gotoCard); break;
-            case 4: final Card piercingShot = new Card(4, "Piercing Shot", "EXHAUST", CardType.ATTACK, 1, game.textureAtlas.findRegion("piercing shot"), true, elapsed_time, game);
+            case 4: Card piercingShot = new Card(4, "Piercing Shot", "EXHAUST", CardType.ATTACK, 1, game.textureAtlas.findRegion("piercing shot"), true, elapsed_time, game);
                 playerCards.add(piercingShot); drawPile.add(piercingShot); break;
-            case 5: final Card fineTuning = new Card(5, "Fine Tuning", "DEXTERITY", CardType.POWER, 2, game.textureAtlas.findRegion("fine tuning"),elapsed_time, game);
+            case 5: Card fineTuning = new Card(5, "Fine Tuning", "DEXTERITY ENCODE COMPILE EXHAUST", CardType.POWER, 2, game.textureAtlas.findRegion("fine tuning"),elapsed_time, game);
                 playerCards.add(fineTuning); drawPile.add(fineTuning);
         }
     }
@@ -96,7 +93,8 @@ public class CardManager {
                     playAttackCard(damage, monster);
                     break;
                 case 1:
-                    player.setBlock(player.getBlock()+6);
+                    int stack = player.getEffectManager().getStack(0); // id 0 --> dexterity
+                    player.setBlock(player.getBlock()+stack+6);
                     virusManager.getPlayer().getEnergyManager().setEnergy(virusManager.getPlayer().getEnergyManager().getEnergy()
                             - card.getCost());;
                     break;
@@ -116,14 +114,20 @@ public class CardManager {
                             playAttackCard(damage, monsterActor);
                         }
                     };break;
-                case 5:game.log.debug("case 3");;break;
+                case 5:game.log.debug("case 5");
+                    //adding dexterity
+                    player.addEffect(0); //id 0 --> Dexterity | See EffectManager for ids
+                break;
             }
 
             // is enemy ded?
-            if (monster.getHealth() <= 0){
-                monster.remove();
-                monsterManager.setIntentVisible(false);
+            if (monster!=null) {
+                if (monster.getHealth() <= 0){
+                    monster.remove();
+                    monsterManager.setIntentVisible(false);
+                }
             }
+
 
             if (!card.isExhaust()){
                 discardPile.add(card);
@@ -338,6 +342,7 @@ public class CardManager {
         table.setOrigin(Align.center);
         table.align(Align.center);
         //table.debug();
+        //table.debugActor();
 
         Array<Card> displayList = new Array<>();
         String title = "";
@@ -358,13 +363,18 @@ public class CardManager {
 
 
         Table displayDeck = new Table(game.skin);
+
         displayDeck.center().top().align(Align.center).clip(true);
         //displayDeck.debugActor();
         displayDeck.add().padTop(100F).row();
+        InfoBoxManager infoBoxManager = new InfoBoxManager(game, stage, displayDeck);
         for (int i = 1; i < displayList.size+1; i++) {
             //creates copy of card to render in deckscreen (--> uses copy card constructor deckscreen)
             Card cardCopy = new Card(displayList.get(i-1), true);
             cardCopy.setScale(0.6F);
+            Card previousCard = null;
+
+
             //cardCopy.debug();
             //adds cards to ta ble displaydeck (WIP)
             cardCopy.setOrigin(Align.bottomLeft);
@@ -373,21 +383,55 @@ public class CardManager {
             int amountPerRow = 5;
             float padWidth = (float) ((stage.getWidth()-(cardCopy.getWidth()*amountPerRow))/5+53);
             float padHeight = 0 - cardCopy.getHeight()/5;
-            displayDeck.add(cardCopy).size(cardCopy.getWidth(), cardCopy.getHeight()).colspan(amountPerRow).space(0).padRight(padWidth).padLeft(padWidth).padTop(padHeight).padBottom(padHeight).center();
+
+
+            displayDeck.add(cardCopy).size(cardCopy.getWidth(), cardCopy.getHeight()).colspan(amountPerRow).padRight(padWidth).padLeft(padWidth).padTop(padHeight).padBottom(padHeight).center();
+            cardCopy.toBack();
+
+            Table infoBoxTable = infoBoxManager.getInfoBoxTable(cardCopy);
+
+            displayDeck.add(infoBoxTable).size(0,0).padLeft(-100);
+            infoBoxTable.toFront();
+
+
             if (i % amountPerRow == 0) {
                 displayDeck.add().row();
             }
 
+
         }
+
         displayDeck.add().padBottom(100F).row();
 
         displayDeck.setSize(stage.getWidth(), stage.getHeight());
         displayDeck.setOrigin(Align.center);
         displayDeck.align(Align.center);
         displayDeck.setBounds(displayDeck.getX(), displayDeck.getY(), stage.getWidth(), stage.getHeight()-60);
-        ScrollPane scrollPane = new ScrollPane(displayDeck, game.skin);
+
+
+        final ScrollPane scrollPane = new ScrollPane(displayDeck, game.skin);
         scrollPane.setSize(stage.getWidth(), stage.getHeight());
         scrollPane.setOrigin(Align.center);
+
+        scrollPane.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                if (pointer == -1) {
+                    stage.setScrollFocus(scrollPane);
+                }
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                super.exit(event, x, y, pointer, toActor);
+                if (pointer == -1) {
+                    stage.setScrollFocus(null);
+                }
+            }
+        });
+
+
         scrollPane.validate();
         table.add(title).row();
         table.add(scrollPane);
@@ -396,7 +440,7 @@ public class CardManager {
         //stage.addActor(table);
         //deckScreenGroup.addActor(table);
 
-        InfoBoxManager infoBoxManager = new InfoBoxManager(game, stage, displayDeck);
+
 
 
 

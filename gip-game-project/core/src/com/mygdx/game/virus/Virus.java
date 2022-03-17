@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
+import com.mygdx.game.effect.EffectManager;
 
 public class Virus extends Actor {
 
@@ -56,6 +57,8 @@ public class Virus extends Actor {
     private final Label virusName;
     private ProgressBar virusHealthBar;
     private Actor nameAreaVirus;
+
+    private EffectManager effectManager;
     private float elapsed_time;
 
     // constructor
@@ -102,6 +105,8 @@ public class Virus extends Actor {
         virusBlockBar.setValue(health);
         virusBlockBar.setPosition(virusHealthBar.getX(), virusHealthBar.getY());
 
+        this.effectManager = new EffectManager(this, game, stage);
+
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));
         //TextureRegion textureRegion = game.textureAtlas.findRegion("block");
         TextureRegion textureRegion = atlas.findRegion("block");
@@ -125,7 +130,8 @@ public class Virus extends Actor {
         font = generator.generateFont(parameter);
 
         energyManager = new EnergyManager(game, stage, energy, font);
-        stage.addActor(energyManager);
+        gameScreenGroup.addActor(energyManager);
+
 
         // Starting Deck
         startingDeck = new Array<>();
@@ -189,6 +195,10 @@ public class Virus extends Actor {
         }
     }
 
+    public void addEffect(int id) {
+        effectManager.addEffect(id);
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
@@ -244,6 +254,14 @@ public class Virus extends Actor {
 
     public void setAmountToDraw(int amountToDraw) {
         this.amountToDraw = amountToDraw;
+    }
+
+    public EffectManager getEffectManager() {
+        return effectManager;
+    }
+
+    public void setEffectManager(EffectManager effectManager) {
+        this.effectManager = effectManager;
     }
 
     public GipGameProject getGame() {

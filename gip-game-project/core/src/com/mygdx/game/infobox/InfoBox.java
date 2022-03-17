@@ -40,13 +40,21 @@ public class InfoBox extends Window {
 
 
                 }
+                Label infoLabelTitle = new Label(type, game.skin);
+                infoLabelTitle.setColor(Color.GOLDENROD);
+
+                GlyphLayout glyphLayout = new GlyphLayout(game.font, type);
+                float titleHeight = glyphLayout.height;
 
                 Label infoLabel = new Label(words, game.skin);
                 infoLabel.setColor(Color.BLACK);
-                GlyphLayout glyphLayout = new GlyphLayout(game.font, words);
+
+                glyphLayout.setText(game.font, words);
+
+                this.add(infoLabelTitle).top().center().row();
                 this.add(infoLabel).top().center();
                 this.pad(20F);
-                this.setHeight(glyphLayout.height+getPadBottom()+getPadTop()+10);
+                this.setHeight(titleHeight+glyphLayout.height+getPadBottom()+getPadTop()+10);
             }
         }
     }

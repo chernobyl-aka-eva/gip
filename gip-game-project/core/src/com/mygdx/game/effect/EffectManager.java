@@ -1,51 +1,80 @@
 package com.mygdx.game.effect;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
-import com.mygdx.game.TurnManager;
-import com.mygdx.game.cards.CardManager;
+import com.mygdx.game.monster.Monster;
+import com.mygdx.game.virus.Virus;
 
-import java.util.ArrayList;
+import java.util.Locale;
 
 public class EffectManager {
     private GipGameProject game;
-    private TurnManager turnManager;
 
-    // player
-    private ArrayList<Effect> effects = new ArrayList<>(); // buffs and debuffs arraylist
-    // monster
-    private final ArrayList<Effect> effectsEnemy = new ArrayList<>(); // buffs and debuffs arraylist
+    private Actor target;
+    private Array<Effect> effects = new Array<>();
+    private Table effectTable;
+    private Stage stage;
 
-    public EffectManager(GipGameProject game, TurnManager turnManager) {
+    private TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("other/game-ui-2.atlas"));
+
+    public EffectManager(Actor target, GipGameProject game, Stage stage) {
         this.game = game;
-        this.turnManager = turnManager;
-    }
+        this.target = target;
+        this.stage = stage;
 
-
-
-    // =BLOCK TYPE EFFECTS=
-    // Dexterity - Increases block gained from cards - Intensity
-    public int dexterityBuff(int dexterity, int amount, boolean multiply) {
-        if (multiply) {
-            dexterity *= amount;
-            return dexterity;
-        } else {
-            dexterity += amount;
-            return dexterity;
+        effectTable = new Table();
+        if (target instanceof Virus) {
+            Virus virus = (Virus) target;
+            effectTable.setPosition(virus.getVirusHealthBar().getX()-virus.getVirusHealthBar().getWidth()/2+5, virus.getVirusHealthBar().getY()-25);
+            effectTable.setSize(virus.getVirusHealthBar().getWidth(), 20);
+        } else if (target instanceof Monster) {
+            Monster monster = (Monster) target;
+            effectTable.setPosition(monster.getMonsterHealthBar().getX()-monster.getMonsterHealthBar().getWidth()/2+5, monster.getMonsterHealthBar().getY()-25);
+            effectTable.setSize(monster.getMonsterHealthBar().getWidth(), 20);
         }
+        //effectTable.setPosition(200, 200);
+
+        stage.addActor(effectTable);
     }
 
-    // =ATTACK TYPE EFFECTS=
-    // Strength - Increases attack damage by X - Intensity
-    public int strengthBuff(int strength, int amount, boolean multiply) {
-        if (multiply) {
-            strength *= amount;
-            return strength;
-        } else {
-            strength += amount;
-            return strength;
+    public void addEffect(int id) {
+        Effect addedEffect = null;
+        switch (id) {
+            case 0: Effect dexterity = new Effect(0, "Dexterity", true); addedEffect = dexterity; break;
+            case 1: Effect strength = new Effect(1, "Strength", true); addedEffect = strength; break;
         }
+
+        boolean effectFound = false;
+        for (Effect effect : effects) {
+            if (effect.getId() == id) {
+                if (addedEffect.isStacks()) {
+                    effect.setStack(addedEffect.getStack()+1); effectFound = true; break;
+                }
+            }
+        }
+        if (!effectFound) {
+            effects.add(addedEffect);
+        }
+        Image effectIcon = new Image(new TextureRegionDrawable(atlas.findRegion(addedEffect.getEffectName().toLowerCase(Locale.ROOT))));
+        effectIcon.setPosition(100, 100);
+        //stage.addActor(effectIcon);
+        effectTable.add(effectIcon).size(effectIcon.getWidth(), effectIcon.getHeight()).left();
     }
 
-    // =OTHER TYPE EFFECTS=
-    // Regen - At the end of your turn, heal X HP - Intensity
+    public int getStack(int id) {
+        int stack = 0;
+        for (Effect effect : effects) {
+            if (effect.getId() == id) {
+                stack = effect.getStack();
+            }
+        }
+        return stack;
+    }
 }

@@ -35,7 +35,6 @@ public class Card extends Image {
     private float timeAdded;
     private Table containingTable;
     private boolean isDragging;
-    private CardManager cardManager;
     private int damage = 0;
     private int block = 0;
 
