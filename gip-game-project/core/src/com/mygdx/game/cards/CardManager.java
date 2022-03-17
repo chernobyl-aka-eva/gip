@@ -117,7 +117,7 @@ public class CardManager {
                 case 5:game.log.debug("case 5");
                     //adding dexterity
                     player.addEffect(0); //id 0 --> Dexterity | See EffectManager for ids
-                break;
+                    break;
             }
 
             // is enemy ded?

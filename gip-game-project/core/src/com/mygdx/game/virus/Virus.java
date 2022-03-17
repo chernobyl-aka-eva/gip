@@ -131,7 +131,10 @@ public class Virus extends Actor {
 
         energyManager = new EnergyManager(game, stage, energy, font);
         gameScreenGroup.addActor(energyManager);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
         // Starting Deck
         startingDeck = new Array<>();
