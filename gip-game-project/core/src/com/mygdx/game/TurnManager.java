@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.mygdx.game.animations.TurnAnimation;
 import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.monster.Monster;
 import com.mygdx.game.monster.MonsterIntent;
@@ -26,7 +25,7 @@ public class TurnManager {
     private CardManager cardManager;
     private final MonsterIntent monsterIntent;
     private Button endTurn;
-    private TurnAnimation turnAnimation;
+
 
 
 
@@ -38,8 +37,6 @@ public class TurnManager {
         this.endTurn = endTurn;
         this.cardManager = cardManager;
         monsterIntent = new MonsterIntent(game, cardManager);
-        turnAnimation = new TurnAnimation(game, stage, this);
-
         playerTurnStart();
         cardManager.refreshDisplayTable();
 
@@ -54,7 +51,12 @@ public class TurnManager {
             }
         });
 
+        /*
+        for (Card playerCard : cardManager.getPlayerCards()) {
+            cardManager.getDrawPile().add(playerCard);
+        }
 
+         */
     }
 
     public void emptyHand(){
@@ -72,9 +74,6 @@ public class TurnManager {
     public void monsterTurnStart() {
         monsterTurn = true;
         // set block
-        //turnAnimation.startAnimation(1);
-
-
         for (Actor actor : cardManager.getMonsterManager().getMonsterGroup().getChildren()) {
             if (actor instanceof Monster) {
                 Monster monster = (Monster) actor;
@@ -96,10 +95,8 @@ public class TurnManager {
 
     public void playerTurnStart() {
         // ♦ is listening to end turn button press ♦
-        turnCounter++;
         playerTurn = true;
-        //turnAnimation.startAnimation(1, turnCounter);
-
+        turnCounter++;
         game.log.debug("TURN " + turnCounter + "\n==============");
         endTurn.setVisible(true); // sets end turn button visible
         // draw cards
