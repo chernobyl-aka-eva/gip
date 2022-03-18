@@ -2,16 +2,50 @@ package com.mygdx.game.effect;
 
 public class Effect {
     //   NAME ------------------- EFFECT ------------------- STACKS?
+    private int id;
     private String effectName;
-    private int counter;
-    private int intensity;
-    private int duration;
+    private boolean stacks;
+    private int stack = 1;
+    private int limitTurns = -1;
+    private boolean active = false;
 
-    public Effect(String effectName, int counter, int intensity, int duration) {
+
+    public Effect(int id, String effectName, boolean stacks) {
+        this.id = id;
         this.effectName = effectName;
-        this.counter = counter;
-        this.intensity = intensity;
-        this.duration = duration;
+        this.stacks = stacks;
+    }
+
+    public Effect(int id, String effectName, boolean stacks, int limitTurns) {
+        this.id = id;
+        this.effectName = effectName;
+        this.stacks = stacks;
+        this.limitTurns = limitTurns;
+    }
+
+    public Effect(int id, String effectName, boolean stacks, int stack, int limitTurns, boolean active) {
+        this.id = id;
+        this.effectName = effectName;
+        this.stacks = stacks;
+        this.stack = stack;
+        this.limitTurns = limitTurns;
+        this.active = active;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getStack() {
+        return stack;
+    }
+
+    public void setStack(int stack) {
+        this.stack = stack;
     }
 
     public String getEffectName() {
@@ -22,31 +56,19 @@ public class Effect {
         this.effectName = effectName;
     }
 
-    // =BLOCK TYPE EFFECTS=
-    // Dexterity - Increases block gained from cards - Intensity
-    public int dexterityBuff(int dexterity, int amount, boolean multiply) {
-        if (multiply) {
-            dexterity *= amount;
-            return dexterity;
-        } else {
-            dexterity += amount;
-            return dexterity;
-        }
+    public boolean isStacks() {
+        return stacks;
     }
 
-    // =ATTACK TYPE EFFECTS=
-    // Strength - Increases attack damage by X - Intensity
-    public int strengthBuff(int strength, int amount, boolean multiply) {
-        if (multiply) {
-            strength *= amount;
-            return strength;
-        } else {
-            strength += amount;
-            return strength;
-        }
+    public void setStacks(boolean stacks) {
+        this.stacks = stacks;
     }
 
-    // =OTHER TYPE EFFECTS=
-    // Regen - At the end of your turn, heal X HP - Intensity
+    public int getLimitTurns() {
+        return limitTurns;
+    }
 
+    public void setLimitTurns(int limitTurns) {
+        this.limitTurns = limitTurns;
+    }
 }

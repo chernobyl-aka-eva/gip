@@ -14,14 +14,14 @@ public class VirusManager {
     private Virus player;
 
     private Stage stage;
-    private Group gameScreenGroup;
+    private final Group gameScreenGroup;
 
     public VirusManager(GipGameProject game, Stage stage, Group group) {
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = group;
 
-        player = new Virus(game, "Poopiehead", 100, 100, stage, gameScreenGroup);
+        player = new Virus(game, "Player", 100, 0, stage, gameScreenGroup);
         gameScreenGroup.addActor(player);
 
         // Animation Textures
@@ -31,14 +31,14 @@ public class VirusManager {
 
     public void drawVirus(){
         game.batch.begin();
-        stage.act(Gdx.graphics.getDeltaTime());
-        stage.draw();
+        //stage.act(Gdx.graphics.getDeltaTime());
+        //stage.draw();
         game.batch.end();
     }
 
     public void setVisible(boolean isVisible){
         player.setVisible(isVisible);
-        System.out.println(isVisible);
+        //.out.println(isVisible);
     }
 
    //getters and setter

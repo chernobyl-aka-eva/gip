@@ -1,22 +1,22 @@
 package com.mygdx.game.item;
 
 public class Item {
-    private String relicName;
+    private String itemName;
     private String rarity;
     private String description;
 
     public Item(String relicName, String rarity, String description) {
-        this.relicName = relicName;
+        this.itemName = relicName;
         this.rarity = rarity;
         this.description = description;
     }
 
-    public String getRelicName() {
-        return relicName;
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setRelicName(String relicName) {
-        this.relicName = relicName;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
     public String getRarity() {

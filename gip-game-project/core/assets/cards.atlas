@@ -1,7 +1,0 @@
-cards.png
-size:2048,1024
-repeat:none
-card-defend
-bounds:678,0,678,874
-card-strike
-bounds:0,0,678,874
