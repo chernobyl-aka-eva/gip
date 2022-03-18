@@ -1,12 +1,19 @@
 
 cards.png
-size: 4096, 2048
+size: 8192, 2048
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 defend
   rotate: false
-  xy: 826, 2
+  xy: 1650, 2
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+fine tuning
+  rotate: false
+  xy: 2474, 2
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0
@@ -18,16 +25,23 @@ go to
   orig: 822, 1122
   offset: 0, 0
   index: -1
+piercing shot
+  rotate: false
+  xy: 826, 2
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
 replicate
   rotate: false
-  xy: 2474, 2
+  xy: 4122, 2
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0
   index: -1
 strike
   rotate: false
-  xy: 1650, 2
+  xy: 3298, 2
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0

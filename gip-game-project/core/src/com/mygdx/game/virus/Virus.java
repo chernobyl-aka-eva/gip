@@ -2,61 +2,78 @@ package com.mygdx.game.virus;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.*;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
+import com.mygdx.game.effect.EffectManager;
 
-public class Virus extends Actor{
+public class Virus extends Actor {
 
     private GipGameProject game;
 
-    //position and dimension
-    private int positionX = 400;
+    private Array<Integer> startingDeck;
 
-    // characterics
-    //name
-    private String name;
-    //health
-    //private int health = 75;
-    private int maxHealth = 75;
-    //block
-    //private int block = 0;
-    private int maxBlock = 200;
-    //relics ?
+    private String name; // name
+    private int health; // health
+    private int block; // block
 
-    //potions ?
 
-    //texture region
-    private Animation<TextureRegion> idleAnimation;
+    private final int STARTING_HP = 75; // starting HP
+    private final int MAX_HP = 200; // maximum health the player can have
+    private final int STARTING_MONEY = 99; // MB data (money)
+    private final int HAND_SIZE = 10; // maximum amount of cards the player can hold
 
-    //stage
+    private int energy = 3; // how much energy you get every turn
+    private EnergyManager energyManager;
+    private Animation<TextureRegion> idleAnimation; // idle character animation
+
+    private int amountToDraw = 6;
+
+    private Label blockLabel;
+    private boolean blockActive;
+    private Image blockImage;
+    private ProgressBar virusBlockBar;
+    // items
+    // potions
+
+    private float positionX; // position and dimension
+    private float positionY;
+
+    // stage
     Stage stage;
     private Group gameScreenGroup;
 
     private final Label virusName;
     private ProgressBar virusHealthBar;
     private Actor nameAreaVirus;
+
+    private EffectManager effectManager;
     private float elapsed_time;
 
     // constructor
-    public Virus(GipGameProject game, String name, int maxHealth, int maxBlock, Stage stage, Group gameScreenGroup) {
+    public Virus(GipGameProject game, String name, int health, int block, Stage stage, Group gameScreenGroup) {
         this.name = name;
-        this.maxHealth = maxHealth;
-        this.maxBlock = maxBlock;
+        this.health = health;
+        this.block = block;
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = gameScreenGroup;
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+
+        positionX = 400;
+        positionY = stage.getHeight() - 700;
 
         elapsed_time = 0f;
         // Animation
@@ -68,7 +85,7 @@ public class Virus extends Actor{
 
         nameAreaVirus.setSize(idleAnimation.getKeyFrame(0).getRegionWidth() * 6, // sets size of area to check
                 idleAnimation.getKeyFrame(0).getRegionHeight() * 6);
-        nameAreaVirus.setPosition(positionX, stage.getHeight() - 750); // sets position of checking area
+        nameAreaVirus.setPosition(positionX, stage.getHeight() - 700); // sets position of checking area
 
         // Virus Name
         virusName = new Label(name, new Label.LabelStyle(game.font, Color.WHITE));
@@ -80,19 +97,66 @@ public class Virus extends Actor{
         initVirus();
 
         // Health Bar
-        virusHealthBar = new ProgressBar(0, 100, 1, false, game.skin);
-        virusHealthBar.setValue(50);
-        virusHealthBar.setPosition(positionX, stage.getHeight() - 780);
+        virusHealthBar = new ProgressBar(0, 100, 1, false, game.skin, "red-knob");
+        virusHealthBar.setValue(health);
+        virusHealthBar.setPosition(positionX, stage.getHeight() - 730);
+
+        virusBlockBar = new ProgressBar(0, 100, 1, false, game.skin, "blue-knob");
+        virusBlockBar.setValue(health);
+        virusBlockBar.setPosition(virusHealthBar.getX(), virusHealthBar.getY());
+
+        this.effectManager = new EffectManager(this, game, stage);
+
+        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));
+        //TextureRegion textureRegion = game.textureAtlas.findRegion("block");
+        TextureRegion textureRegion = atlas.findRegion("block");
+        blockImage = new Image(new TextureRegionDrawable(textureRegion));
+        blockImage.setPosition(virusHealthBar.getX() - blockImage.getWidth() + 3, virusHealthBar.getY() - (blockImage.getHeight() / 2));
+        //blockImage.setPosition(500,500);
+
+        blockLabel = new Label(String.valueOf(block), game.skin);
+        blockLabel.setPosition(blockImage.getX(), blockImage.getY());
+        //Color color = Color.rgba8888(57.0F, 45.0F, 63.0F, 1.0F);
+        //color.set(57, 45, 63, 1);
+        //System.out.println("Color: " + color.r + ", " + color.g + ", " + color.b + ", " + color.a);
+        blockLabel.setColor(Color.PURPLE);
+        blockActive = false;
+
+        // Energy
+        FreeTypeFontGenerator generator = game.generator;
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = game.parameter;
+        parameter.size = 50;
+        BitmapFont font;
+        font = generator.generateFont(parameter);
+
+        energyManager = new EnergyManager(game, stage, energy, font);
+        gameScreenGroup.addActor(energyManager);
+
+        // Starting Deck
+        startingDeck = new Array<>();
+        startingDeck.add(0);
+        startingDeck.add(0);
+        startingDeck.add(0);
+        startingDeck.add(0);
+        startingDeck.add(1);
+        startingDeck.add(1);
+        startingDeck.add(1);
+        startingDeck.add(1);
+        startingDeck.add(2);
+        startingDeck.add(3);
+        startingDeck.add(4);
+        startingDeck.add(5);
+
 
     }
 
-    public void initVirus(){
+    public void initVirus() {
         nameAreaVirus.addListener(new ClickListener() { // detects if hovering over player
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 if (pointer == -1) {
                     virusName.setVisible(true);
-                    game.log.debug("hover " + idleAnimation.getKeyFrame(0).getRegionWidth() + " " + idleAnimation.getKeyFrame(0).getRegionHeight());
+                    game.log.debug("hovering player " + idleAnimation.getKeyFrame(0).getRegionWidth() + " " + idleAnimation.getKeyFrame(0).getRegionHeight());
                 }
             }
 
@@ -100,7 +164,7 @@ public class Virus extends Actor{
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 if (pointer == -1) {
                     virusName.setVisible(false);
-                    game.log.debug("not hover");
+                    game.log.debug("not hovering player ");
                 }
             }
         });
@@ -111,32 +175,59 @@ public class Virus extends Actor{
     public void setVisible(boolean visible) {
         super.setVisible(visible);
         if (visible) {
+            if (blockActive) {
+                virusBlockBar.setVisible(true);
+                blockLabel.setVisible(true);
+                blockImage.setVisible(true);
+            }
             nameAreaVirus.setVisible(true);
             virusHealthBar.setVisible(true);
-        }else{
+        } else {
+            if (blockActive) {
+                virusBlockBar.setVisible(false);
+                blockLabel.setVisible(false);
+                blockImage.setVisible(false);
+            }
             virusName.setVisible(false);
             nameAreaVirus.setVisible(false);
             virusHealthBar.setVisible(false);
         }
     }
 
+    public void addEffect(int id) {
+        effectManager.addEffect(id);
+    }
+
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        if(this.isVisible()){
+        virusHealthBar.setValue(health);
+        if (blockActive) {
+            virusBlockBar.setValue(health);
+            blockLabel.setText(String.valueOf(block));
+        }
+        blockLabel.setText(block);
+        if (this.isVisible()) {
             elapsed_time += Gdx.graphics.getDeltaTime();
             TextureRegion currentFrame = idleAnimation.getKeyFrame(elapsed_time, true);
             game.batch.draw(currentFrame,
                     positionX,
-                    stage.getHeight() - 750,
+                    positionY,
                     currentFrame.getRegionWidth() * 6,
                     currentFrame.getRegionHeight() * 6);
 
-            if (virusName.isVisible())  {
+            if (virusName.isVisible()) {
                 virusName.draw(batch, parentAlpha);
             }
-            virusHealthBar.draw(batch, parentAlpha);
+            if (!blockActive) {
+                virusHealthBar.draw(batch, parentAlpha);
+            } else {
+                virusBlockBar.draw(batch, parentAlpha);
+                blockImage.draw(batch, parentAlpha);
+                blockLabel.draw(batch, parentAlpha);
+            }
         }
+
     }
 
     @Override
@@ -150,16 +241,66 @@ public class Virus extends Actor{
                 virusName.act(delta);
             }
         }
+
     }
 
-    // setters and getters
+    // getters and setters
 
-    public int getPositionX() {
-        return positionX;
+
+    public int getAmountToDraw() {
+        return amountToDraw;
     }
 
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
+    public void setAmountToDraw(int amountToDraw) {
+        this.amountToDraw = amountToDraw;
+    }
+
+    public EffectManager getEffectManager() {
+        return effectManager;
+    }
+
+    public void setEffectManager(EffectManager effectManager) {
+        this.effectManager = effectManager;
+    }
+
+    public GipGameProject getGame() {
+        return game;
+    }
+
+    public void setGame(GipGameProject game) {
+        this.game = game;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
+
+    public EnergyManager getEnergyManager() {
+        return energyManager;
+    }
+
+    public void setEnergyManager(EnergyManager energyManager) {
+        this.energyManager = energyManager;
+    }
+
+    public Animation<TextureRegion> getIdleAnimation() {
+        return idleAnimation;
+    }
+
+    public void setIdleAnimation(Animation<TextureRegion> idleAnimation) {
+        this.idleAnimation = idleAnimation;
+    }
+
+    public Array<Integer> getStartingDeck() {
+        return startingDeck;
+    }
+
+    public void setStartingDeck(Array<Integer> startingDeck) {
+        this.startingDeck = startingDeck;
     }
 
     @Override
@@ -172,20 +313,90 @@ public class Virus extends Actor{
         this.name = name;
     }
 
-    public int getMaxHealth() {
-        return maxHealth;
+    public int getHealth() {
+        return health;
     }
 
-    public void setMaxHealth(int maxHealth) {
-        this.maxHealth = maxHealth;
+    public void setHealth(int health) {
+        this.health = health;
     }
 
-    public int getMaxBlock() {
-        return maxBlock;
+    public int getBlock() {
+        return block;
     }
 
-    public void setMaxBlock(int maxBlock) {
-        this.maxBlock = maxBlock;
+    public void setBlock(int block) {
+        this.block = block;
+        if (block > 0) {
+            setBlockActive(true);
+        } else {
+            block = 0;
+            setBlockActive(false);
+        }
+    }
+
+    public int getSTARTING_HP() {
+        return STARTING_HP;
+    }
+
+    public int getMAX_HP() {
+        return MAX_HP;
+    }
+
+    public int getSTARTING_MONEY() {
+        return STARTING_MONEY;
+    }
+
+    public int getHAND_SIZE() {
+        return HAND_SIZE;
+    }
+
+    public Label getBlockLabel() {
+        return blockLabel;
+    }
+
+    public void setBlockLabel(Label blockLabel) {
+        this.blockLabel = blockLabel;
+    }
+
+    public boolean isBlockActive() {
+        return blockActive;
+    }
+
+    public void setBlockActive(boolean blockActive) {
+        this.blockActive = blockActive;
+    }
+
+    public Image getBlockImage() {
+        return blockImage;
+    }
+
+    public void setBlockImage(Image blockImage) {
+        this.blockImage = blockImage;
+    }
+
+    public ProgressBar getVirusBlockBar() {
+        return virusBlockBar;
+    }
+
+    public void setVirusBlockBar(ProgressBar virusBlockBar) {
+        this.virusBlockBar = virusBlockBar;
+    }
+
+    public float getPositionX() {
+        return positionX;
+    }
+
+    public void setPositionX(float positionX) {
+        this.positionX = positionX;
+    }
+
+    public float getPositionY() {
+        return positionY;
+    }
+
+    public void setPositionY(float positionY) {
+        this.positionY = positionY;
     }
 
     @Override
@@ -196,6 +407,14 @@ public class Virus extends Actor{
     @Override
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public Group getGameScreenGroup() {
+        return gameScreenGroup;
+    }
+
+    public void setGameScreenGroup(Group gameScreenGroup) {
+        this.gameScreenGroup = gameScreenGroup;
     }
 
     public Label getVirusName() {
@@ -217,4 +436,14 @@ public class Virus extends Actor{
     public void setNameAreaVirus(Actor nameAreaVirus) {
         this.nameAreaVirus = nameAreaVirus;
     }
+
+    public float getElapsed_time() {
+        return elapsed_time;
+    }
+
+    public void setElapsed_time(float elapsed_time) {
+        this.elapsed_time = elapsed_time;
+    }
 }
+
+
