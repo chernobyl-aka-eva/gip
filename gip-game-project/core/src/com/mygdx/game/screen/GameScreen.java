@@ -14,12 +14,10 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.GipGameProject;
 import com.mygdx.game.SessionManager;
-import com.mygdx.game.effect.Effect;
-import com.mygdx.game.item.Item;
+
 import com.mygdx.game.screen.settings.SettingsScreen;
 
 
@@ -32,35 +30,8 @@ public class GameScreen implements Screen {
     // variable for tracking elapsed time
     private float elapsed_time;
 
-    private Image gameBackground; // background texture region
-    private Image hudbar; // hud bar texture region
-    private Image mapBackground; // map texture region
-
     private boolean showMap; // determines whether map should be shown
     private boolean previousState = true; // previous state of map button
-
-    private Table table;
-    private Table drawTable;
-    private Table discardTable;
-
-    // virus
-    private Array<Effect> effects = new Array<>(); // buffs and debuffs arraylist
-    private Array<Image> icons = new Array<>();
-    private Array<Image> iconsEnem = new Array<>();
-
-    private Array<Item> items= new Array<>(); // items arraylist
-    private Array<Image> itemIcons = new Array<>();
-
-    // enemy
-    private final Array<Effect> effectsEnemy = new Array<>(); // buffs and debuffs arraylist
-
-
-    // effects
-    //private final Effect strength = new Effect("strength", 1, 1, 5); // strength buff
-    //private final Effect dexterity = new Effect("dexterity", 1, 1, 5); // dexterity buff
-
-    // item
-    //private final Item dataDisk = new Item("data-disk", "common", "Gain 100 megabytes after every combat");
 
     // stage for drawing actors
     private final Stage stage;
@@ -68,28 +39,19 @@ public class GameScreen implements Screen {
     // group for adding actors
     private Group gameScreenGroup;
     private Group mapScreenGroup;
-    private Group backgroundGroup;
-    private ImageTextButton exhaustpile;
-
-    // icons health & money texture regions
-    private final Image healthIcon;
-    private final Image moneyIcon;
+    private final ImageTextButton exhaustpile;
 
     // currency & health value
     private final Label healthVirus;
     private final Label moneyValue;
-
-    private int money;
     private final Label sessionTimer;
 
     // group for UI so they can be shown and hidden
     private final Group pauseGroup;
-    private final TextureRegion pausescreenBackground;
     private boolean pausescreen; // decides whether pause screen should be shown
     private final SettingsScreen settingsScreen;
 
     // turnmanager (later sessionmanager) ☻
-    // private TurnManager turnManager;
 
     private final SessionManager sessionManager;
 
@@ -99,7 +61,7 @@ public class GameScreen implements Screen {
 
         // game stage
         stage = new Stage(new ScreenViewport());
-        backgroundGroup = new Group();
+        Group backgroundGroup = new Group();
         stage.addActor(backgroundGroup);
 
         Gdx.input.setInputProcessor(stage); // allows stage to take input
@@ -107,10 +69,6 @@ public class GameScreen implements Screen {
         // groups determine which UI should be shown on screen
         gameScreenGroup = new Group();
         mapScreenGroup = new Group();
-
-        // initialize turnmanager
-        // turnManager = new TurnManager(game, stage, gameScreenGroup);
-
 
         // game background
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("other/game-ui-2.atlas"));
@@ -196,8 +154,6 @@ public class GameScreen implements Screen {
                 previousState = true;
                 mapScreenGroup.setVisible(false);
                 gameScreenGroup.setVisible(true);
-                //sessionManager.getTurnManager().getCardManager().getMonsterManager().setVisible(true);
-                //sessionManager.getTurnManager().getCardManager().getVirusManager().setVisible(true);
                 return true;
             }
         });
@@ -210,14 +166,10 @@ public class GameScreen implements Screen {
         // money
         int money = 3; // sets money
 
-        // imports texture atlas and sets text for health and money
-
-
-        // health
-
         //healthVirus = new Label(String.valueOf((int) virusManager.getPlayer().gethealth()), new Label.LabelStyle(game.font, Color.RED));
         healthVirus = new Label(String.valueOf(sessionManager.getTurnManager().getCardManager().getVirusManager().getPlayer().getHealth()), new Label.LabelStyle(game.font, Color.RED));
-        healthIcon = new Image(new TextureRegionDrawable(atlas.findRegion("health")));
+        // icons health & money texture regions
+        Image healthIcon = new Image(new TextureRegionDrawable(atlas.findRegion("health")));
         healthIcon.setPosition(healthVirus.getX() + healthVirus.getWidth() + 10,
                 stage.getHeight() - healthIcon.getHeight() + healthIcon.getHeight() / 4 - 30);
         healthVirus.setPosition(100, stage.getHeight() - healthIcon.getHeight() / 2 - 30);
@@ -227,7 +179,7 @@ public class GameScreen implements Screen {
 
         // money
         moneyValue = new Label(money + "\t MB", new Label.LabelStyle(game.font, Color.GOLD));
-        moneyIcon = new Image(new TextureRegionDrawable(atlas.findRegion("data")));
+        Image moneyIcon = new Image(new TextureRegionDrawable(atlas.findRegion("data")));
         moneyValue.setPosition(healthVirus.getX() + healthVirus.getWidth() + 50 + 10, stage.getHeight() - healthIcon.getHeight() / 2 - 30);
         moneyIcon.setPosition(moneyValue.getX() + moneyValue.getWidth() + 10,
                 stage.getHeight() - moneyIcon.getHeight() + moneyIcon.getHeight() / 4 - 30);
@@ -273,7 +225,7 @@ public class GameScreen implements Screen {
         stage.addActor(pause); // adds actor to stage
 
         // pause menu
-        pausescreenBackground = game.skin.getRegion("pausescreen-background"); // sets region for pause screen background
+        TextureRegion pausescreenBackground = game.skin.getRegion("pausescreen-background"); // sets region for pause screen background
         Window pauseScreenWindow = new Window("",game.skin);
         pauseScreenWindow.setPosition((stage.getWidth() - pausescreenBackground.getRegionWidth()) / 2,
                 (stage.getHeight() - pausescreenBackground.getRegionHeight()) / 2);
@@ -325,8 +277,6 @@ public class GameScreen implements Screen {
                 pauseGroup.setVisible(false);
                 gameScreenGroup.setVisible(false);
                 settingsScreen.getSettingsGroup().setVisible(true);
-                //turnManager.getCardManager().getMonsterManager().setVisible(false);
-                //turnManager.getCardManager().getVirusManager().setVisible(false);
                 mapScreenGroup.setVisible(false);
                 showMap = false;
                 previousState = true;
@@ -415,8 +365,6 @@ public class GameScreen implements Screen {
         gameScreenGroup.addActor(drawpile);
 
         final Button discardpile = new Button(game.skin, "discardpile");
-        //discardpile.setScale(0.17F);
-        //discardpile.setSize(discardpile.getWidth()*discardpile.getScaleX(), discardpile.getHeight()*discardpile.getScaleY());
         System.out.println("Width " + discardpile.getWidth() + " Height " + discardpile.getHeight());
         discardpile.setPosition(stage.getWidth()-discardpile.getWidth(), 0);
         gameScreenGroup.addActor(discardpile);
