@@ -41,7 +41,9 @@ public class TurnManager {
         turnAnimation = new TurnAnimation(game, stage, this);
 
         playerTurnStart();
-        cardManager.refreshDisplayTable();
+        for (int i = 0; i < 4; i++) {
+            cardManager.refreshDisplayTable(i);
+        }
 
         endTurn.addListener(new ClickListener() { // listens for button press
             @Override
@@ -63,7 +65,7 @@ public class TurnManager {
             cardManager.getHandTable().removeActor(cardManager.getHand().get(i));
 
         }
-        cardManager.refreshDisplayTable();
+        cardManager.refreshDisplayTable(2);
         cardManager.getHand().clear();
         cardManager.getHandTable().clear();
         cardManager.getHand().refreshHand();

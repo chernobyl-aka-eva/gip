@@ -1,0 +1,34 @@
+
+cards-empty.png
+size: 3298, 1126
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+attack-gold
+  rotate: false
+  xy: 2474, 2
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+attack-green
+  rotate: false
+  xy: 1650, 2
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+power-green
+  rotate: false
+  xy: 826, 2
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+skill-green
+  rotate: false
+  xy: 2, 2
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1

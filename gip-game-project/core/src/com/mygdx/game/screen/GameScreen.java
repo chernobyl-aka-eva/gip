@@ -20,6 +20,7 @@ import com.mygdx.game.GipGameProject;
 import com.mygdx.game.SessionManager;
 import com.mygdx.game.effect.Effect;
 import com.mygdx.game.item.Item;
+import com.mygdx.game.screen.settings.SettingsScreen;
 
 
 // class where all game logic goes
@@ -59,7 +60,7 @@ public class GameScreen implements Screen {
     //private final Effect dexterity = new Effect("dexterity", 1, 1, 5); // dexterity buff
 
     // item
-    private final Item dataDisk = new Item("data-disk", "common", "Gain 100 megabytes after every combat");
+    //private final Item dataDisk = new Item("data-disk", "common", "Gain 100 megabytes after every combat");
 
     // stage for drawing actors
     private final Stage stage;
@@ -85,7 +86,7 @@ public class GameScreen implements Screen {
     private final Group pauseGroup;
     private final TextureRegion pausescreenBackground;
     private boolean pausescreen; // decides whether pause screen should be shown
-    private final Settings settingsScreen;
+    private final SettingsScreen settingsScreen;
 
     // turnmanager (later sessionmanager) ☻
     // private TurnManager turnManager;
@@ -95,15 +96,6 @@ public class GameScreen implements Screen {
     public GameScreen(final GipGameProject game) {
         this.game = game;
 
-        // adding effects (later this will be added by playing cards or having certain items)
-        //effects.add(strength);
-        //effects.add(dexterity);
-
-        //effectsEnemy.add(dexterity);
-        //effectsEnemy.add(strength);
-
-        // adding items
-        items.add(dataDisk);
 
         // game stage
         stage = new Stage(new ScreenViewport());
@@ -148,29 +140,6 @@ public class GameScreen implements Screen {
         hudbar.setPosition(0, stage.getHeight() - hudbar.getHeight());
         backgroundGroup.addActor(hudbar);
 
-        // effect icons
-        for (int i = 0; i < effects.size; i++) { // adds names of regions to textureregion arraylist (virus)
-            //TextureRegion iconRegion = atlas.findRegion(effects.get(i).getEffectName());
-            //Image effectIcon = new Image(new TextureRegionDrawable(iconRegion));
-           // icons.add(effectIcon);
-           // backgroundGroup.addActor(effectIcon);
-        }
-
-
-        for (int i = 0; i < effectsEnemy.size; i++) { // adds names of regions to textureregion arraylist (enemy)
-            //TextureRegion iconRegion = atlas.findRegion(effects.get(i).getEffectName());
-            //Image effectIcon = new Image(new TextureRegionDrawable(iconRegion));
-           // iconsEnemy.add(effectIcon);
-           // backgroundGroup.addActor(effectIcon);
-        }
-
-        // item icons
-        for (int i = 0; i < items.size; i++) { // adds names of regions to textureregion arraylist (items)
-          //  TextureRegion iconRegion = atlas.findRegion(items.get(i).getItemName());
-          //  Image itemIcon = new Image(new TextureRegionDrawable(iconRegion));
-           // itemIcons.add(itemIcon);
-         //   backgroundGroup.addActor(itemIcon);
-        }
 
 
         // groups determine which UI should be shown on screen
@@ -279,7 +248,7 @@ public class GameScreen implements Screen {
 
         // actor group
         pauseGroup = new Group();
-        settingsScreen = new Settings(game, stage);
+        settingsScreen = new SettingsScreen(game, stage);
 
         // pause button
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // imports skin (json file)

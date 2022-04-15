@@ -5,11 +5,13 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.cards.CardManager;
+import com.mygdx.game.save.SaveManager;
 
 public class SessionManager {
     private GipGameProject game;
     private Stage stage;
     private Group gameScreenGroup;
+    private SaveManager saveManager;
     //private DungeonManager dungeonManager;
     private TurnManager turnManager;
     private final CardManager cardManager;
@@ -19,6 +21,7 @@ public class SessionManager {
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = group;
+        this.saveManager = new SaveManager(this);
 
         cardManager = new CardManager(game, stage, group);
 
@@ -38,8 +41,6 @@ public class SessionManager {
         }
 
         cardManager.drawcard(cardManager.getVirusManager().getPlayer().getAmountToDraw());
-        cardManager.refreshDisplayTable();
-
 
 
         turnManager = new TurnManager(game, stage, group, endTurn, cardManager);

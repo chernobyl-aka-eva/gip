@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
 import com.mygdx.game.effect.EffectManager;
+import com.mygdx.game.item.ItemManager;
 
 public class Virus extends Actor {
 
@@ -27,6 +28,7 @@ public class Virus extends Actor {
     private String name; // name
     private int health; // health
     private int block; // block
+    private int money;
 
 
     private final int STARTING_HP = 75; // starting HP
@@ -59,6 +61,7 @@ public class Virus extends Actor {
     private Actor nameAreaVirus;
 
     private EffectManager effectManager;
+    private ItemManager itemManager;
     private float elapsed_time;
 
     // constructor
@@ -69,6 +72,7 @@ public class Virus extends Actor {
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = gameScreenGroup;
+        this.money = STARTING_MONEY;
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
         game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
@@ -134,6 +138,7 @@ public class Virus extends Actor {
 
         // Starting Deck
         startingDeck = new Array<>();
+        startingDeck.add(6);
         startingDeck.add(0);
         startingDeck.add(0);
         startingDeck.add(0);
@@ -147,7 +152,20 @@ public class Virus extends Actor {
         startingDeck.add(4);
         startingDeck.add(5);
 
-
+        // Items
+        Group itemGroup = new Group();
+        itemManager = new ItemManager(itemGroup, stage, game);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        itemManager.addItem(0);
+        stage.addActor(itemGroup);
     }
 
     public void initVirus() {
@@ -241,6 +259,10 @@ public class Virus extends Actor {
                 virusName.act(delta);
             }
         }
+
+    }
+
+    public void dispose() {
 
     }
 

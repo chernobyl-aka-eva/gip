@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.GipGameProject;
+import com.mygdx.game.screen.settings.SettingsScreen;
 
 // class where all main menu logic goes
 
@@ -22,7 +23,7 @@ public class TitleScreen implements Screen {
     final GipGameProject game;
 
     // screen
-    private final Settings settingsScreen;
+    private final SettingsScreen settingsScreen;
     private final TextureRegion[] BACKGROUNDS = new TextureRegion[4]; // textures for main menu background
     private final Stage stage;
 
@@ -46,7 +47,7 @@ public class TitleScreen implements Screen {
         stage = new Stage(new ScreenViewport()); // creates new stage
         Gdx.input.setInputProcessor(stage); // enables input in stage
         titlescreenGroup = new Group();
-        settingsScreen = new Settings(game, stage);
+        settingsScreen = new SettingsScreen(game, stage);
 
         // set up texture atlas for background
         initBackground();

@@ -1,14 +1,15 @@
 package com.mygdx.game.cards;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.*;
 import com.mygdx.game.GipGameProject;
 import com.mygdx.game.infobox.InfoBoxManager;
 import com.mygdx.game.monster.Monster;
@@ -16,6 +17,8 @@ import com.mygdx.game.monster.MonsterManager;
 import com.mygdx.game.virus.Virus;
 import com.mygdx.game.virus.VirusManager;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 public class CardManager {
@@ -25,6 +28,7 @@ public class CardManager {
     private Array<Card> drawPile;
     private Array<Card> discardPile;
     private Array<Card> exhaustPile;
+    private Array<Card> displayList = null;
     private VirusManager virusManager;
     private MonsterManager monsterManager;
     private Group tableGroup;
@@ -34,6 +38,7 @@ public class CardManager {
     private Stage stage;
     private Group gameScreenGroup;
     private float elapsed_time;
+
 
     //constructor
     public CardManager(GipGameProject game, Stage stage, Group gameScreenGroup) {
@@ -52,6 +57,7 @@ public class CardManager {
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // skin
 
         handTable = new Table();
+        handTable.setName("handTable");
         handTable.setBounds(0, 0, stage.getWidth(), 100);
         handTable.center().top().align(Align.center);
         //handTable.debugTable();
@@ -60,6 +66,29 @@ public class CardManager {
         gameScreenGroup.addActor(handTable);
 
         initTables();
+
+        ArrayList<CardUpgrade> cardUpgrades = new ArrayList<>();
+        cardUpgrades.add(new CardUpgrade("Strike", " Deal 9 Damage ", 1));
+        cardUpgrades.add(new CardUpgrade("Defend", " Gain 8 Block ", 1));
+        cardUpgrades.add(new CardUpgrade("Replicate", " Deal 6 Damage.\n ENCODE. \n add a copy \n of this card in the \n DISCARD_PILE. ", 0));
+        cardUpgrades.add(new CardUpgrade("Go To", " Draw 1 card. \n ENCODE. \n COMPILE - Draw 1 card. ", 0));
+        cardUpgrades.add(new CardUpgrade("Piercing Shot", " Deal 10 damage to \n all enemies. \n EXHAUST. ", 0));
+        cardUpgrades.add(new CardUpgrade("Fine Tuning", " Gain 2 DEXTERITY. \n ENCODE. \n COMPILE - gain 2 \n DEXTERITY. \n \n EXHAUST. ", 2));
+        cardUpgrades.add(new CardUpgrade("Test Card", " This is an \n upgraded test Card \n EXHAUST. ", 5));
+
+        Json json = new Json();
+        json.addClassTag("cardUpgrade", CardUpgrade.class);
+        String cardJSON = json.prettyPrint(cardUpgrades);
+        FileHandle file = new FileHandle("cards/cardUpgrades.json");
+        file.writeString(cardJSON, false);
+
+
+        ArrayList<CardUpgrade> cardUpgradeArrayList = json.fromJson(ArrayList.class, CardUpgrade.class, file);
+        for (CardUpgrade cardUpgrade : cardUpgradeArrayList) {
+            //System.out.println(cardUpgrade.getName() + ": " + cardUpgrade.getDescription() + ": " + cardUpgrade.getCost());
+        }
+
+
     }
 
 
@@ -68,18 +97,20 @@ public class CardManager {
     public void addCard(int id) {
         game.textureAtlas = new TextureAtlas("cards/cards.atlas");
         switch (id) {
-            case 0: Card strike = new Card(0, "Strike", "", CardType.ATTACK, 1, game.textureAtlas.findRegion("strike"), elapsed_time, game);
-                playerCards.add(strike); drawPile.add(strike); break;
-            case 1: Card defend = new Card(1,"Defend", "", CardType.SKILL, 1, game.textureAtlas.findRegion("defend"), elapsed_time, game);
-                playerCards.add(defend); drawPile.add(defend); break;
-            case 2: Card replicate = new Card(2, "Replicate", "ENCODE", CardType.ATTACK, 0, game.textureAtlas.findRegion("replicate"), elapsed_time, game);
-                playerCards.add(replicate); drawPile.add(replicate); break;
-            case 3: Card gotoCard = new Card(3, "Go To", "ENCODE. COMPILE", CardType.SKILL, 1, game.textureAtlas.findRegion("go to"), elapsed_time, game);
-                playerCards.add(gotoCard); drawPile.add(gotoCard); break;
-            case 4: Card piercingShot = new Card(4, "Piercing Shot", "EXHAUST", CardType.ATTACK, 1, game.textureAtlas.findRegion("piercing shot"), true, elapsed_time, game);
-                playerCards.add(piercingShot); drawPile.add(piercingShot); break;
-            case 5: Card fineTuning = new Card(5, "Fine Tuning", "DEXTERITY ENCODE COMPILE EXHAUST", CardType.POWER, 2, game.textureAtlas.findRegion("fine tuning"),elapsed_time, game);
-                playerCards.add(fineTuning); drawPile.add(fineTuning);
+            case 0: Card strike = new Card(0, "Strike", " Deal 6 Damage ", CardType.ATTACK, "green", 1, elapsed_time, game);
+                playerCards.add(strike); drawPile.add(strike); strike.setTimeAdded(playerCards.size); break;
+            case 1: Card defend = new Card(1,"Defend", " Gain 5 Block ", CardType.SKILL, "green", 1, elapsed_time, game);
+                playerCards.add(defend); drawPile.add(defend); defend.setTimeAdded(playerCards.size); break;
+            case 2: Card replicate = new Card(2, "Replicate", " Deal 4 Damage.\n ENCODE. \n add a copy \n of this card in the \n DISCARD_PILE. ", CardType.ATTACK, "green", 0, elapsed_time, game);
+                playerCards.add(replicate); drawPile.add(replicate); replicate.setTimeAdded(playerCards.size); break;
+            case 3: Card gotoCard = new Card(3, "Go To", " Draw 1 card. \n ENCODE. \n COMPILE - Draw 1 card. ", CardType.SKILL, "green", 1, elapsed_time, game);
+                playerCards.add(gotoCard); drawPile.add(gotoCard); gotoCard.setTimeAdded(playerCards.size); break;
+            case 4: Card piercingShot = new Card(4, "Piercing Shot", " Deal 10 damage to \n all enemies. \n EXHAUST. ", CardType.ATTACK, "gold", 1, true, elapsed_time, game);
+                playerCards.add(piercingShot); drawPile.add(piercingShot); piercingShot.setTimeAdded(playerCards.size); break;
+            case 5: Card fineTuning = new Card(5, "Fine Tuning", " Gain 1 DEXTERITY. \n ENCODE. \n COMPILE - gain 1 \n DEXTERITY. \n \n EXHAUST. ", CardType.POWER, "green", 2, true, elapsed_time, game);
+                playerCards.add(fineTuning); drawPile.add(fineTuning); fineTuning.setTimeAdded(playerCards.size); break;
+            case 6: Card testCard = new Card(6, "Test Card", " This is a test \n Card \n EXHAUST. ", CardType.ATTACK, "gold", 5, true, elapsed_time, game);
+                playerCards.add(testCard); drawPile.add(testCard); testCard.setTimeAdded(playerCards.size); break;
         }
     }
 
@@ -131,11 +162,13 @@ public class CardManager {
 
             if (!card.isExhaust()){
                 discardPile.add(card);
+                refreshDisplayTable(2);
             }else{
                 exhaustPile.add(card);
+                refreshDisplayTable(3);
             }
 
-            refreshDisplayTable();
+
         }
     }
 
@@ -174,14 +207,14 @@ public class CardManager {
                         drawPile.add(card);
                     }
                     discardPile.clear();
-                    refreshDisplayTable();
                 }
                 int randomIndex = random.nextInt(drawPile.size);
                 hand.add(drawPile.get(randomIndex));
                 drawPile.removeIndex(randomIndex);
             }
         }
-        refreshDisplayTable();
+        refreshDisplayTable(1);
+        refreshDisplayTable(2);
     }
 
     //rendering hand actor group on screen
@@ -283,17 +316,16 @@ public class CardManager {
         });
     }
 
-    public void refreshDisplayTable() {
-        tableGroup.clear();
-        Table table = displayCards(0);
-        Table drawTable = displayCards(1);
-        Table discardTable = displayCards(2);
-        Table exhaustTable = displayCards(3);
+    public void refreshDisplayTable(int type) {
+        try {
+            tableGroup.removeActorAt(type, false);
+            tableGroup.addActorAt(type, displayCards(type));
+        } catch (IndexOutOfBoundsException e) {
+            if (tableGroup.getChildren().size == type) {
+                tableGroup.addActor(displayCards(type));
+            }
+        }
 
-        tableGroup.addActor(table);
-        tableGroup.addActor(drawTable);
-        tableGroup.addActor(discardTable);
-        tableGroup.addActor(exhaustTable);
     }
 
     public void initTables() {
@@ -303,7 +335,9 @@ public class CardManager {
 
         deckScreenGroup = new Group();
         tableGroup = new Group();
-        refreshDisplayTable();
+        for (int i = 0; i < 4; i++) {
+            refreshDisplayTable(i);
+        }
 
 
         Button deckReturn = new Button(game.skin, "return");
@@ -344,7 +378,7 @@ public class CardManager {
         //table.debug();
         //table.debugActor();
 
-        Array<Card> displayList = new Array<>();
+        displayList = new Array<>();
         String title = "";
         switch (type) {
             case 0:
@@ -360,13 +394,52 @@ public class CardManager {
                 title = "Exhaust pile";
                 displayList = exhaustPile; break;
         }
+        Table scollWindow = new Table(game.skin);
+
+        if (displayList == playerCards) {
+            scollWindow = getDeckSortWindow(scollWindow);
+        }
+        Table displayDeck = getDisplayDeck();
+
+        scollWindow.add(displayDeck);
+
+        final ScrollPane scrollPane = new ScrollPane(scollWindow, game.skin);
+        scrollPane.setSize(stage.getWidth(), stage.getHeight());
+        scrollPane.setOrigin(Align.center);
+
+        scrollPane.addListener(new InputListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                if (pointer == -1) {
+                    stage.setScrollFocus(scrollPane);
+                }
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                super.exit(event, x, y, pointer, toActor);
+                if (pointer == -1) {
+                    stage.setScrollFocus(null);
+                }
+            }
+        });
 
 
-        Table displayDeck = new Table(game.skin);
+        scrollPane.validate();
+        table.add(title).row();
+        table.add(scrollPane);
 
+        return table;
+    }
+
+    private Table getDisplayDeck() {
+        Table displayDeck = new Table();
         displayDeck.center().top().align(Align.center).clip(true);
         //displayDeck.debugActor();
-        displayDeck.add().padTop(100F).row();
+
+
+        displayDeck.add().padTop(70F).row();
         InfoBoxManager infoBoxManager = new InfoBoxManager(game, stage, displayDeck);
         for (int i = 1; i < displayList.size+1; i++) {
             //creates copy of card to render in deckscreen (--> uses copy card constructor deckscreen)
@@ -407,46 +480,185 @@ public class CardManager {
         displayDeck.setOrigin(Align.center);
         displayDeck.align(Align.center);
         displayDeck.setBounds(displayDeck.getX(), displayDeck.getY(), stage.getWidth(), stage.getHeight()-60);
+        return displayDeck;
+    }
 
+    private Table getDeckSortWindow(Table scollWindow) {
+        scollWindow.add().padTop(40F).row();
+        final Window deckSortBackground = new Window( "",game.skin, "deck-sort-background");
+        deckSortBackground.align(Align.center);
+        deckSortBackground.setSize(1770, 80);
 
-        final ScrollPane scrollPane = new ScrollPane(displayDeck, game.skin);
-        scrollPane.setSize(stage.getWidth(), stage.getHeight());
-        scrollPane.setOrigin(Align.center);
+        Label sort = new Label("Sort:", game.skin);
 
-        scrollPane.addListener(new InputListener() {
+        GlyphLayout glyphord = new GlyphLayout(game.font, sort.getText());
+        deckSortBackground.add(sort).size(glyphord.width).pad(150);
+
+        final TextButton sortObtained = new TextButton("Obtained", game.skin, "deck-sorting");
+        sortObtained.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (displayList.size == 0) {
+                    refreshDisplayTable(0);
+                    tableGroup.getChild(0).setVisible(true);
+                }
+                displayList.sort(new Comparator<Card>() {
+                    @Override
+                    public int compare(Card o1, Card o2) {
+                        return Float.compare(o1.getTimeAdded(), o2.getTimeAdded());
+                    }
+                });
+                refreshDisplayTable(0);
+                tableGroup.getChild(0).setVisible(true);
+
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 super.enter(event, x, y, pointer, fromActor);
-                if (pointer == -1) {
-                    stage.setScrollFocus(scrollPane);
-                }
+                if (pointer == -1) {sortObtained.setText("> Obtained");}
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 super.exit(event, x, y, pointer, toActor);
-                if (pointer == -1) {
-                    stage.setScrollFocus(null);
-                }
+                if (pointer == -1) {sortObtained.setText("Obtained");}
             }
         });
+        deckSortBackground.add(sortObtained).pad(150).size(sortObtained.getWidth(), sortObtained.getHeight());
 
 
-        scrollPane.validate();
-        table.add(title).row();
-        table.add(scrollPane);
+        final TextButton sortType = new TextButton("Type", game.skin, "deck-sorting");
+        sortType.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (displayList.size == 0) {
+                    refreshDisplayTable(0);
+                    tableGroup.getChild(0).setVisible(true);
+                }
+                displayList.sort(new Comparator<Card>() {
+
+                    @Override
+                    public int compare(Card o1, Card o2) {
+                        int card1TypeValue = getCardTypeValue(o1.getCardType());
+                        int card2TypeValue = getCardTypeValue(o2.getCardType());
+
+                        int typeCompare = Integer.compare(card1TypeValue, card2TypeValue);
+                        int nameCompare = o1.getTitle().compareTo(o2.getTitle());
+
+                        return (nameCompare == 0) ? nameCompare : typeCompare;
 
 
-        //stage.addActor(table);
-        //deckScreenGroup.addActor(table);
+                    }
+
+                    private int getCardTypeValue(CardType cardType) {
+                        int cardTypeValue = 0;
+                        switch (cardType) {
+                            case ATTACK: break;
+                            case SKILL:  cardTypeValue = 1; break;
+                            case POWER:  cardTypeValue = 2; break;
+                            case STATUS: cardTypeValue = 3; break;
+                        }
+
+                        return cardTypeValue;
+                    }
+                });
+                refreshDisplayTable(0);
+                tableGroup.getChild(0).setVisible(true);
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                if (pointer == -1) {sortType.setText("> Type");}
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                super.exit(event, x, y, pointer, toActor);
+                if (pointer == -1) {sortType.setText("Type");}
+            }
+        });
+        deckSortBackground.add(sortType).pad(150).size(sortType.getWidth(), sortType.getHeight());
 
 
+        final TextButton sortCost = new TextButton("Cost", game.skin, "deck-sorting");
+        sortCost.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (displayList.size == 0) {
+                    refreshDisplayTable(0);
+                    tableGroup.getChild(0).setVisible(true);
+                }
+                displayList.sort(new Comparator<Card>() {
+                    @Override
+                    public int compare(Card o1, Card o2) {
+                        int costCompare = Integer.compare(o1.getCost(), o2.getCost());
+                        int nameCompare = o1.getTitle().compareTo(o2.getTitle());
+
+                        return (nameCompare == 0) ? nameCompare : costCompare;
+                    }
+                });
+                refreshDisplayTable(0);
+                tableGroup.getChild(0).setVisible(true);
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                if (pointer == -1) {sortCost.setText("> Cost");}
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                super.exit(event, x, y, pointer, toActor);
+                if (pointer == -1) {sortCost.setText("Cost");}
+            }
+        });
+        deckSortBackground.add(sortCost).pad(150).size(sortCost.getWidth(), sortCost.getHeight());
 
 
+        final TextButton sortAZ = new TextButton("A-Z", game.skin, "deck-sorting");
+        sortAZ.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (displayList.size == 0) {
+                    refreshDisplayTable(0);
+                    tableGroup.getChild(0).setVisible(true);
+                }
+                displayList.sort(new Comparator<Card>() {
+                    @Override
+                    public int compare(Card o1, Card o2) {
+                        return o1.getTitle().compareTo(o2.getTitle());
+                    }
+                });
+                refreshDisplayTable(0);
+                tableGroup.getChild(0).setVisible(true);
+                return super.touchDown(event, x, y, pointer, button);
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+                if (pointer == -1) {sortAZ.setText("> A-Z");}
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                super.exit(event, x, y, pointer, toActor);
+                if (pointer == -1) {sortAZ.setText("A-Z");}
+            }
+        });
+        deckSortBackground.add(sortAZ).pad(150).size(sortAZ.getWidth(), sortAZ.getHeight());
 
 
+        scollWindow.add(deckSortBackground).size(1770, 80).top().align(Align.top).row();
+        scollWindow.add().row();
 
-        return table;
+        return scollWindow;
     }
 
     //getters & setters

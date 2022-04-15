@@ -5,6 +5,18 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	}
 }
 com.badlogic.gdx.graphics.Color: {
+	BackGround: {
+		r: 0.05490196
+		g: 0.05882353
+		b: 0.09803922
+		a: 1
+	}
+	Gold: {
+		r: 0.9764706
+		g: 0.654902
+		b: 0.1254902
+		a: 1
+	}
 	RGBA_255_0_0_255: {
 		r: 1
 		g: 1
@@ -111,6 +123,11 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		up: pause-button-0
 		over: pause-button-1
 	}
+	deck-sorting: {
+		font: pcsenior
+		fontColor: RGBA_255_0_0_255
+		overFontColor: Gold
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 	default: {
@@ -128,6 +145,10 @@ com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
 	}
 	card-info: {
 		background: card-infobox
+		titleFont: pcsenior
+	}
+	deck-sort-background: {
+		background: deck-sort-background
 		titleFont: pcsenior
 	}
 }

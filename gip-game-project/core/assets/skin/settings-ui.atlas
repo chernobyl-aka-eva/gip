@@ -1,48 +1,153 @@
 
 settings-ui.png
-size: 1625, 1796
+size: 2048, 2048
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Linear, Linear
 repeat: none
+104851790-eafc7e80-58ab-11eb-9c9f-2522af93f460
+  rotate: false
+  xy: 508, 169
+  size: 25, 19
+  orig: 25, 19
+  offset: 0, 0
+  index: -1
+bg
+  rotate: false
+  xy: 1, 111
+  size: 500, 52
+  orig: 500, 52
+  offset: 0, 0
+  index: -1
+bg-no
+  rotate: false
+  xy: 508, 190
+  size: 500, 52
+  orig: 500, 52
+  offset: 0, 0
+  index: -1
+bg-over
+  rotate: false
+  xy: 1, 57
+  size: 500, 52
+  orig: 500, 52
+  offset: 0, 0
+  index: -1
+bg-selected
+  rotate: false
+  xy: 1010, 190
+  size: 500, 52
+  orig: 500, 52
+  offset: 0, 0
+  index: -1
+grey_box
+  rotate: false
+  xy: 1678, 1942
+  size: 38, 36
+  orig: 38, 36
+  offset: 0, 0
+  index: -1
+grey_boxCheckmark
+  rotate: false
+  xy: 1626, 1838
+  size: 38, 36
+  orig: 38, 36
+  offset: 0, 0
+  index: -1
+grey_sliderEnd
+  rotate: false
+  xy: 1754, 1996
+  size: 8, 10
+  orig: 8, 10
+  offset: 0, 0
+  index: -1
+grey_sliderHorizontal
+  rotate: false
+  xy: 1626, 2008
+  size: 190, 4
+  orig: 190, 4
+  offset: 0, 0
+  index: -1
+grey_sliderUp
+  rotate: false
+  xy: 129, 38
+  size: 11, 17
+  orig: 11, 17
+  offset: 0, 0
+  index: -1
 input-0
   rotate: false
-  xy: 332, 1
+  xy: 1512, 216
   size: 76, 26
   orig: 76, 26
   offset: 0, 0
   index: -1
 input-1
   rotate: false
-  xy: 255, 1
+  xy: 1, 1
   size: 76, 26
   orig: 76, 26
   offset: 0, 0
   index: -1
 input-settings
   rotate: false
-  xy: 1, 912
+  xy: 1, 1129
   size: 1623, 883
   orig: 1623, 883
   offset: 0, 0
   index: -1
+pcsenior
+  rotate: false
+  xy: 1, 165
+  size: 505, 77
+  orig: 505, 77
+  offset: 0, 0
+  index: -1
 settings
   rotate: false
-  xy: 1, 28
+  xy: 1, 244
   size: 1623, 883
   orig: 1623, 883
   offset: 0, 0
   index: -1
 settings-0
   rotate: false
-  xy: 1, 1
+  xy: 1, 29
   size: 126, 26
   orig: 126, 26
   offset: 0, 0
   index: -1
 settings-1
   rotate: false
-  xy: 128, 1
+  xy: 1626, 1980
   size: 126, 26
   orig: 126, 26
+  offset: 0, 0
+  index: -1
+white-pixel
+  rotate: false
+  xy: 503, 162
+  size: 1, 1
+  orig: 1, 1
+  offset: 0, 0
+  index: -1
+back
+  rotate: false
+  xy: 1626, 1928
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+back_over
+  rotate: false
+  xy: 1626, 1876
+  size: 50, 50
+  orig: 50, 50
+  offset: 0, 0
+  index: -1
+vscrollknob
+  rotate: false
+  xy: 1626, 1706
+  size: 25, 130
+  orig: 25, 130
   offset: 0, 0
   index: -1

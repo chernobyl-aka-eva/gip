@@ -1,34 +1,43 @@
 package com.mygdx.game.cards;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.MoveToAction;
 import com.badlogic.gdx.scenes.scene2d.actions.ScaleByAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Scaling;
 import com.mygdx.game.GipGameProject;
+import com.mygdx.game.infobox.InfoboxTypes;
 
+import java.util.Locale;
 import java.util.UUID;
 
-public class Card extends Image {
+public class Card extends Table {
     private GipGameProject game;
 
     private int id;
     //private Label title;
     private String title;
     private String description;
+
     private CardType cardType;
     private int cost;
     private TextureRegion textureRegion;
+    private Image cardImage;
+    private String rarity;
     private boolean exhaust;
+    private boolean upgraded;
     private boolean deckDisplay = false;
     private final UUID uniqueIdentifier = UUID.randomUUID(); //generates unique number to identify card
     private int handslot = 0;
@@ -38,32 +47,31 @@ public class Card extends Image {
     private int damage = 0;
     private int block = 0;
 
+
     private FreeTypeFontGenerator generator = null;
     private BitmapFont font = null;
-    //private Table textTable;
-    //private Group titleGroup;
-    //private Group descriptionGroup;
 
-    //private Table canInfoTable;
-    //private Group cardInfo;
-    //private CardInfoType cardInfoType;
+
 
     //constructor for card without exhaust
-    public Card(int id, String title, String descriptionText, CardType cardType, int cost, TextureRegion textureRegion, float timeAdded, GipGameProject game) {
+    public Card(int id, String title, String descriptionText, CardType cardType, String rarity, int cost, float timeAdded, GipGameProject game) {
         this.game = game;
+        game.textureAtlas = new TextureAtlas("cards/cards-empty.atlas");
         this.title = title;
         this.description = descriptionText;
         this.id = id;
         this.cardType = cardType;
+        this.rarity = rarity;
         this.cost = cost;
-        this.textureRegion = textureRegion;
-        super.setDrawable(new TextureRegionDrawable(textureRegion));
-        //titleGroup = new Group();
-        //descriptionGroup = new Group();
-
-        generateTextTable(title);
-        super.setAlign(1);
-        super.setScaling(Scaling.fill);
+        this.textureRegion = game.textureAtlas.findRegion(cardType.name().toLowerCase(Locale.ROOT) + "-" + rarity);
+        this.cardImage = new Image(new TextureRegionDrawable(textureRegion));
+        super.setBackground(cardImage.getDrawable());
+        this.setClip(true);
+        this.align(1);
+        this.setOrigin(Align.center);
+        //super.setAlign(1);
+        //super.setScaling(Scaling.fill);
+        generateTextTable();
         super.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
         this.exhaust = false;
         super.setName(title);
@@ -76,20 +84,24 @@ public class Card extends Image {
     }
 
     //constructor for card with specified exhaust
-    public Card(int id, String title, String descriptionText, CardType cardType, int cost, TextureRegion textureRegion, boolean exhaust, float timeAdded, GipGameProject game) {
+    public Card(int id, String title, String descriptionText, CardType cardType, String rarity, int cost, boolean exhaust, float timeAdded, GipGameProject game) {
         this.game = game;
+        game.textureAtlas = new TextureAtlas("cards/cards-empty.atlas");
         this.title = title;
         this.description = descriptionText;
         this.id = id;
         this.cardType = cardType;
         this.cost = cost;
-        this.textureRegion = textureRegion;
-        super.setDrawable(new TextureRegionDrawable(textureRegion));
-        //titleGroup = new Group();
-        //descriptionGroup = new Group();
-        generateTextTable(title);
-        super.setAlign(1);
-        super.setScaling(Scaling.fill);
+        this.rarity = rarity;
+        this.textureRegion = game.textureAtlas.findRegion(cardType.name().toLowerCase(Locale.ROOT) + "-" + rarity);
+        this.cardImage = new Image(new TextureRegionDrawable(textureRegion));
+        super.setBackground(cardImage.getDrawable());
+        this.setClip(true);
+        this.align(1);
+        this.setOrigin(Align.center);
+        //super.setAlign(1);
+        //super.setScaling(Scaling.fill);
+        generateTextTable();
         super.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
         this.exhaust = exhaust;
         super.setName(title);
@@ -107,6 +119,7 @@ public class Card extends Image {
 
         //deckscreen card
         if (deckDisplay) {
+            this.deckDisplay = deckDisplay;
             this.id = card.getId();
             this.title = card.getTitle();
             this.description = card.getDescription();
@@ -114,9 +127,14 @@ public class Card extends Image {
             this.cardType = card.getCardType();
             this.cost = card.getCost();
             this.textureRegion = card.getTextureRegion();
-            super.setDrawable(new TextureRegionDrawable(textureRegion));
-            super.setAlign(1);
-            super.setScaling(Scaling.fill);
+            this.cardImage = new Image(new TextureRegionDrawable(textureRegion));
+            super.setBackground(cardImage.getDrawable());
+            this.setClip(true);
+            this.align(1);
+            this.setOrigin(Align.center);
+            //super.setAlign(1);
+            //super.setScaling(Scaling.fill);
+            generateTextTable();
             super.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
             this.exhaust = card.isExhaust();
             super.setName(title);
@@ -124,7 +142,6 @@ public class Card extends Image {
             this.setHeight(textureRegion.getRegionHeight());
             this.setScale(super.getScaleX(), super.getScaleY());
             this.timeAdded = card.getTimeAdded();
-            this.deckDisplay = deckDisplay;
             this.containingTable = null;
             //this.titleGroup = card.getTitleGroup();
             //this.descriptionGroup = card.getDescriptionGroup();
@@ -133,25 +150,70 @@ public class Card extends Image {
 
     }
 
-    public void generateTextTable(String titleText) {
-        /*
-        generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/pcsenior.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 30;
-        font = generator.generateFont(parameter);
-        Label.LabelStyle labelStyle = new Label.LabelStyle(font, Color.WHITE);
-        titleText = titleText.toUpperCase(Locale.ROOT);
-        title = new Label(titleText, labelStyle);
-        titleGroup.addActor(title);
-        titleGroup.setOrigin(Align.center);
-        titleGroup.setPosition(getX()+getWidth()/2, getY()+getHeight()-100);
-        //title.setPosition();
+    public void generateTextTable() {
+        game.font.getData().markupEnabled = true;
+        GlyphLayout glyphord = new GlyphLayout();
+        Label titleLabel = new Label(title.toUpperCase(Locale.ROOT) ,new LabelStyle(game.font, Color.WHITE));
+        Group titleGroup = new Group();
+        titleGroup.addActor(titleLabel);
+        float scaleBy = 0.7F;
+        titleGroup.addAction(Actions.scaleBy(scaleBy, scaleBy));
+        align(Align.top);
+        float spaceTop = (deckDisplay) ? 120 : 150;
+        //add().space(spaceTop).row();
+        add(titleGroup).size(titleLabel.getWidth()*scaleBy*2.5F, titleLabel.getHeight()*scaleBy*1.5F);
+        String descriptionText = description.toUpperCase(Locale.ROOT);
+        String[] descWords = description.replaceAll("[.]", "").split("\\s");
+        for (String descWord : descWords) {
+            for (InfoboxTypes.CardInfoType cardInfoType : InfoboxTypes.CardInfoType.values()) {
+                if (cardInfoType.name().equals(descWord)) {
+                    descriptionText = descriptionText.replace(descWord, "[#f9a720]" + descWord.replace("_", " ") + "[]");
+                }
+            }
+        }
+        add().padTop((deckDisplay) ? 250 : 270).row();
+        String[] descriptionLinesColor = descriptionText.split("\\R");
+        String[] descriptionLines = description.split("\\R");
+        for (int i = 0; i < descriptionLinesColor.length; i++) {
+            Label descriptionLabel = new Label(descriptionLinesColor[i], new LabelStyle(game.font, Color.WHITE));
+            Group descriptionGroup = new Group();
+            descriptionGroup.addActor(descriptionLabel);
+            scaleBy = (deckDisplay) ? 0.15F : 0.2F;
+            descriptionGroup.addAction(Actions.scaleBy(scaleBy, scaleBy));
 
-         */
+
+            glyphord.setText(game.font, descriptionLines[i]);
+
+            if (i == 0) {
+                add(descriptionGroup).size(glyphord.width * (1 + scaleBy), glyphord.height * (1 + scaleBy)).padTop((deckDisplay ? 130 : 170));
+            } else {
+                add(descriptionGroup).size(glyphord.width * (1 + scaleBy), glyphord.height * (1 + scaleBy)).padTop(10);
+            }
+
+
+            row();
+        }
+
+        Label costLabel = new Label(String.valueOf(cost), new LabelStyle(game.font, Color.WHITE));
+        Group costGroup = new Group();
+        costGroup.addActor(costLabel);
+        scaleBy = (deckDisplay) ? 0.5F : 0.7F;
+        costGroup.addAction(Actions.scaleBy(scaleBy, scaleBy));
+        //add(costGroup).size(costLabel.getWidth(), costLabel.getHeight()).bottom().left().align(Align.bottomLeft).padTop(((deckDisplay) ? 160 : 180)-glyphord.height);
+        addActor(costGroup);
+        costGroup.moveBy((deckDisplay) ? 95 : 110, (deckDisplay) ? 115 : 130);
+        //pack();
+    }
+
+    public void generateUpgradedTextTable() {
+
     }
 
     //initializes card boundaries + adds listeners
     public void initCard() {
+        upgraded = false;
+        setTouchable(Touchable.enabled);
+        //this.debug();
         //setColor(Color.WHITE);
         setColor(1, 1, 1, 1F);
         isDragging = false;
@@ -163,21 +225,20 @@ public class Card extends Image {
 
 
 
-
-
-
             this.addListener(new ClickListener() {
                 boolean exited = true;
                 @Override
                 //called when mouse hovers over card
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     super.enter(event, x, y, pointer, fromActor);
-                    ScaleByAction sba = new ScaleByAction();
-                    sba.setAmount(0.1F);
-                    sba.setDuration(.2F);
-                    setOrigin(Align.center);
-                    setAlign(Align.center);
-                    Card.this.addAction(sba);
+                    if (pointer == -1) {
+                        ScaleByAction sba = new ScaleByAction();
+                        sba.setAmount(0.1F);
+                        sba.setDuration(.2F);
+                        setOrigin(Align.center);
+                        //setAlign(Align.center);
+                        Card.this.addAction(sba);
+
                     /*
                     titleGroup.setOrigin(Align.center);
                     descriptionGroup.setOrigin(Align.center);
@@ -185,29 +246,30 @@ public class Card extends Image {
                     descriptionGroup.addAction(Actions.sequence(Actions.scaleBy(sba.getAmountX(), sba.getAmountY(), .2F)));
 
                      */
-                    exited = false;
+                        exited = false;
 
-
+                    }
                 }
 
                 @Override
                 //called when mouse stops hovering over card
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     super.exit(event, x, y, pointer, toActor);
-                    ScaleByAction sba = new ScaleByAction();
-                    sba.setAmount(-0.1F);
-                    sba.setDuration(.2F);
-                    setOrigin(Align.center);
-                    setAlign(Align.center);
+                    if (pointer == -1) {
+                        ScaleByAction sba = new ScaleByAction();
+                        sba.setAmount(-0.1F);
+                        sba.setDuration(.2F);
+                        setOrigin(Align.center);
+                        //setAlign(Align.center);
                     /*
                     titleGroup.addAction(Actions.sequence(Actions.scaleBy(sba.getAmountX(), sba.getAmountY(), .2F)));
                     descriptionGroup.addAction(Actions.sequence(Actions.scaleBy(sba.getAmountX(), sba.getAmountY(),.2F)));
                      */
-                    Card.this.addAction(sba);
+                        Card.this.addAction(sba);
 
 
-                    exited = true;
-
+                        exited = true;
+                    }
                 }
             });
         } else {
@@ -216,7 +278,7 @@ public class Card extends Image {
                 @Override
                 public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                     super.enter(event, x, y, pointer, fromActor);
-                    if (containingTable!=null) {
+                    if (containingTable!=null && containingTable.getName().equals("handTable")) {
                         if (pointer == -1) {
                             if (!isDragging) {
                                 //makes sure you aren't hovering over the last card in your hand
@@ -237,7 +299,7 @@ public class Card extends Image {
                 @Override
                 public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                     super.exit(event, x, y, pointer, toActor);
-                    if (containingTable!=null) {
+                    if (containingTable!=null && containingTable.getName().equals("handTable")) {
                         if (pointer == -1) {
                             if (!isDragging) {
                                 if (containingTable.getCells().indexOf(containingTable.getCell(currentCard), false) != containingTable.getCells().size - 1) {
@@ -256,6 +318,7 @@ public class Card extends Image {
             });
         }
 
+
     }
 
     //card draw
@@ -265,6 +328,7 @@ public class Card extends Image {
         if (this.isVisible()) {
             //titleGroup.draw(batch, parentAlpha);
             //descriptionGroup.draw(batch, parentAlpha);
+
         }
     }
 
@@ -293,23 +357,25 @@ public class Card extends Image {
 
     }
 
+
+
     //is called when scale has changed
     @Override
     protected void scaleChanged() {
+
         super.scaleChanged();
     }
 
     @Override
     public void setScale(float scaleXY) {
         super.setScale(scaleXY);
-        //titleGroup.setScale(scaleXY);
-        //descriptionGroup.setScale(scaleXY);
     }
 
     //is called when size has changed
     @Override
     protected void sizeChanged() {
         super.sizeChanged();
+
     }
 
     private void dispose() {
@@ -324,9 +390,21 @@ public class Card extends Image {
     //getters & setters
 
 
+    public boolean isUpgraded() {
+        return upgraded;
+    }
+
+    public void setUpgraded(boolean upgraded) {
+        this.upgraded = upgraded;
+        if (upgraded) {
+            generateUpgradedTextTable();
+        }
+    }
+
     public GipGameProject getGame() {
         return game;
     }
+
 
     public void setGame(GipGameProject game) {
         this.game = game;
