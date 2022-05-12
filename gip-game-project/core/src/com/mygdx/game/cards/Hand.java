@@ -17,6 +17,7 @@ public class Hand extends Array<Card> {
         cardManager.makeDragable(value);
     }
     public void refreshHand() {
+        cardManager.getHandTable().clear();
         //cardManager.getHandTable().clearChildren();
         for (int i = 0; i < size; i++) {
             cardManager.positionHand(i);

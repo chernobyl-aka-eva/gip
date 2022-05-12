@@ -5,7 +5,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.cards.CardManager;
+import com.mygdx.game.map.Map;
 import com.mygdx.game.save.SaveManager;
+import com.mygdx.game.screen.GameScreen;
 
 public class SessionManager {
     private GipGameProject game;
@@ -14,16 +16,22 @@ public class SessionManager {
     private SaveManager saveManager;
     //private DungeonManager dungeonManager;
     private TurnManager turnManager;
+    private GameScreen gameScreen;
+    private Map map;
     private final CardManager cardManager;
     private final Button endTurn;
 
-    public SessionManager(GipGameProject game, Stage stage, Group group) {
+    public SessionManager(GipGameProject game, Stage stage, Group group, Group foreGround, GameScreen gameScreen) {
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = group;
+        this.gameScreen = gameScreen;
         this.saveManager = new SaveManager(this);
 
-        cardManager = new CardManager(game, stage, group);
+        map = new Map(gameScreen);
+        map.getMapBackground().setCurrentEvent(map.getCurrentEvent());
+
+        cardManager = new CardManager(game, stage, group, foreGround, this);
 
         cardManager.getMonsterManager().addMonster(0);
 
@@ -44,6 +52,22 @@ public class SessionManager {
 
 
         turnManager = new TurnManager(game, stage, group, endTurn, cardManager);
+
+
+        saveManager.load();
+
+    }
+
+    public void eventEnded() {
+        cardManager.getMonsterManager().addMonster(0);
+        turnManager = new TurnManager(game, stage, gameScreenGroup, endTurn, cardManager);
+        cardManager.resetHand();
+        map.setShowMap(true);
+        map.setPreviousState(false);
+        gameScreen.getGameScreenGroup().setVisible(false);
+        map.getMapScreenGroup().setVisible(true);
+        map.setCurrentEvent(map.getCurrentEvent()+1);
+        map.getMapBackground().setCurrentEvent(map.getCurrentEvent());
     }
 
     public GipGameProject getGame() {
@@ -60,6 +84,34 @@ public class SessionManager {
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public SaveManager getSaveManager() {
+        return saveManager;
+    }
+
+    public void setSaveManager(SaveManager saveManager) {
+        this.saveManager = saveManager;
+    }
+
+    public GameScreen getGameScreen() {
+        return gameScreen;
+    }
+
+    public void setGameScreen(GameScreen gameScreen) {
+        this.gameScreen = gameScreen;
+    }
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
+    public CardManager getCardManager() {
+        return cardManager;
     }
 
     public Group getGameScreenGroup() {

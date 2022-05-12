@@ -1,23 +1,26 @@
 package com.mygdx.game.cards;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
-import com.badlogic.gdx.utils.*;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
+import com.mygdx.game.SessionManager;
+import com.mygdx.game.cards.upgrades.GenerateCardUpgrades;
 import com.mygdx.game.infobox.InfoBoxManager;
 import com.mygdx.game.monster.Monster;
 import com.mygdx.game.monster.MonsterManager;
 import com.mygdx.game.virus.Virus;
 import com.mygdx.game.virus.VirusManager;
 
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -37,14 +40,20 @@ public class CardManager {
     private GipGameProject game;
     private Stage stage;
     private Group gameScreenGroup;
+    private Group forGround;
+    private Table fadeTable = new Table();
     private float elapsed_time;
 
+    private SessionManager sessionManager;
+    private Image inspectCardBackGround;
 
     //constructor
-    public CardManager(GipGameProject game, Stage stage, Group gameScreenGroup) {
+    public CardManager(GipGameProject game, Stage stage, Group gameScreenGroup, Group foreGround, SessionManager sessionManager) {
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = gameScreenGroup;
+        this.forGround = foreGround;
+        this.sessionManager = sessionManager;
         virusManager = new VirusManager(game, stage, gameScreenGroup);
         monsterManager = new MonsterManager(game, stage, gameScreenGroup);
 
@@ -65,29 +74,24 @@ public class CardManager {
         handTable.setName("handTable");
         gameScreenGroup.addActor(handTable);
 
+        game.textureAtlas = new TextureAtlas("other/game-ui-2.atlas");
+        inspectCardBackGround = new Image(new TextureRegionDrawable(game.textureAtlas.findRegion("card-inspect-fade")));
+        inspectCardBackGround.setPosition(0, -60);
+        inspectCardBackGround.addAction(Actions.alpha(0.8F));
+        inspectCardBackGround.setVisible(false);
+        foreGround.addActor(inspectCardBackGround);
+        inspectCardBackGround.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                inspectCard(false, null);
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
+        forGround.addActor(fadeTable);
+
         initTables();
 
-        ArrayList<CardUpgrade> cardUpgrades = new ArrayList<>();
-        cardUpgrades.add(new CardUpgrade("Strike", " Deal 9 Damage ", 1));
-        cardUpgrades.add(new CardUpgrade("Defend", " Gain 8 Block ", 1));
-        cardUpgrades.add(new CardUpgrade("Replicate", " Deal 6 Damage.\n ENCODE. \n add a copy \n of this card in the \n DISCARD_PILE. ", 0));
-        cardUpgrades.add(new CardUpgrade("Go To", " Draw 1 card. \n ENCODE. \n COMPILE - Draw 1 card. ", 0));
-        cardUpgrades.add(new CardUpgrade("Piercing Shot", " Deal 10 damage to \n all enemies. \n EXHAUST. ", 0));
-        cardUpgrades.add(new CardUpgrade("Fine Tuning", " Gain 2 DEXTERITY. \n ENCODE. \n COMPILE - gain 2 \n DEXTERITY. \n \n EXHAUST. ", 2));
-        cardUpgrades.add(new CardUpgrade("Test Card", " This is an \n upgraded test Card \n EXHAUST. ", 5));
-
-        Json json = new Json();
-        json.addClassTag("cardUpgrade", CardUpgrade.class);
-        String cardJSON = json.prettyPrint(cardUpgrades);
-        FileHandle file = new FileHandle("cards/cardUpgrades.json");
-        file.writeString(cardJSON, false);
-
-
-        ArrayList<CardUpgrade> cardUpgradeArrayList = json.fromJson(ArrayList.class, CardUpgrade.class, file);
-        for (CardUpgrade cardUpgrade : cardUpgradeArrayList) {
-            //System.out.println(cardUpgrade.getName() + ": " + cardUpgrade.getDescription() + ": " + cardUpgrade.getCost());
-        }
-
+        new GenerateCardUpgrades(); // used to insert card upgrades to the json file
 
     }
 
@@ -156,6 +160,7 @@ public class CardManager {
                 if (monster.getHealth() <= 0){
                     monster.remove();
                     monsterManager.setIntentVisible(false);
+                    sessionManager.eventEnded();
                 }
             }
 
@@ -208,6 +213,7 @@ public class CardManager {
                     }
                     discardPile.clear();
                 }
+                System.out.println(drawPile.size);
                 int randomIndex = random.nextInt(drawPile.size);
                 hand.add(drawPile.get(randomIndex));
                 drawPile.removeIndex(randomIndex);
@@ -238,6 +244,21 @@ public class CardManager {
             handTable.add(card).size(card.getWidth(), card.getHeight()).padLeft((float) padWidth).padRight((float) padWidth);
             card.setContainingTable(handTable);
         }
+    }
+
+    public void resetHand() {
+        hand.clear();
+        drawPile.clear();
+        discardPile.clear();
+        exhaustPile.clear();
+
+        drawPile = new Array<Card>(playerCards);
+        drawcard(virusManager.getPlayer().getAmountToDraw());
+
+        refreshDisplayTable(1);
+        refreshDisplayTable(2);
+        refreshDisplayTable(3);
+        hand.refreshHand();
     }
 
     public void makeDragable(final Card card) {
@@ -273,7 +294,7 @@ public class CardManager {
                 SequenceAction sequenceAction = new SequenceAction(fadeOut, completeAction, fadeIn);
                 card.addAction(sequenceAction);
 
-                for (Actor actor: monsterManager.getMonsterGroup().getChildren()) {
+                for (Actor actor: monsterManager.getMonsterGroup().getChildren().items) {
                     if (actor instanceof Monster) {
                         Monster monster = (Monster) actor;
                         //System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
@@ -426,12 +447,12 @@ public class CardManager {
         });
 
 
-        scrollPane.validate();
         table.add(title).row();
         table.add(scrollPane);
 
         return table;
     }
+
 
     private Table getDisplayDeck() {
         Table displayDeck = new Table();
@@ -443,19 +464,28 @@ public class CardManager {
         InfoBoxManager infoBoxManager = new InfoBoxManager(game, stage, displayDeck);
         for (int i = 1; i < displayList.size+1; i++) {
             //creates copy of card to render in deckscreen (--> uses copy card constructor deckscreen)
-            Card cardCopy = new Card(displayList.get(i-1), true);
+            final Card cardCopy = new Card(displayList.get(i-1), true);
             cardCopy.setScale(0.6F);
             Card previousCard = null;
 
 
             //cardCopy.debug();
-            //adds cards to ta ble displaydeck (WIP)
             cardCopy.setOrigin(Align.bottomLeft);
             cardCopy.setSize(cardCopy.getWidth()*cardCopy.getScaleX(), cardCopy.getHeight()*cardCopy.getScaleY());
             cardCopy.setOrigin(Align.center);
             int amountPerRow = 5;
             float padWidth = (float) ((stage.getWidth()-(cardCopy.getWidth()*amountPerRow))/5+53);
             float padHeight = 0 - cardCopy.getHeight()/5;
+            if (displayList == playerCards) {
+                cardCopy.addListener(new ClickListener() {
+                    @Override
+                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                        Card inspectCard = new Card(cardCopy, false);
+                        CardManager.this.inspectCard(true, inspectCard);
+                        return super.touchDown(event, x, y, pointer, button);
+                    }
+                });
+            }
 
 
             displayDeck.add(cardCopy).size(cardCopy.getWidth(), cardCopy.getHeight()).colspan(amountPerRow).padRight(padWidth).padLeft(padWidth).padTop(padHeight).padBottom(padHeight).center();
@@ -481,6 +511,52 @@ public class CardManager {
         displayDeck.align(Align.center);
         displayDeck.setBounds(displayDeck.getX(), displayDeck.getY(), stage.getWidth(), stage.getHeight()-60);
         return displayDeck;
+    }
+
+    public void inspectCard(boolean show, final Card inspectCard) {
+        inspectCardBackGround.setVisible(show);
+
+        if (show && inspectCard != null) {
+            fadeTable.clear();
+            fadeTable.setBounds(0, 0, stage.getWidth(), stage.getHeight()-60);
+            //fadeTable.debug();
+            fadeTable.align(Align.top);
+            inspectCard.setScale(0.8F);
+            Card previousCard = null;
+
+
+            //cardCopy.debug();
+            inspectCard.setOrigin(Align.bottomLeft);
+            inspectCard.setSize(inspectCard.getWidth()*inspectCard.getScaleX(), inspectCard.getHeight()*inspectCard.getScaleY());
+            inspectCard.setOrigin(Align.center);
+            fadeTable.add(inspectCard).size(inspectCard.getWidth(), inspectCard.getHeight());
+
+            fadeTable.row();
+
+            //Label previewUpgrade = new Label("Preview upgrade", game.skin);
+            //fadeTable.add(previewUpgrade);
+
+            game.skin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
+            //game.skin.addRegions(new TextureAtlas("skin/settings-ui.json"));
+            final CheckBox checkBox = new CheckBox(" Preview upgrade", game.skin);
+            checkBox.addListener(new EventListener() {
+                @Override
+                public boolean handle(Event event) {
+                    boolean enabled = checkBox.isChecked();
+                    inspectCard.previewUpgrade(enabled);
+                    return false;
+                }
+            });
+            fadeTable.add(checkBox).size(checkBox.getWidth(), checkBox.getHeight());
+
+
+
+            game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+            game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+        } else if (!show) {
+            fadeTable.clear();
+        }
+
     }
 
     private Table getDeckSortWindow(Table scollWindow) {

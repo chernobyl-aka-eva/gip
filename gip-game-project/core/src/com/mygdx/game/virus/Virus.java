@@ -269,12 +269,28 @@ public class Virus extends Actor {
     // getters and setters
 
 
+    public int getMoney() {
+        return money;
+    }
+
+    public void setMoney(int money) {
+        this.money = money;
+    }
+
     public int getAmountToDraw() {
         return amountToDraw;
     }
 
     public void setAmountToDraw(int amountToDraw) {
         this.amountToDraw = amountToDraw;
+    }
+
+    public ItemManager getItemManager() {
+        return itemManager;
+    }
+
+    public void setItemManager(ItemManager itemManager) {
+        this.itemManager = itemManager;
     }
 
     public EffectManager getEffectManager() {

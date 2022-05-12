@@ -1,5 +1,6 @@
 package com.mygdx.game.cards;
 
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.*;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
@@ -17,9 +18,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Json;
 import com.mygdx.game.GipGameProject;
+import com.mygdx.game.cards.upgrades.CardUpgrade;
 import com.mygdx.game.infobox.InfoboxTypes;
 
+
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -38,6 +43,8 @@ public class Card extends Table {
     private String rarity;
     private boolean exhaust;
     private boolean upgraded;
+    private boolean preview;
+    private boolean inspect = false;
     private boolean deckDisplay = false;
     private final UUID uniqueIdentifier = UUID.randomUUID(); //generates unique number to identify card
     private int handslot = 0;
@@ -71,6 +78,8 @@ public class Card extends Table {
         this.setOrigin(Align.center);
         //super.setAlign(1);
         //super.setScaling(Scaling.fill);
+        this.upgraded = false;
+        this.preview = false;
         generateTextTable();
         super.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
         this.exhaust = false;
@@ -101,6 +110,8 @@ public class Card extends Table {
         this.setOrigin(Align.center);
         //super.setAlign(1);
         //super.setScaling(Scaling.fill);
+        this.upgraded = false;
+        this.preview = false;
         generateTextTable();
         super.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
         this.exhaust = exhaust;
@@ -116,54 +127,77 @@ public class Card extends Table {
     //constructor used to make a copy of a card
     public Card(Card card, boolean deckDisplay) {
         this.game = card.getGame();
-
+        this.inspect = !deckDisplay;
         //deckscreen card
-        if (deckDisplay) {
-            this.deckDisplay = deckDisplay;
-            this.id = card.getId();
-            this.title = card.getTitle();
-            this.description = card.getDescription();
-            //this.textTable = card.getTextTable();
-            this.cardType = card.getCardType();
-            this.cost = card.getCost();
-            this.textureRegion = card.getTextureRegion();
-            this.cardImage = new Image(new TextureRegionDrawable(textureRegion));
-            super.setBackground(cardImage.getDrawable());
-            this.setClip(true);
-            this.align(1);
-            this.setOrigin(Align.center);
-            //super.setAlign(1);
-            //super.setScaling(Scaling.fill);
-            generateTextTable();
-            super.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
-            this.exhaust = card.isExhaust();
-            super.setName(title);
-            this.setWidth(textureRegion.getRegionWidth());
-            this.setHeight(textureRegion.getRegionHeight());
-            this.setScale(super.getScaleX(), super.getScaleY());
-            this.timeAdded = card.getTimeAdded();
-            this.containingTable = null;
-            //this.titleGroup = card.getTitleGroup();
-            //this.descriptionGroup = card.getDescriptionGroup();
-        }
+
+        this.deckDisplay = deckDisplay;
+        this.id = card.getId();
+        this.title = card.getTitle();
+        this.description = card.getDescription();
+        //this.textTable = card.getTextTable();
+        this.cardType = card.getCardType();
+        this.cost = card.getCost();
+        this.textureRegion = card.getTextureRegion();
+        this.cardImage = new Image(new TextureRegionDrawable(textureRegion));
+        super.setBackground(cardImage.getDrawable());
+        this.setClip(true);
+        this.align(1);
+        this.setOrigin(Align.center);
+        //super.setAlign(1);
+        //super.setScaling(Scaling.fill);
+        this.upgraded = card.isUpgraded();
+        this.preview = card.isPreview();
+        generateTextTable();
+        super.setSize(textureRegion.getRegionWidth(), textureRegion.getRegionHeight());
+        this.exhaust = card.isExhaust();
+        super.setName(title);
+        this.setWidth(textureRegion.getRegionWidth());
+        this.setHeight(textureRegion.getRegionHeight());
+        this.setScale(super.getScaleX(), super.getScaleY());
+        this.timeAdded = card.getTimeAdded();
+        this.containingTable = null;
+        //this.titleGroup = card.getTitleGroup();
+        //this.descriptionGroup = card.getDescriptionGroup();
+
         initCard();
 
     }
 
     public void generateTextTable() {
+        clearChildren();
         game.font.getData().markupEnabled = true;
+        String upgradeDescription = description.toUpperCase(Locale.ROOT);
+        String colorlessDescription = upgradeDescription;
+        int displayCost = cost;
+        if (upgraded || preview) {
+            Json json = new Json();
+            json.addClassTag("cardUpgrade", CardUpgrade.class);
+            FileHandle file = new FileHandle("cards/cardUpgrades.json");
+            ArrayList<CardUpgrade> cardUpgradeArrayList = json.fromJson(ArrayList.class, CardUpgrade.class, file);
+            for (CardUpgrade upgrade : cardUpgradeArrayList) {
+                if (title.equalsIgnoreCase(upgrade.getName())) {
+                    displayCost = upgrade.getCost();
+                    upgradeDescription = upgrade.getDescription();
+                    colorlessDescription = upgrade.getDescriptionColorless();
+                }
+            }
+
+        }
+
+
+
         GlyphLayout glyphord = new GlyphLayout();
-        Label titleLabel = new Label(title.toUpperCase(Locale.ROOT) ,new LabelStyle(game.font, Color.WHITE));
+        Label titleLabel = new Label((!(upgraded || preview)) ? title.toUpperCase(Locale.ROOT) : (title + "+").toUpperCase(Locale.ROOT),new LabelStyle(game.font, Color.WHITE));
         Group titleGroup = new Group();
         titleGroup.addActor(titleLabel);
-        float scaleBy = 0.7F;
+        float scaleBy = (deckDisplay) ? 0.5F : (!inspect) ? 0.7F : 1F;
         titleGroup.addAction(Actions.scaleBy(scaleBy, scaleBy));
         align(Align.top);
-        float spaceTop = (deckDisplay) ? 120 : 150;
+        float spaceTop = (deckDisplay) ? 120 : (!inspect) ? 150 : 170;
         //add().space(spaceTop).row();
-        add(titleGroup).size(titleLabel.getWidth()*scaleBy*2.5F, titleLabel.getHeight()*scaleBy*1.5F);
-        String descriptionText = description.toUpperCase(Locale.ROOT);
-        String[] descWords = description.replaceAll("[.]", "").split("\\s");
+        add(titleGroup).size(titleLabel.getWidth()*scaleBy* ((deckDisplay) ? 3F : (!inspect) ? 2.5F : 2F) , titleLabel.getHeight()*scaleBy*1.5F);
+        String descriptionText = upgradeDescription;
+        String[] descWords = upgradeDescription.replaceAll("[.]", "").split("\\s");
         for (String descWord : descWords) {
             for (InfoboxTypes.CardInfoType cardInfoType : InfoboxTypes.CardInfoType.values()) {
                 if (cardInfoType.name().equals(descWord)) {
@@ -171,21 +205,21 @@ public class Card extends Table {
                 }
             }
         }
-        add().padTop((deckDisplay) ? 250 : 270).row();
+        add().padTop((deckDisplay) ? 250 : (!inspect) ? 270 : 290).row();
         String[] descriptionLinesColor = descriptionText.split("\\R");
-        String[] descriptionLines = description.split("\\R");
+        String[] descriptionLines = colorlessDescription.split("\\R");
         for (int i = 0; i < descriptionLinesColor.length; i++) {
             Label descriptionLabel = new Label(descriptionLinesColor[i], new LabelStyle(game.font, Color.WHITE));
             Group descriptionGroup = new Group();
             descriptionGroup.addActor(descriptionLabel);
-            scaleBy = (deckDisplay) ? 0.15F : 0.2F;
+            scaleBy = (deckDisplay) ? 0.15F : (!inspect) ? 0.2F : 0.25F;
             descriptionGroup.addAction(Actions.scaleBy(scaleBy, scaleBy));
 
 
             glyphord.setText(game.font, descriptionLines[i]);
 
             if (i == 0) {
-                add(descriptionGroup).size(glyphord.width * (1 + scaleBy), glyphord.height * (1 + scaleBy)).padTop((deckDisplay ? 130 : 170));
+                add(descriptionGroup).size(glyphord.width * (1 + scaleBy), glyphord.height * (1 + scaleBy)).padTop((deckDisplay ? 130 : (!inspect) ? 170 : 200));
             } else {
                 add(descriptionGroup).size(glyphord.width * (1 + scaleBy), glyphord.height * (1 + scaleBy)).padTop(10);
             }
@@ -194,20 +228,17 @@ public class Card extends Table {
             row();
         }
 
-        Label costLabel = new Label(String.valueOf(cost), new LabelStyle(game.font, Color.WHITE));
+        Label costLabel = new Label(String.valueOf(displayCost), new LabelStyle(game.font, Color.WHITE));
         Group costGroup = new Group();
         costGroup.addActor(costLabel);
-        scaleBy = (deckDisplay) ? 0.5F : 0.7F;
+        scaleBy = (deckDisplay) ? 0.5F : (!inspect) ? 0.7F : 1F;
         costGroup.addAction(Actions.scaleBy(scaleBy, scaleBy));
         //add(costGroup).size(costLabel.getWidth(), costLabel.getHeight()).bottom().left().align(Align.bottomLeft).padTop(((deckDisplay) ? 160 : 180)-glyphord.height);
         addActor(costGroup);
-        costGroup.moveBy((deckDisplay) ? 95 : 110, (deckDisplay) ? 115 : 130);
-        //pack();
+        costGroup.moveBy((deckDisplay) ? 95 : (!inspect) ? 110 : 120, (deckDisplay) ? 115 : (!inspect) ? 130 : 150);
+        pack();
     }
 
-    public void generateUpgradedTextTable() {
-
-    }
 
     //initializes card boundaries + adds listeners
     public void initCard() {
@@ -317,8 +348,11 @@ public class Card extends Table {
                 }
             });
         }
+    }
 
-
+    public void previewUpgrade(boolean preview) {
+        this.preview = preview;
+        generateTextTable();
     }
 
     //card draw
@@ -390,6 +424,14 @@ public class Card extends Table {
     //getters & setters
 
 
+    public String getRarity() {
+        return rarity;
+    }
+
+    public void setRarity(String rarity) {
+        this.rarity = rarity;
+    }
+
     public boolean isUpgraded() {
         return upgraded;
     }
@@ -397,9 +439,14 @@ public class Card extends Table {
     public void setUpgraded(boolean upgraded) {
         this.upgraded = upgraded;
         if (upgraded) {
-            generateUpgradedTextTable();
+            generateTextTable();
         }
     }
+
+    public boolean isPreview() {
+        return preview;
+    }
+
 
     public GipGameProject getGame() {
         return game;
