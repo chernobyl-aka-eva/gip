@@ -128,6 +128,16 @@ com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
 		fontColor: RGBA_255_0_0_255
 		overFontColor: Gold
 	}
+	pausescreen-button-small: {
+		font: pcsenior
+		up: pause-button-small-0
+		over: pause-button-small-1
+	}
+	restButton: {
+		font: pcsenior
+		overFontColor: Gold
+		up: restButton
+	}
 }
 com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
 	default: {

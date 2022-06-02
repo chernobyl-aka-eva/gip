@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.mygdx.game.save.SavedMap;
+import com.mygdx.game.save.SavedState;
 
 import java.util.Random;
 
@@ -22,80 +24,54 @@ public class MapBackground extends Table {
     private MapEventType mapEventType = MapEventType.MONSTER;
     private boolean selected;
 
-    public MapBackground(TextureRegion region) {
+    private SavedState savedState;
+
+    public MapBackground(TextureRegion region, SavedState savedState) {
         //debug();
         setBackground(new TextureRegionDrawable(region));
         setSize(region.getRegionWidth(), region.getRegionHeight());
         align(Align.top|Align.left);
 
+        this.savedState = savedState;
 
         int amountEvents = 7;
         mapEvents = new Array<>();
-        for (int i = 0; i < amountEvents; i++) {
-            addMapEvent(i, amountEvents - i - 1);
+        if (savedState == null) {
+            initMapEvents();
+        } else {
+            loadMapBackGround();
         }
     }
 
-    private void addMapEvent(int index, int count) {
-        boolean suitable = false;
-        final int maxElite = 2;
-        switch (intSinceElite) {
-            case 0:
-                while (!suitable) {
-                    mapEventType = randomEnum(MapEventType.class);
-                    if (mapEventType != MapEventType.ELITE) {
-                        suitable = true;
-                        intSinceElite++;
-                    }
-                }
-                break;
-            case 1:
-                while (!suitable) {
-                    mapEventType = randomEnum(MapEventType.class);
-                    if (mapEventType == MapEventType.ELITE) {
-                        if (countElite <= maxElite) {
-                            suitable = true;
-                            intSinceElite = 0;
-                            countElite++;
-                        }
-                    } else {
-                        suitable = true;
-                        intSinceElite++;
-                    }
-                }
-                break;
-            case 2:
-                if (countElite > maxElite) {
-                    while (!suitable) {
-                        mapEventType = randomEnum(MapEventType.class);
-                        if (mapEventType != MapEventType.ELITE) {
-                            suitable = true;
-                            intSinceElite++;
-                        }
-                    }
-                } else {
-                    mapEventType = MapEventType.ELITE;
-                    intSinceElite = 0;
-                    countElite++;
-                }
+    private void initMapEvents() {
+        MapEvent event1 = new MapEvent(atlas, MapEventType.MONSTER, 0, 0);
+        MapEvent event2 = new MapEvent(atlas, MapEventType.REST, 0, 1);
+        MapEvent event3 = new MapEvent(atlas, MapEventType.MONSTER, 0, 2);
+        MapEvent event4 = new MapEvent(atlas, MapEventType.ELITE, 0, 3);
+        MapEvent event5 = new MapEvent(atlas, MapEventType.REST, 0, 4);
+        MapEvent event6 = new MapEvent(atlas, MapEventType.RANDOM, 0, 5);
+        MapEvent event7 = new MapEvent(atlas, MapEventType.ELITE, 0, 6);
+
+        mapEvents.add(event1, event2, event3, event4);
+        mapEvents.add(event5, event6, event7);
+
+        for (int i = mapEvents.size - 1; i >= 0; i--) {
+            add(mapEvents.get(i)).size(mapEvents.get(i).getWidth(), mapEvents.get(i).getHeight()).pad((i == 6) ? 330 : 103, 160, 0, 0).row();
         }
-        if (count == 0) {
-            mapEventType = MapEventType.MONSTER;
+    }
+
+    private void loadMapBackGround() {
+        SavedMap savedMap = savedState.getSavedMap();
+        currentEvent = savedMap.getCurrentEventId();
+
+        for (int i = 0; i < savedMap.getMapEventTypes().size(); i++) {
+            MapEvent mapEvent = new MapEvent(atlas, savedMap.getMapEventTypes().get(i), savedMap.getMapEventIds().get(i), i);
+            mapEvents.add(mapEvent);
         }
 
-
-        MapEvent eventBackground;
-        if (mapEventType == MapEventType.ELITE) {
-            eventBackground = new MapEvent(atlas, mapEventType, index);
-        } else {
-            eventBackground = new MapEvent(atlas, mapEventType, index);
+        for (int i = mapEvents.size - 1; i >= 0; i--) {
+            add(mapEvents.get(i)).size(mapEvents.get(i).getWidth(), mapEvents.get(i).getHeight()).pad((i == 6) ? 330 : 103, 160, 0, 0).row();
         }
-        mapEvents.add(eventBackground);
-
-        add(eventBackground).size(eventBackground.getWidth(), eventBackground.getHeight()).pad((index == 0) ? 330 : 103, 160, 0, 0).row();
-
-
-
     }
 
 
@@ -118,16 +94,7 @@ public class MapBackground extends Table {
         for (MapEvent mapEvent : mapEvents) {
             mapEvent.setCurrentEvent(false);
         }
-        switch (currentEvent) {
-            case 6: currentEvent = 0; break;
-            case 5: currentEvent = 1; break;
-            case 4: currentEvent = 2; break;
-            case 3: currentEvent = 3; break;
-            case 2: currentEvent = 4; break;
-            case 1: currentEvent = 5; break;
-            case 0: currentEvent = 6; break;
-            default: currentEvent = 0;
-        }
+
         this.currentEvent = currentEvent;
         MapEvent mapEvent = mapEvents.get(currentEvent);
         mapEvent.setCurrentEvent(true);

@@ -46,6 +46,8 @@ public class SettingsScreen {
 
     private final KeyboardController keyboardController;
 
+    private final Array<Label> keyLabels = new Array<>(23);
+
     public SettingsScreen(final GipGameProject game, final Stage stage) {
 
         this.game = game;
@@ -92,6 +94,10 @@ public class SettingsScreen {
                 soundsSettingsTable.setVisible(true);
                 videoSettingsTable.setVisible(true);
                 inputScrollPaneTable.setVisible(false);
+                if (settings.isSoundEffectsEnabled()){
+                    game.getSound().play(settings.getSoundVolume());
+                }
+
                 return true;
             }
         });
@@ -110,6 +116,9 @@ public class SettingsScreen {
                 soundsSettingsTable.setVisible(false);
                 videoSettingsTable.setVisible(false);
                 inputScrollPaneTable.setVisible(true);
+                if (settings.isSoundEffectsEnabled()){
+                    game.getSound().play(settings.getSoundVolume());
+                }
                 return true;
             }
         });
@@ -123,24 +132,25 @@ public class SettingsScreen {
 
         soundsSettingsTable = new Table();
         soundsSettingsTable.setFillParent(true);
-        soundsSettingsTable.setDebug(true);
+        //soundsSettingsTable.setDebug(true);
         stage.addActor(soundsSettingsTable);
 
         videoSettingsTable = new Table();
         videoSettingsTable.setFillParent(true);
-        videoSettingsTable.setDebug(true);
+        //videoSettingsTable.setDebug(true);
         stage.addActor(videoSettingsTable);
 
         inputScrollPaneTable = new Table();
         inputScrollPaneTable.setVisible(true);
-        inputScrollPaneTable.setDebug(true);
-        inputScrollPaneTable.setBounds(settingsBackground.getX() + 20, settingsBackground.getY() + 160, 1580, 615);
+        //inputScrollPaneTable.setDebug(true);
+        inputScrollPaneTable.setBounds(settingsBackground.getX() + 25, settingsBackground.getY() + 160, 1580, 615);
         inputScrollPaneTable.setSize(1580, 615);
 
         inputSettingsTable = new Table();
-        inputSettingsTable.setDebug(true);
+        //inputSettingsTable.setDebug(true);
 
-        settings = new Settings();
+        settings = new Settings(game);
+
 
         // music volume
         volumeMusicSlider = new Slider(0f, 1f, 0.1f, false, skin);
@@ -166,6 +176,7 @@ public class SettingsScreen {
             @Override
             public boolean handle(Event event) {
                 settings.setSoundVolume(soundMusicSlider.getValue());
+
                 return false;
             }
         });
@@ -226,19 +237,7 @@ public class SettingsScreen {
                 boolean enabled = fullscreenCheckBox.isChecked();
                 settings.setFullscreenEnabled(enabled);
                 game.log.debug(String.valueOf(fullscreenCheckBox.isChecked()));
-                return false;
-            }
-        });
-
-        // vsync on/off
-        final CheckBox vSyncCheckBox = new CheckBox(null, skin);
-        vSyncCheckBox.setChecked(settings.isVsyncEnabled());
-        vSyncCheckBox.addListener(new EventListener() {
-            @Override
-            public boolean handle(Event event) {
-                boolean enabled = vSyncCheckBox.isChecked();
-                settings.setVsyncEnabled(enabled);
-                game.log.debug(String.valueOf(vSyncCheckBox.isChecked()));
+                game.log.debug("enabled fullscreen " + settings.isFullscreenEnabled());
                 return false;
             }
         });
@@ -276,9 +275,6 @@ public class SettingsScreen {
         //videoSettingsTable.row().pad(10, 0, 0, 10);
         videoSettingsTable.add(fullscreenLabel).left();
         videoSettingsTable.add(fullscreenCheckBox);
-        videoSettingsTable.row().pad(10, 0, 0, 10);
-        videoSettingsTable.add(vSyncLabel).left();
-        videoSettingsTable.add(vSyncCheckBox);
         videoSettingsTable.row().pad(10, 0, 0, 10);
         videoSettingsTable.add(resolutionLabel).left();
         videoSettingsTable.add(resolutions);
@@ -343,11 +339,13 @@ public class SettingsScreen {
 
         settingsGroup.addActor(inputScrollPaneTable);
         inputScrollPaneTable.setVisible(false);
+
     }
 
     public void addInput(final int keyId, String labelName) {
         Skin skin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
         final TextButton inputTextButton = new TextButton(Input.Keys.toString(keyboardController.getKey(keyId)), skin);
+        keyLabels.add(inputTextButton.getLabel());
         inputTextButton.addListener(new ChangeListener() {
             int key;
 
@@ -374,11 +372,44 @@ public class SettingsScreen {
             }
         });
 
-        Label cardLabel = new Label(labelName + " ", skin);
+        Label cardLabel = new Label(labelName + ". . . . .", skin);
 
         inputSettingsTable.row();
-        inputSettingsTable.add(cardLabel).padRight(1200).left();
+        inputSettingsTable.add(cardLabel).padRight(1000).left();
         inputSettingsTable.add(inputTextButton).right();
+
+        keyboardController.initKeyArray();
+    }
+
+    public void refreshInput() {
+        for (int k = 0; k < keyLabels.size; k++) {
+            keyLabels.get(k).setText(Input.Keys.toString(keyboardController.getKeyArray()[k]));
+        }
+    }
+
+    public void refreshVariables() {
+        for (int v = 0; v <= 5; v++) {
+            switch (v) {
+                case 0:
+                    settings.setFullscreenEnabled(settings.isFullscreenEnabled());
+                    break;
+                case 1:
+                    settings.changeResolution();
+                    break;
+                case 2:
+                    settings.setMusicVolume(settings.getMusicVolume());
+                    break;
+                case 3:
+                    settings.setMusicEnabled(settings.isMusicEnabled());
+                    break;
+                case 4:
+                    settings.setSoundVolume(settings.getSoundVolume());
+                    break;
+                case 5:
+                    settings.setSoundEffectsEnabled(settings.isSoundEffectsEnabled());
+                    break;
+            }
+        }
     }
 
     public Group getSettingsGroup() {
@@ -386,6 +417,8 @@ public class SettingsScreen {
     } // getter
 
     public void render(float delta, Group previousGroup) {
+        game.batch.setProjectionMatrix(game.getCamera().combined); //Important
+
         game.batch.begin();
         game.batch.end();
         game.batch.begin();
@@ -394,11 +427,17 @@ public class SettingsScreen {
         game.batch.end();
 
         if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) { // detects ESC key to close settings
+            // resets settings since no save
             settingsGroup.setVisible(false);
             previousGroup.setVisible(true);
+            refreshInput();
+            refreshVariables();
         }
-        if (Gdx.input.isKeyPressed(Input.Keys.F10)) { // detects F10 key to close settings (later save)
+        if (Gdx.input.isKeyPressed(Input.Keys.F10)) { // detects F10 key to close settings and save
             settingsGroup.setVisible(false);
+            keyboardController.saveInputSettings();
+            settings.saveSettings();
+            settings.changeResolution();
             previousGroup.setVisible(true);
         }
 

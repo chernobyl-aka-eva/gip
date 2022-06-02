@@ -28,7 +28,6 @@ public class EnergyManager extends com.badlogic.gdx.scenes.scene2d.ui.Label {
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
-        this.setVisible(visible);
     }
 
     @Override

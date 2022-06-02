@@ -1,24 +1,30 @@
 package com.mygdx.game.save;
 
-import com.mygdx.game.cards.SavedCard;
-
 import java.util.ArrayList;
 
 public class SavedState {
     private int health;
+    private int block;
     private int money;
     private ArrayList<SavedCard> savedCards;
+    private ArrayList<SavedCard> drawCards;
+    private ArrayList<SavedCard> handCards;
+    private ArrayList<SavedCard> discardedCards;
+    private ArrayList<SavedCard> exhaustedCards;
     private ArrayList<Integer> savedItemIndexes;
-    private ArrayList<Integer> mapEventIds;
-    private int currentEventId;
+    private SavedMap savedMap;
 
-    public SavedState(int health, int money, ArrayList<SavedCard> savedCards, ArrayList<Integer> savedItemIndexes, ArrayList<Integer> mapEventIds, int currentEventId) {
+    public SavedState(int health, int block, int money, ArrayList<SavedCard> savedCards, ArrayList<SavedCard> drawCards, ArrayList<SavedCard> handCards, ArrayList<SavedCard> discardedCards, ArrayList<SavedCard> exhaustedCards, ArrayList<Integer> savedItemIndexes, SavedMap savedMap) {
         this.health = health;
+        this.block = block;
         this.money = money;
         this.savedCards = savedCards;
+        this.drawCards = drawCards;
+        this.handCards = handCards;
+        this.discardedCards = discardedCards;
+        this.exhaustedCards = exhaustedCards;
         this.savedItemIndexes = savedItemIndexes;
-        this.mapEventIds = mapEventIds;
-        this.currentEventId = currentEventId;
+        this.savedMap = savedMap;
     }
 
     public SavedState() {
@@ -31,6 +37,14 @@ public class SavedState {
 
     public void setHealth(int health) {
         this.health = health;
+    }
+
+    public int getBlock() {
+        return block;
+    }
+
+    public void setBlock(int block) {
+        this.block = block;
     }
 
     public int getMoney() {
@@ -49,6 +63,38 @@ public class SavedState {
         this.savedCards = savedCards;
     }
 
+    public ArrayList<SavedCard> getDrawCards() {
+        return drawCards;
+    }
+
+    public void setDrawCards(ArrayList<SavedCard> drawCards) {
+        this.drawCards = drawCards;
+    }
+
+    public ArrayList<SavedCard> getHandCards() {
+        return handCards;
+    }
+
+    public void setHandCards(ArrayList<SavedCard> handCards) {
+        this.handCards = handCards;
+    }
+
+    public ArrayList<SavedCard> getDiscardedCards() {
+        return discardedCards;
+    }
+
+    public void setDiscardedCards(ArrayList<SavedCard> discardedCards) {
+        this.discardedCards = discardedCards;
+    }
+
+    public ArrayList<SavedCard> getExhaustedCards() {
+        return exhaustedCards;
+    }
+
+    public void setExhaustedCards(ArrayList<SavedCard> exhaustedCards) {
+        this.exhaustedCards = exhaustedCards;
+    }
+
     public ArrayList<Integer> getSavedItemIndexes() {
         return savedItemIndexes;
     }
@@ -57,19 +103,11 @@ public class SavedState {
         this.savedItemIndexes = savedItemIndexes;
     }
 
-    public ArrayList<Integer> getMapEventIds() {
-        return mapEventIds;
+    public SavedMap getSavedMap() {
+        return savedMap;
     }
 
-    public void setMapEventIds(ArrayList<Integer> mapEventIds) {
-        this.mapEventIds = mapEventIds;
-    }
-
-    public int getCurrentEventId() {
-        return currentEventId;
-    }
-
-    public void setCurrentEventId(int currentEventId) {
-        this.currentEventId = currentEventId;
+    public void setSavedMap(SavedMap savedMap) {
+        this.savedMap = savedMap;
     }
 }

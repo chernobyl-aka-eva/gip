@@ -4,5 +4,6 @@ public enum CardType {
     ATTACK,
     SKILL,
     POWER,
-    STATUS
+    STATUS,
+    CURSE
 }

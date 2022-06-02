@@ -1,33 +1,110 @@
 
 cards-empty.png
-size: 3298, 1126
+size: 8192, 4096
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-attack-gold
+attack-blue
   rotate: false
-  xy: 2474, 2
+  xy: 2474, 2250
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0
   index: -1
-attack-green
+attack-gold
   rotate: false
   xy: 1650, 2
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0
   index: -1
-power-green
+attack-green
   rotate: false
   xy: 826, 2
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0
   index: -1
-skill-green
+attack-purple
+  rotate: false
+  xy: 826, 1126
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+curse-
+  rotate: false
+  xy: 3298, 1126
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+power-blue
+  rotate: false
+  xy: 2474, 1126
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+power-gold
+  rotate: false
+  xy: 3298, 2250
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+power-green
+  rotate: false
+  xy: 1650, 2250
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+power-purple
+  rotate: false
+  xy: 1650, 1126
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+skill-blue
   rotate: false
   xy: 2, 2
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+skill-gold
+  rotate: false
+  xy: 826, 2250
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+skill-green
+  rotate: false
+  xy: 2, 2250
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+skill-purple
+  rotate: false
+  xy: 2, 1126
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+status-
+  rotate: false
+  xy: 2474, 2
+  size: 822, 1122
+  orig: 822, 1122
+  offset: 0, 0
+  index: -1
+status-energy
+  rotate: false
+  xy: 4122, 2250
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0

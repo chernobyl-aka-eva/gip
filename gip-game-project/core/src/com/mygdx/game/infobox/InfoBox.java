@@ -34,7 +34,39 @@ public class InfoBox extends Window {
                             words = "A buff that\nincreases block\ngiven by cards.";
                             break;
                         case DISCARD_PILE:
-                            words = " The Discard Pile \n is where cards \n from your hand \n go at the end \n of your turn.";
+                            words = "The Discard Pile \n is where cards \n from your hand \n go at the end \n of your turn.";
+                            break;
+                        case CYCLE:
+                            words = "Discard a card, drawing a new\ncard to replace it.";
+                            break;
+                        case BURNS:
+                            words = "Burns are unplayable status\ncards that damage you.";
+                            break;
+                        case WOUND:
+                            words = "Unplayable status card that\nis removed at\n the end of combat.";
+                            break;
+                        case STRENGTH:
+                            words = "Strength adds additional\ndamage to attack cards.";
+                            break;
+                        case SLIMED:
+                            words = "Status card that\ncan be exhausted\n";
+                            break;
+                        case INSERT:
+                            words = "Shuffle a card\ninto your draw pile.";
+                            break;
+                        case STATUS:
+                            words = "Status cards are\nremoved at the end\nof the combat.";
+                            break;
+                        case BURN:
+                            words = "Unplayable status card that\ndamage you.";
+                            break;
+                        case UNPLAYABLE:
+                            words = "Unplayable cards cannot be\nplayed from your hand.";
+                            break;
+                        case ETHEREAL:
+                            words = "If this card is in your hand at\nthe end of turn, it is exhausted.\nExhausted cards are " +
+                                "removed\nfrom your deck until the end of combat.";
+                        break;
                     }
                 }
             }

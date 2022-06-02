@@ -6,7 +6,17 @@ public interface InfoboxTypes {
         COMPILE,
         EXHAUST,
         DEXTERITY,
-        DISCARD_PILE
+        DISCARD_PILE,
+        CYCLE,
+        STATUS,
+        SLIMED,
+        WOUND,
+        STRENGTH,
+        BURN,
+        BURNS,
+        INSERT,
+        UNPLAYABLE,
+        ETHEREAL
     }
     enum ItemInfoType {
         DATADISK

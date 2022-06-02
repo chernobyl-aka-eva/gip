@@ -10,6 +10,7 @@ import com.mygdx.game.animations.TurnAnimation;
 import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.monster.Monster;
 import com.mygdx.game.monster.MonsterIntent;
+import com.mygdx.game.save.SavedState;
 import com.mygdx.game.screen.DeathScreen;
 
 public class TurnManager {
@@ -24,6 +25,7 @@ public class TurnManager {
     private Stage stage;
     private Group group;
     private CardManager cardManager;
+    private SavedState savedState;
     private final MonsterIntent monsterIntent;
     private Button endTurn;
     private TurnAnimation turnAnimation;
@@ -31,16 +33,19 @@ public class TurnManager {
 
 
 
-    public TurnManager(GipGameProject game, Stage stage, Group group, final Button endTurn, CardManager cardManager) {
+    public TurnManager(GipGameProject game, Stage stage, Group group, final Button endTurn, CardManager cardManager, SavedState savedState) {
         this.game = game;
         this.stage = stage;
         this.group = group;
         this.endTurn = endTurn;
         this.cardManager = cardManager;
+        this.savedState = savedState;
         monsterIntent = new MonsterIntent(game, cardManager);
         turnAnimation = new TurnAnimation(game, stage, this);
 
-        playerTurnStart();
+        if (savedState == null) {
+            playerTurnStart();
+        }
         for (int i = 0; i < 4; i++) {
             cardManager.refreshDisplayTable(i);
         }

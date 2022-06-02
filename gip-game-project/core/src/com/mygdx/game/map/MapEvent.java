@@ -18,20 +18,15 @@ public class MapEvent extends Table {
     private boolean currentEvent = false;
     private RepeatAction repeatAction = new RepeatAction();
 
-    public MapEvent(TextureAtlas textureAtlas, MapEventType mapEventType, int order) {
-
+    public MapEvent(TextureAtlas textureAtlas, MapEventType mapEventType, int id, int order) {
+        this.id = id;
         this.atlas = textureAtlas;
         this.mapEventType = mapEventType;
-        switch (mapEventType) {
-            case ELITE:     id = 0; break;
-            case REST:      id = 1; break;
-            case SHOP:      id = 2; break;
-            case MONSTER:   id = 3; break;
-            case RANDOM:    id = 4; break;
-            case FILE:      id = 5; break;
-        }
         this.order = order;
+        init();
+    }
 
+    private void init() {
         if (mapEventType.equals(MapEventType.ELITE)) {
             setBackground(new TextureRegionDrawable(atlas.findRegion("eliteField")));
             setSize(atlas.findRegion("eliteField").getRegionWidth(), atlas.findRegion("eliteField").getRegionHeight());
@@ -93,5 +88,13 @@ public class MapEvent extends Table {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public MapEventType getMapEventType() {
+        return mapEventType;
+    }
+
+    public void setMapEventType(MapEventType mapEventType) {
+        this.mapEventType = mapEventType;
     }
 }

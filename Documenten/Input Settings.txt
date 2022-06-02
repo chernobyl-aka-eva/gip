@@ -1,5 +1,5 @@
 Als een gebruiker wil ik de input voor “Confirm Card” kunnen veranderen zodat ik mijn gekozen kaart kan bevestigen.
-Als een gebruiker wil ik de input voor “Cancel/Exit” kunnen verandernen zodat ik mijn actie kan annuleren.
+Als een gebruiker wil ik de input voor “Cancel/Exit” kunnen veranderen zodat ik mijn actie kan annuleren.
 Als een gebruiker wil ik de input voor “Map” kunnen veranderen zodat ik te kaart te zien krijg.
 Als een gebruiker wil ik de input voor “View Deck” kunnen veranderen zodat ik al mijn kaarten kan zien.
 Als een gebruiker wil ik de input voor “Draw Pile” kunnen veranderen zodat ik mijn trekstapel kan zien.

@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.GipGameProject;
+import com.mygdx.game.save.SavedState;
 
 
 public class VirusManager {
@@ -16,12 +17,17 @@ public class VirusManager {
     private Stage stage;
     private final Group gameScreenGroup;
 
-    public VirusManager(GipGameProject game, Stage stage, Group group) {
+    public VirusManager(GipGameProject game, Stage stage, Group group, SavedState savedState) {
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = group;
 
-        player = new Virus(game, "Player", 100, 0, stage, gameScreenGroup);
+
+        if (savedState == null) {
+            player = new Virus(game, "Player", 100, 0, stage, gameScreenGroup, savedState);
+        } else {
+            player = new Virus(game, "Player", savedState.getHealth(), savedState.getBlock(), stage, gameScreenGroup, savedState);
+        }
         gameScreenGroup.addActor(player);
 
         // Animation Textures

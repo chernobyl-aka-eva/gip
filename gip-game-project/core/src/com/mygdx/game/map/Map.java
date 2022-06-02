@@ -3,10 +3,14 @@ package com.mygdx.game.map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
+import com.mygdx.game.save.SavedState;
 import com.mygdx.game.screen.GameScreen;
 
 public class Map extends Table {
@@ -17,24 +21,29 @@ public class Map extends Table {
     private Button mapButton;
     private int currentEvent = 0;
 
+    private SavedState savedState;
 
     private Table mapTable;
     private ScrollPane scrollPane;
     private MapBackground mapBackground;
 
-    public Map(final GameScreen gameScreen) {
+    public Map(final GameScreen gameScreen, SavedState savedState) {
         setBounds(0, 0, gameScreen.getStage().getWidth(), gameScreen.getStage().getHeight()-60);
         align(Align.center);
         //debug();
         setVisible(false);
         setShowMap(false);
 
+        this.savedState = savedState;
+
+
+
         mapTable = new Table();
         mapTable.setBounds(0,2, gameScreen.getStage().getWidth(), gameScreen.getStage().getHeight()-62);
 
         // map texture region
         TextureRegion mapBackgroundRegion = atlas.findRegion("map-background");
-        mapBackground = new MapBackground(mapBackgroundRegion);
+        mapBackground = new MapBackground(mapBackgroundRegion, savedState);
         mapBackground.setPosition(0, 0);
         mapTable.add(mapBackground).size(mapBackground.getWidth(), mapBackground.getHeight());
 
@@ -57,7 +66,7 @@ public class Map extends Table {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!gameScreen.getSettingsScreen().getSettingsGroup().isVisible() && !gameScreen.isPausescreen()) {
-                    if (!gameScreen.getSessionManager().getTurnManager().getCardManager().getTableGroup().getChild(0).isVisible() && !gameScreen.getSessionManager().getTurnManager().getCardManager().getTableGroup().getChild(1).isVisible() && !gameScreen.getSessionManager().getTurnManager().getCardManager().getTableGroup().getChild(2).isVisible() && !gameScreen.getSessionManager().getTurnManager().getCardManager().getTableGroup().getChild(3).isVisible()){
+                    if (!gameScreen.getSessionManager().getEventManager().getCardManager().getTableGroup().getChild(0).isVisible() && !gameScreen.getSessionManager().getEventManager().getCardManager().getTableGroup().getChild(1).isVisible() && !gameScreen.getSessionManager().getEventManager().getCardManager().getTableGroup().getChild(2).isVisible() && !gameScreen.getSessionManager().getEventManager().getCardManager().getTableGroup().getChild(3).isVisible()){
                         if (previousState) {
                             setShowMap(true);
                             previousState = false;
@@ -156,9 +165,13 @@ public class Map extends Table {
                 }
             }
         });
-        gameScreen.getStage().addActor(mapScreenGroup); // adds group to stage
+        gameScreen.getMapScreenGroup().addActor(this);
+        gameScreen.getMapScreenGroup().addActor(mapScreenGroup); // adds group to stage
 
-        gameScreen.getBackgroundGroup().addActor(this);
+
+        if (savedState != null) {
+            currentEvent = savedState.getSavedMap().getCurrentEventId();
+        }
     }
 
     public void dispose() {
@@ -185,11 +198,12 @@ public class Map extends Table {
     }
 
     public int getCurrentEvent() {
-        return currentEvent;
+        return mapBackground.getCurrentEvent();
     }
 
     public void setCurrentEvent(int currentEvent) {
-        this.currentEvent = currentEvent;
+        mapBackground.setCurrentEvent(currentEvent);
+        this.currentEvent = mapBackground.getCurrentEvent();
     }
 
     public boolean isPreviousState() {

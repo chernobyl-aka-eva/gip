@@ -2,9 +2,9 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.cards.CardManager;
+import com.mygdx.game.map.EventManager;
 import com.mygdx.game.map.Map;
 import com.mygdx.game.save.SaveManager;
 import com.mygdx.game.screen.GameScreen;
@@ -14,60 +14,51 @@ public class SessionManager {
     private Stage stage;
     private Group gameScreenGroup;
     private SaveManager saveManager;
+    private EventManager eventManager;
     //private DungeonManager dungeonManager;
     private TurnManager turnManager;
     private GameScreen gameScreen;
     private Map map;
     private final CardManager cardManager;
-    private final Button endTurn;
 
-    public SessionManager(GipGameProject game, Stage stage, Group group, Group foreGround, GameScreen gameScreen) {
+
+    public SessionManager(GipGameProject game, Stage stage, Group foreGround, GameScreen gameScreen) {
         this.game = game;
         this.stage = stage;
-        this.gameScreenGroup = group;
         this.gameScreen = gameScreen;
+        this.gameScreenGroup = gameScreen.getGameScreenGroup();
         this.saveManager = new SaveManager(this);
 
-        map = new Map(gameScreen);
-        map.getMapBackground().setCurrentEvent(map.getCurrentEvent());
 
-        cardManager = new CardManager(game, stage, group, foreGround, this);
+        cardManager = new CardManager(game, stage, gameScreenGroup, foreGround, this);
 
         cardManager.getMonsterManager().addMonster(0);
 
+        eventManager = new EventManager(saveManager.getSavedState(), gameScreen, cardManager, stage, game);
 
         Array<Integer> startingDeck = cardManager.getVirusManager().getPlayer().getStartingDeck();
-        endTurn = new Button(game.skin, "end-turn");
-        endTurn.setPosition(stage.getWidth()-120-endTurn.getWidth(), 150);
-        group.addActor(endTurn);
 
-        for (int i = 0; i < startingDeck.size; i++) {
-            //turnManager.getCardManager().addCard(startingDeck.get(i));
-            cardManager.addCard(startingDeck.get(i));
-            game.log.debug("added card id: " + startingDeck.get(i));
-            game.log.debug("drawpile size: " + cardManager.getDrawPile().size);
+
+        if (saveManager.getSavedState() == null) {
+            for (int i = 0; i < startingDeck.size; i++) {
+                //turnManager.getCardManager().addCard(startingDeck.get(i));
+                cardManager.addCard(startingDeck.get(i));
+                game.log.debug("added card id: " + startingDeck.get(i));
+                game.log.debug("drawpile size: " + cardManager.getDrawPile().size);
+            }
+            cardManager.drawcard(cardManager.getVirusManager().getPlayer().getAmountToDraw());
+        } else {
+            cardManager.loadCards();
         }
 
-        cardManager.drawcard(cardManager.getVirusManager().getPlayer().getAmountToDraw());
 
 
-        turnManager = new TurnManager(game, stage, group, endTurn, cardManager);
 
-
-        saveManager.load();
 
     }
 
     public void eventEnded() {
-        cardManager.getMonsterManager().addMonster(0);
-        turnManager = new TurnManager(game, stage, gameScreenGroup, endTurn, cardManager);
-        cardManager.resetHand();
-        map.setShowMap(true);
-        map.setPreviousState(false);
-        gameScreen.getGameScreenGroup().setVisible(false);
-        map.getMapScreenGroup().setVisible(true);
-        map.setCurrentEvent(map.getCurrentEvent()+1);
-        map.getMapBackground().setCurrentEvent(map.getCurrentEvent());
+        eventManager.eventEnded();
     }
 
     public GipGameProject getGame() {
@@ -120,6 +111,14 @@ public class SessionManager {
 
     public void setGameScreenGroup(Group gameScreenGroup) {
         this.gameScreenGroup = gameScreenGroup;
+    }
+
+    public EventManager getEventManager() {
+        return eventManager;
+    }
+
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     public TurnManager getTurnManager() {

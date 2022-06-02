@@ -18,6 +18,7 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
 import com.mygdx.game.effect.EffectManager;
 import com.mygdx.game.item.ItemManager;
+import com.mygdx.game.save.SavedState;
 
 public class Virus extends Actor {
 
@@ -64,15 +65,22 @@ public class Virus extends Actor {
     private ItemManager itemManager;
     private float elapsed_time;
 
+    private SavedState savedState;
+
     // constructor
-    public Virus(GipGameProject game, String name, int health, int block, Stage stage, Group gameScreenGroup) {
+    public Virus(GipGameProject game, String name, int health, int block, Stage stage, Group gameScreenGroup, SavedState savedState) {
         this.name = name;
         this.health = health;
         this.block = block;
         this.game = game;
         this.stage = stage;
         this.gameScreenGroup = gameScreenGroup;
-        this.money = STARTING_MONEY;
+        if (savedState == null) {
+            this.money = STARTING_MONEY;
+        } else {
+            this.money = savedState.getMoney();
+        }
+        this.savedState = savedState;
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
         game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
@@ -126,6 +134,8 @@ public class Virus extends Actor {
         blockLabel.setColor(Color.PURPLE);
         blockActive = false;
 
+        setBlock(block);
+
         // Energy
         FreeTypeFontGenerator generator = game.generator;
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = game.parameter;
@@ -139,33 +149,58 @@ public class Virus extends Actor {
         // Starting Deck
         startingDeck = new Array<>();
         startingDeck.add(6);
+        //startingDeck.add(0);
+        //startingDeck.add(0);
+        //startingDeck.add(0);
         startingDeck.add(0);
-        startingDeck.add(0);
-        startingDeck.add(0);
-        startingDeck.add(0);
-        startingDeck.add(1);
-        startingDeck.add(1);
-        startingDeck.add(1);
+        //startingDeck.add(1);
+        //startingDeck.add(1);
+        //startingDeck.add(1);
         startingDeck.add(1);
         startingDeck.add(2);
         startingDeck.add(3);
         startingDeck.add(4);
         startingDeck.add(5);
+        startingDeck.add(7);
+        startingDeck.add(8);
+        startingDeck.add(9);
+        startingDeck.add(11);
+        startingDeck.add(12);
+        startingDeck.add(13);
+        startingDeck.add(14);
+        startingDeck.add(15);
+        startingDeck.add(17);
+        startingDeck.add(20);
+        startingDeck.add(21);
+        startingDeck.add(22);
+        startingDeck.add(23);
+        startingDeck.add(24);
+        startingDeck.add(25);
+        startingDeck.add(26);
+        startingDeck.add(27);
+        startingDeck.add(28);
+
 
         // Items
         Group itemGroup = new Group();
         itemManager = new ItemManager(itemGroup, stage, game);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        itemManager.addItem(0);
-        stage.addActor(itemGroup);
+        if (savedState == null) {
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            itemManager.addItem(0);
+            stage.addActor(itemGroup);
+        } else {
+            for (Integer savedItemIndex : savedState.getSavedItemIndexes()) {
+                itemManager.addItem(savedItemIndex);
+            }
+        }
     }
 
     public void initVirus() {
