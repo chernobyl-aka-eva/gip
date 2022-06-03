@@ -19,8 +19,19 @@ public class GenerateCardUpgrades {
         cardUpgrades.add(new CardUpgrade("Go To", " Draw 1 card. \n ENCODE. \n COMPILE - Draw 1 card. ", 0));
         cardUpgrades.add(new CardUpgrade("Piercing Shot", " Deal [12] damage to \n all enemies. \n EXHAUST. ", 0));
         cardUpgrades.add(new CardUpgrade("Fine Tuning", " Gain [2] DEXTERITY. \n ENCODE. \n COMPILE - gain [2] \n DEXTERITY. \n \n EXHAUST. ", 2));
-        cardUpgrades.add(new CardUpgrade("Test Card", " This is an \n [upgraded] test Card \n EXHAUST. ", 5));
-
+        cardUpgrades.add(new CardUpgrade("Bug Barrage", "Gain [2] WOUNDS.\nCYCLE each STATUS,\ndealing 7 Damage\nfor each.", 1));
+        cardUpgrades.add(new CardUpgrade("Oil Spill", "Deal 20 Damage.\nENCODE.\nCOMPILE error -\nINSERT a SLIMED\nEXHAUST.", 2));
+        cardUpgrades.add(new CardUpgrade("Wild Strike", "Deal [17] Damage.\nINSERT a WOUND.", 1));
+        cardUpgrades.add(new CardUpgrade("Sticky Shield", "Gain [14] Block.\nINSERT 1 SLIMED.", 1));
+        cardUpgrades.add(new CardUpgrade("Buggy Mess", "INSERT a DAZED.\nGain 1 energy.\nENCODE.", 0));
+        cardUpgrades.add(new CardUpgrade("Frontload", "Gain [11] BLOCK.\nENCODE.\nCOMPILE - Function\ngains RETAIN.", 2));
+        cardUpgrades.add(new CardUpgrade("Fragment", "Deal [6] Damage.\nGain [6] Block.\nENCODE.", 1));
+        cardUpgrades.add(new CardUpgrade("Mutator", "[Retain].\nGain 1 STRENGTH.\nTransform a STATUS\ninto a copy of this.", 1)); // !
+        cardUpgrades.add(new CardUpgrade("Reboot", "Gain 2 Energy.", 0));
+        cardUpgrades.add(new CardUpgrade("Iterate", "Deal 2 Damage [5]\ntimes.\nENCODE.", 1));
+        cardUpgrades.add(new CardUpgrade("Boost", "Gain 6 BLOCK.\nENCODE.\nCOMPILE - \nGain [3] STRENGTH.", 2));
+        cardUpgrades.add(new CardUpgrade("Auto-Shields", "If you have no BLOCK,\ngain [15] BLOCK.", 1));
+        cardUpgrades.add(new CardUpgrade("Double Energy", "Double your energy.\nEXHAUST.", 0));
 
         Json json = new Json();
         json.addClassTag("cardUpgrade", CardUpgrade.class);

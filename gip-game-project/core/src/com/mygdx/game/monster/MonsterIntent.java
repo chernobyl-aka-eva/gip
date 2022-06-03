@@ -24,23 +24,23 @@ public class MonsterIntent {
                         if (cardManager.getVirusManager().getPlayer().getBlock() >= 32) { // if the player can block fully
                             damage = 32;
                             cardManager.getVirusManager().getPlayer().setBlock(cardManager.getVirusManager().getPlayer().getBlock()-damage);
-                            game.log.debug("damage : " + damage);
-                            game.log.debug("block after damage : " + cardManager.getVirusManager().getPlayer().getBlock());
+                            //game.log.debug("damage : " + damage);
+                            //game.log.debug("block after damage : " + cardManager.getVirusManager().getPlayer().getBlock());
                         } else { // else if the player can't block fully but can block some...
                             int damageAfterBlock;
                             damage = 32 - cardManager.getVirusManager().getPlayer().getBlock();
-                            game.log.debug("damage : " + damage);
+                            //game.log.debug("damage : " + damage);
                             cardManager.getVirusManager().getPlayer().setBlock(cardManager.getVirusManager().getPlayer().getBlock()-damage);
                             damageAfterBlock = 32 - damage; // damage done after breaking block
-                            game.log.debug("damage after block : " + damageAfterBlock);
-                            game.log.debug("health before damage : " + cardManager.getVirusManager().getPlayer().getHealth());
+                            //game.log.debug("damage after block : " + damageAfterBlock);
+                            //game.log.debug("health before damage : " + cardManager.getVirusManager().getPlayer().getHealth());
                             cardManager.getVirusManager().getPlayer().setHealth(cardManager.getVirusManager().getPlayer().getHealth() - damageAfterBlock);
-                            game.log.debug("health after damage : " + cardManager.getVirusManager().getPlayer().getHealth());
+                            //game.log.debug("health after damage : " + cardManager.getVirusManager().getPlayer().getHealth());
                         }
                     } else { // if the player doesn't have block
-                        game.log.debug("health before damage : " + cardManager.getVirusManager().getPlayer().getHealth());
+                        //game.log.debug("health before damage : " + cardManager.getVirusManager().getPlayer().getHealth());
                         cardManager.getVirusManager().getPlayer().setHealth(cardManager.getVirusManager().getPlayer().getHealth()-32);
-                        game.log.debug("health after damage : " + cardManager.getVirusManager().getPlayer().getHealth());
+                        //game.log.debug("health after damage : " + cardManager.getVirusManager().getPlayer().getHealth());
                     }
                     break;
                 case 1:

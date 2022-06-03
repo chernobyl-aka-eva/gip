@@ -47,10 +47,10 @@ public class MapBackground extends Table {
         MapEvent event1 = new MapEvent(atlas, MapEventType.MONSTER, 0, 0);
         MapEvent event2 = new MapEvent(atlas, MapEventType.REST, 0, 1);
         MapEvent event3 = new MapEvent(atlas, MapEventType.MONSTER, 0, 2);
-        MapEvent event4 = new MapEvent(atlas, MapEventType.ELITE, 0, 3);
-        MapEvent event5 = new MapEvent(atlas, MapEventType.REST, 0, 4);
-        MapEvent event6 = new MapEvent(atlas, MapEventType.RANDOM, 0, 5);
-        MapEvent event7 = new MapEvent(atlas, MapEventType.ELITE, 0, 6);
+        MapEvent event4 = new MapEvent(atlas, MapEventType.REST, 0, 2);
+        MapEvent event5 = new MapEvent(atlas, MapEventType.MONSTER, 0, 4);
+        MapEvent event6 = new MapEvent(atlas, MapEventType.RANDOM, 0, 2);
+        MapEvent event7 = new MapEvent(atlas, MapEventType.MONSTER, 0, 2);
 
         mapEvents.add(event1, event2, event3, event4);
         mapEvents.add(event5, event6, event7);
@@ -76,11 +76,7 @@ public class MapBackground extends Table {
 
 
 
-    public static <T extends Enum<?>> T randomEnum(Class<T> enumClass){
-        Random random = new Random();
-        int x = random.nextInt(enumClass.getEnumConstants().length);
-        return enumClass.getEnumConstants()[x];
-    }
+
 
     public void dispose() {
         atlas.dispose();

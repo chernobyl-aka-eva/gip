@@ -16,6 +16,7 @@ public class Hand extends Array<Card> {
         cardManager.positionHand(index);
         cardManager.makeDragable(value);
     }
+
     public void refreshHand() {
         try {
 

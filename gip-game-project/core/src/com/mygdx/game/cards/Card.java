@@ -44,6 +44,8 @@ public class Card extends Table {
     private String rarity;
     private boolean exhaust;
     private boolean upgraded;
+    private boolean ethereal;
+    private boolean retain;
     private boolean preview;
     private boolean inspect = false;
     private boolean deckDisplay = false;
@@ -197,6 +199,7 @@ public class Card extends Table {
             for (CardUpgrade upgrade : cardUpgradeArrayList) {
                 if (title.equalsIgnoreCase(upgrade.getName())) {
                     displayCost = upgrade.getCost();
+                    cost = displayCost;
                     upgradeDescription = upgrade.getDescription();
                     colorlessDescription = upgrade.getDescriptionColorless();
                 }
@@ -253,15 +256,17 @@ public class Card extends Table {
                 row();
             }
 
-            Label costLabel = new Label("[#0e0f19]" + displayCost + "[]", new LabelStyle(game.font, Color.WHITE));
-            Group costGroup = new Group();
-            costGroup.addActor(costLabel);
-            scaleBy = (deckDisplay) ? 0.5F : (!inspect) ? 0.7F : 1F;
-            costGroup.addAction(Actions.scaleBy(scaleBy, scaleBy));
-            //add(costGroup).size(costLabel.getWidth(), costLabel.getHeight()).bottom().left().align(Align.bottomLeft).padTop(((deckDisplay) ? 160 : 180)-glyphord.height);
-            addActor(costGroup);
-            costGroup.moveBy((deckDisplay) ? 70 : (!inspect) ? 110 : 100, (deckDisplay) ? 585 : (!inspect) ? 130 : 790);
-
+            if ((cardType.equals(CardType.STATUS) && cost == 0) || cardType.equals(CardType.CURSE)) {
+            } else {
+                Label costLabel = new Label("[#0e0f19]" + displayCost + "[]", new LabelStyle(game.font, Color.WHITE));
+                Group costGroup = new Group();
+                costGroup.addActor(costLabel);
+                scaleBy = (deckDisplay) ? 0.5F : (!inspect) ? 0.7F : 1F;
+                costGroup.addAction(Actions.scaleBy(scaleBy, scaleBy));
+                //add(costGroup).size(costLabel.getWidth(), costLabel.getHeight()).bottom().left().align(Align.bottomLeft).padTop(((deckDisplay) ? 160 : 180)-glyphord.height);
+                addActor(costGroup);
+                costGroup.moveBy((deckDisplay) ? 70 : (!inspect) ? 80 : 100, (deckDisplay) ? 585 : (!inspect) ? 680 : 790);
+            }
         } else {
             //debug();
             //debugActor();
@@ -289,7 +294,14 @@ public class Card extends Table {
 
                 row();
             }
-
+            Label costLabel = new Label("[#0e0f19]" + displayCost + "[]", new LabelStyle(game.font, Color.WHITE));
+            Group costGroup = new Group();
+            costGroup.addActor(costLabel);
+            scaleTo = (functionCard) ? 0.7F : 0.5F;
+            costGroup.addAction(Actions.scaleTo(scaleTo, scaleTo));
+            //add(costGroup).size(costLabel.getWidth(), costLabel.getHeight()).bottom().left().align(Align.bottomLeft).padTop(((deckDisplay) ? 160 : 180)-glyphord.height);
+            addActor(costGroup);
+            costGroup.moveBy((functionCard) ? 35 : 15, (functionCard) ? 295 : 145);
 
 
         }
@@ -718,4 +730,19 @@ public class Card extends Table {
         this.block = block;
     }
 
+    public boolean isEthereal() {
+        return ethereal;
+    }
+
+    public void setEthereal(boolean ethereal) {
+        this.ethereal = ethereal;
+    }
+
+    public void setRetain(boolean retain) {
+        this.retain = retain;
+    }
+
+    public boolean isRetain() {
+        return retain;
+    }
 }

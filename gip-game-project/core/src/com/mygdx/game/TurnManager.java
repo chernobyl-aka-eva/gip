@@ -6,7 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.animations.TurnAnimation;
+import com.mygdx.game.cards.Card;
 import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.monster.Monster;
 import com.mygdx.game.monster.MonsterIntent;
@@ -33,7 +35,7 @@ public class TurnManager {
 
 
 
-    public TurnManager(GipGameProject game, Stage stage, Group group, final Button endTurn, CardManager cardManager, SavedState savedState) {
+    public TurnManager(final GipGameProject game, Stage stage, Group group, final Button endTurn, final CardManager cardManager, SavedState savedState) {
         this.game = game;
         this.stage = stage;
         this.group = group;
@@ -54,6 +56,51 @@ public class TurnManager {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 endTurn.setVisible(false); // set end turn button invisible
+                for (int c = 0; c < cardManager.getHand().size; c++){
+                    if (cardManager.getHand().get(c).isEthereal()){
+                        cardManager.getExhaustPile().add(cardManager.getHand().get(c));
+                        cardManager.getHand().removeIndex(c);
+                        cardManager.refreshDisplayTable(3);
+                        cardManager.getHand().refreshHand();
+                    }
+                }
+                int burnCounter = 0;
+                for (int c = 0; c < cardManager.getHand().size; c++) {
+                    if (cardManager.getHand().get(c).getId() == 12) {
+                        burnCounter++;
+                    }
+                }
+                if (burnCounter > 0) {
+                    int damage;
+                    if (cardManager.getVirusManager().getPlayer().getBlock() > 0) { // if the player has block
+                        //game.log.debug("block before damage : " + cardManager.getVirusManager().getPlayer().getBlock());
+                        if (cardManager.getVirusManager().getPlayer().getBlock() >= 2) { // if the player can block fully
+                            damage = 2;
+                            cardManager.getVirusManager().getPlayer().setBlock(cardManager.getVirusManager().getPlayer().getBlock()-damage);
+                            //game.log.debug("damage : " + damage);
+                            //game.log.debug("block after damage : " + cardManager.getVirusManager().getPlayer().getBlock());
+                        } else { // else if the player can't block fully but can block some...
+                            int damageAfterBlock;
+                            damage = 2 - cardManager.getVirusManager().getPlayer().getBlock();
+                            //game.log.debug("damage : " + damage);
+                            cardManager.getVirusManager().getPlayer().setBlock(cardManager.getVirusManager().getPlayer().getBlock()-damage);
+                            damageAfterBlock = 2 - damage; // damage done after breaking block
+                            //game.log.debug("damage after block : " + damageAfterBlock);
+                            //game.log.debug("health before damage : " + cardManager.getVirusManager().getPlayer().getHealth());
+                            cardManager.getVirusManager().getPlayer().setHealth(cardManager.getVirusManager().getPlayer().getHealth() - damageAfterBlock);
+                            //game.log.debug("health after damage : " + cardManager.getVirusManager().getPlayer().getHealth());
+                        }
+                    } else { // if the player doesn't have block
+                        //game.log.debug("health before damage : " + cardManager.getVirusManager().getPlayer().getHealth());
+                        cardManager.getVirusManager().getPlayer().setHealth(cardManager.getVirusManager().getPlayer().getHealth()-2);
+                        //game.log.debug("health after damage : " + cardManager.getVirusManager().getPlayer().getHealth());
+                    }
+
+                    if (cardManager.getVirusManager().getPlayer().getHealth() <= 0) {
+                        game.setScreen(new DeathScreen(game));
+                    }
+                }
+
                 emptyHand(); // empty hand
                 playerTurnEnd(); // end turn
                 monsterTurnStart(); // begin monster turn
@@ -65,14 +112,26 @@ public class TurnManager {
     }
 
     public void emptyHand(){
-        for (int i = 0; i < cardManager.getHand().size; i++) {
-            cardManager.getDiscardPile().add(cardManager.getHand().get(i));
-            cardManager.getHandTable().removeActor(cardManager.getHand().get(i));
+        Array<Card> cards = new Array<>();
 
+        for (int i = 0; i < cardManager.getHand().size; i++) {
+            if (!cardManager.getHand().get(i).isRetain()) {
+                cardManager.getDiscardPile().add(cardManager.getHand().get(i));
+                cardManager.getHandTable().removeActor(cardManager.getHand().get(i));
+            } else {
+                cards.add(cardManager.getHand().get(i));
+            }
         }
-        cardManager.refreshDisplayTable(2);
+
         cardManager.getHand().clear();
-        cardManager.getHandTable().clear();
+        cardManager.getHandTable().clearChildren();
+
+        for (Card card : cards) {
+            cardManager.getHand().add(card);
+        }
+
+        cardManager.refreshDisplayTable(2);
+
         cardManager.getHand().refreshHand();
     }
 
@@ -110,7 +169,7 @@ public class TurnManager {
         game.log.debug("TURN " + turnCounter + "\n==============");
         endTurn.setVisible(true); // sets end turn button visible
         // draw cards
-        if (turnCounter != 1){
+        if (turnCounter != 1 || savedState != null){
             cardManager.drawcard(cardManager.getVirusManager().getPlayer().getAmountToDraw());
         }
         // set energy
@@ -128,7 +187,7 @@ public class TurnManager {
 
         game.log.debug("(amount of intents) : " + cardManager.getMonsterManager().getMonsterIntents().size);
         for (int i = 0; i < cardManager.getMonsterManager().getMonsterIntents().size; i++){
-            game.log.debug("(intent code) :" + cardManager.getMonsterManager().getMonsterIntents().get(0));
+            //game.log.debug("(intent code) :" + cardManager.getMonsterManager().getMonsterIntents().get(0));
         }
 
 

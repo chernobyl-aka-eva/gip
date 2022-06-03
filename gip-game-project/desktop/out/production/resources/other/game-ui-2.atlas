@@ -1,0 +1,83 @@
+
+game-ui-2.png
+size: 7370, 1084
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+card-inspect-fade
+  rotate: false
+  xy: 2, 2
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+data
+  rotate: false
+  xy: 1924, 114
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+data-disk
+  rotate: false
+  xy: 1924, 148
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+dexterity
+  rotate: false
+  xy: 1958, 160
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1
+guidelines
+  rotate: false
+  xy: 1924, 182
+  size: 1600, 900
+  orig: 1600, 900
+  offset: 0, 0
+  index: -1
+health
+  rotate: false
+  xy: 3526, 446
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+hud-bar
+  rotate: false
+  xy: 3526, 480
+  size: 1920, 300
+  orig: 1920, 300
+  offset: 0, 0
+  index: -1
+hud-bar-binary-0
+  rotate: false
+  xy: 3526, 782
+  size: 1920, 300
+  orig: 1920, 300
+  offset: 0, 0
+  index: -1
+hud-bar-binary-01
+  rotate: false
+  xy: 5448, 480
+  size: 1920, 300
+  orig: 1920, 300
+  offset: 0, 0
+  index: -1
+hud-bar-binary-1
+  rotate: false
+  xy: 5448, 782
+  size: 1920, 300
+  orig: 1920, 300
+  offset: 0, 0
+  index: -1
+strength
+  rotate: false
+  xy: 3526, 424
+  size: 20, 20
+  orig: 20, 20
+  offset: 0, 0
+  index: -1

@@ -41,14 +41,14 @@ curse-
   index: -1
 power-blue
   rotate: false
-  xy: 2474, 1126
+  xy: 3298, 2250
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0
   index: -1
 power-gold
   rotate: false
-  xy: 3298, 2250
+  xy: 2474, 2
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0
@@ -97,7 +97,7 @@ skill-purple
   index: -1
 status-
   rotate: false
-  xy: 2474, 2
+  xy: 2474, 1126
   size: 822, 1122
   orig: 822, 1122
   offset: 0, 0

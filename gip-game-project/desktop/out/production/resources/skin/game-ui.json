@@ -1,0 +1,165 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	pcsenior: {
+		file: pcsenior.fnt
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	BackGround: {
+		r: 0.05490196
+		g: 0.05882353
+		b: 0.09803922
+		a: 1
+	}
+	Gold: {
+		r: 0.9764706
+		g: 0.654902
+		b: 0.1254902
+		a: 1
+	}
+	RGBA_255_0_0_255: {
+		r: 1
+		g: 1
+		b: 1
+		a: 1
+	}
+	RGBA_255_255_255_255: {
+		r: 0
+		g: 0
+		b: 0
+		a: 0
+	}
+}
+com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable: {
+	knob-tiled: {
+		region: knob
+		color: RGBA_255_255_255_255
+		minWidth: 1
+		minHeight: 6
+	}
+	knob-tile: {
+		region: knob
+		color: RGBA_255_0_0_255
+		minWidth: 0
+		minHeight: 6
+	}
+	knob-block-tiled: {
+		region: knob-block
+		color: RGBA_255_0_0_255
+		minWidth: 0
+		minHeight: 6
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: map-button-00
+		over: map-button-01
+	}
+	return: {
+		up: return-button
+	}
+	pause: {
+		up: pause-0
+		over: pause-1
+	}
+	deck: {
+		up: deck-button-00
+		over: deck-button-01
+	}
+	drawpile: {
+		up: drawpile
+		down: drawpile
+	}
+	discardpile: {
+		up: discardpile
+		down: discardpile
+	}
+	end-turn: {
+		up: end turn button
+		down: end turn hover
+		over: end turn hover
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ImageTextButton$ImageTextButtonStyle: {
+	default: {
+		font: pcsenior
+		up: exhaust_pile
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: pcsenior
+		fontColor: RGBA_255_0_0_255
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ProgressBar$ProgressBarStyle: {
+	default-horizontal: {
+		background: background
+		knobBefore: knob-tile
+	}
+	blue-knob: {
+		background: background
+		knobBefore: knob-block-tiled
+	}
+	red-knob: {
+		background: background
+		knobBefore: knob-tile
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: pausescreen-background
+		vScrollKnob: scrollBar
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: pcsenior
+		fontColor: RGBA_255_255_255_255
+		overFontColor: RGBA_255_0_0_255
+	}
+	pausescreen-button: {
+		font: pcsenior
+		up: pause-button-0
+		over: pause-button-1
+	}
+	deck-sorting: {
+		font: pcsenior
+		fontColor: RGBA_255_0_0_255
+		overFontColor: Gold
+	}
+	pausescreen-button-small: {
+		font: pcsenior
+		up: pause-button-small-0
+		over: pause-button-small-1
+	}
+	restButton: {
+		font: pcsenior
+		overFontColor: Gold
+		up: restButton
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Window$WindowStyle: {
+	default: {
+		background: pausescreen-background
+		titleFont: pcsenior
+	}
+	deck: {
+		background: deck-background
+		titleFont: pcsenior
+	}
+	card-info: {
+		background: card-infobox
+		titleFont: pcsenior
+	}
+	deck-sort-background: {
+		background: deck-sort-background
+		titleFont: pcsenior
+	}
+}
+}

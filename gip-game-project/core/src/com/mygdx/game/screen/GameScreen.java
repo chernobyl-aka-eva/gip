@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.GipGameProject;
 import com.mygdx.game.SessionManager;
 import com.mygdx.game.save.SaveManager;
+import com.mygdx.game.screen.settings.Settings;
 import com.mygdx.game.screen.settings.SettingsScreen;
 
 
@@ -57,9 +58,13 @@ public class GameScreen implements Screen {
 
     private final SessionManager sessionManager;
 
+    Settings settingsPref;
+
     public GameScreen(final GipGameProject game) {
         this.game = game;
-
+        settingsPref = new Settings(game);
+        settingsPref.setMusicEnabled(settingsPref.isMusicEnabled());
+        settingsPref.setMusicVolume(settingsPref.getMusicVolume());
 
         // game stage
         stage = new Stage(new ScreenViewport());

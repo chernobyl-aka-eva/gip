@@ -33,7 +33,7 @@ public class Virus extends Actor {
 
 
     private final int STARTING_HP = 75; // starting HP
-    private final int MAX_HP = 200; // maximum health the player can have
+    private int MAX_HP; // maximum health the player can have
     private final int STARTING_MONEY = 99; // MB data (money)
     private final int HAND_SIZE = 10; // maximum amount of cards the player can hold
 
@@ -64,6 +64,8 @@ public class Virus extends Actor {
     private EffectManager effectManager;
     private ItemManager itemManager;
     private float elapsed_time;
+
+    private Label healthLabel;
 
     private SavedState savedState;
 
@@ -136,6 +138,12 @@ public class Virus extends Actor {
 
         setBlock(block);
 
+
+        MAX_HP = health;
+        healthLabel = new Label(getHealth() + "/" + MAX_HP, game.skin);
+        healthLabel.setPosition(virusHealthBar.getX() + virusHealthBar.getWidth()/2 - 25, virusHealthBar.getY() - 70);
+        healthLabel.setColor(Color.WHITE);
+
         // Energy
         FreeTypeFontGenerator generator = game.generator;
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = game.parameter;
@@ -148,52 +156,22 @@ public class Virus extends Actor {
 
         // Starting Deck
         startingDeck = new Array<>();
-        startingDeck.add(6);
-        //startingDeck.add(0);
-        //startingDeck.add(0);
-        //startingDeck.add(0);
         startingDeck.add(0);
-        //startingDeck.add(1);
-        //startingDeck.add(1);
-        //startingDeck.add(1);
+        startingDeck.add(0);
+        startingDeck.add(0);
+        startingDeck.add(0);
+        startingDeck.add(1);
+        startingDeck.add(1);
+        startingDeck.add(1);
         startingDeck.add(1);
         startingDeck.add(2);
         startingDeck.add(3);
-        startingDeck.add(4);
         startingDeck.add(5);
-        startingDeck.add(7);
-        startingDeck.add(8);
-        startingDeck.add(9);
-        startingDeck.add(11);
-        startingDeck.add(12);
-        startingDeck.add(13);
-        startingDeck.add(14);
-        startingDeck.add(15);
-        startingDeck.add(17);
-        startingDeck.add(20);
-        startingDeck.add(21);
-        startingDeck.add(22);
-        startingDeck.add(23);
-        startingDeck.add(24);
-        startingDeck.add(25);
-        startingDeck.add(26);
-        startingDeck.add(27);
-        startingDeck.add(28);
-
 
         // Items
         Group itemGroup = new Group();
         itemManager = new ItemManager(itemGroup, stage, game);
         if (savedState == null) {
-            itemManager.addItem(0);
-            itemManager.addItem(0);
-            itemManager.addItem(0);
-            itemManager.addItem(0);
-            itemManager.addItem(0);
-            itemManager.addItem(0);
-            itemManager.addItem(0);
-            itemManager.addItem(0);
-            itemManager.addItem(0);
             itemManager.addItem(0);
             stage.addActor(itemGroup);
         } else {
@@ -209,6 +187,7 @@ public class Virus extends Actor {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 if (pointer == -1) {
                     virusName.setVisible(true);
+                    healthLabel.setVisible(true);
                     game.log.debug("hovering player " + idleAnimation.getKeyFrame(0).getRegionWidth() + " " + idleAnimation.getKeyFrame(0).getRegionHeight());
                 }
             }
@@ -217,6 +196,7 @@ public class Virus extends Actor {
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 if (pointer == -1) {
                     virusName.setVisible(false);
+                    healthLabel.setVisible(false);
                     game.log.debug("not hovering player ");
                 }
             }
@@ -227,6 +207,7 @@ public class Virus extends Actor {
     @Override
     public void setVisible(boolean visible) {
         super.setVisible(visible);
+        effectManager.getEffectTable().setVisible(visible);
         if (visible) {
             if (blockActive) {
                 virusBlockBar.setVisible(true);
@@ -255,6 +236,7 @@ public class Virus extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         virusHealthBar.setValue(health);
+        healthLabel.setText(getHealth() + "/" + MAX_HP);
         if (blockActive) {
             virusBlockBar.setValue(health);
             blockLabel.setText(String.valueOf(block));
@@ -271,6 +253,7 @@ public class Virus extends Actor {
 
             if (virusName.isVisible()) {
                 virusName.draw(batch, parentAlpha);
+                healthLabel.draw(batch, parentAlpha);
             }
             if (!blockActive) {
                 virusHealthBar.draw(batch, parentAlpha);

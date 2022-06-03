@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
@@ -17,6 +18,7 @@ import com.mygdx.game.cards.CardManager;
 import com.mygdx.game.save.SavedState;
 import com.mygdx.game.screen.GameScreen;
 
+import java.util.Random;
 import java.util.UUID;
 
 public class EventManager {
@@ -28,6 +30,7 @@ public class EventManager {
 
     private Button endTurn;
     private TextButton confirmUpgrade;
+    private Button returnButton;
     private Image fadeImage;
     private Table fadeTable = new Table();
     private Table restTable = new Table();
@@ -40,6 +43,9 @@ public class EventManager {
     private GameScreen gameScreen;
 
     private TextureAtlas textureAtlas;
+
+    private Window rewardWindow;
+    private Table rewardCards;
 
     public EventManager(SavedState savedState, final GameScreen gameScreen, final CardManager cardManager, Stage stage, GipGameProject game) {
         this.savedState = savedState;
@@ -100,7 +106,7 @@ public class EventManager {
                         }
                     }
                 }
-                eventEnded();
+                restReset(restTable);
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
@@ -112,12 +118,172 @@ public class EventManager {
 
 
 
+
+
+
         turnManager = new TurnManager(game, stage, gameScreen.getGameScreenGroup(), endTurn, cardManager, savedState);
 
     }
 
-    public void eventEnded() {
+    public void generateRewards() {
+        rewardWindow = new Window("", game.skin);
+        rewardWindow.align(Align.top|Align.center);
+        rewardWindow.setSize(1000, 700);
+        rewardWindow.setPosition((stage.getWidth() - rewardWindow.getWidth()) / 2, (stage.getHeight() - rewardWindow.getHeight()) / 2);
+        gameScreen.getForGroundGroup().addActor(rewardWindow);
+        rewardWindow.add("REWARDS!").padTop(50).row();
+        rewardWindow.add("Pick a card").row();
+        rewardWindow.setVisible(true);
 
+        rewardCards = new Table();
+        //rewardCards.debug();
+        rewardCards.setSize(rewardWindow.getWidth(), 200);
+
+        rewardWindow.add(rewardCards);
+        rewardCards.clearChildren();
+        final int[] chosenCardIndex = {-1};
+        for (int i = 0; i < 3; i++) {
+            Random random = new Random();
+            int chance = random.nextInt(100) + 1;
+            int randomCardId = 0;
+            if (chance <= 50) {
+                randomCardId = cardManager.getCardList().getGreenCards().get(random.nextInt(cardManager.getCardList().getGreenCards().size));
+            } else if (chance <= 80) {
+                randomCardId = cardManager.getCardList().getBlueCards().get(random.nextInt(cardManager.getCardList().getBlueCards().size));
+            } else {
+                randomCardId = cardManager.getCardList().getGoldCards().get(random.nextInt(cardManager.getCardList().getGoldCards().size));
+            }
+            final Card rewardCard = cardManager.getCardList().getCard(randomCardId);
+            final Card cardCopy = new Card(rewardCard, true, false);
+            float scale = 0.6F;
+            int upgradedChance = random.nextInt(100) + 1;
+            if (upgradedChance <= 30) {
+                cardCopy.setUpgraded(true);
+            }
+
+            cardCopy.setScale(scale);
+            cardCopy.setOrigin(Align.bottomLeft);
+            cardCopy.setSize(cardCopy.getWidth()*scale, cardCopy.getHeight()*scale);
+            cardCopy.setOrigin(Align.center);
+
+            cardCopy.addListener(new ClickListener() {
+                @Override
+                public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                    if (pointer != -1) {
+                        for (int i = 0; i < rewardCards.getCells().size; i++) {
+                            Cell cell = rewardCards.getCells().get(i);
+                            if (cell.getActor() instanceof Card) {
+                                Card cellCard = (Card) cell.getActor();
+                                if (cellCard.equals(cardCopy)) {
+                                    chosenCardIndex[0] = i;
+                                    cellCard.addAction(Actions.alpha(1));
+                                } else {
+                                    cellCard.addAction(Actions.alpha(0.5F));
+                                }
+                            }
+                        }
+                    }
+                    return super.touchDown(event, x, y, pointer, button);
+                }
+            });
+            rewardCards.add(cardCopy).size(cardCopy.getWidth(), cardCopy.getHeight()).pad(-100);
+        }
+        rewardWindow.row();
+        TextButton confirmCardReward = new TextButton("Confirm", game.skin, "restButton");
+        confirmCardReward.addListener(new ClickListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println(chosenCardIndex[0]);
+                if (chosenCardIndex[0] == -1) {
+                    // no choice made
+                    SequenceAction sqa = new SequenceAction();
+                    sqa.addAction(Actions.rotateBy(0.5F, 0.2F));
+                    sqa.addAction(Actions.rotateBy(-1F, 0.2F));
+                    sqa.addAction(Actions.rotateBy(0.5F, 0.2F));
+
+                    SequenceAction sqa1 = new SequenceAction();
+                    sqa1.addAction(Actions.rotateBy(0.5F, 0.2F));
+                    sqa1.addAction(Actions.rotateBy(-1F, 0.2F));
+                    sqa1.addAction(Actions.rotateBy(0.5F, 0.2F));
+
+                    SequenceAction sqa2 = new SequenceAction();
+                    sqa2.addAction(Actions.rotateBy(0.5F, 0.2F));
+                    sqa2.addAction(Actions.rotateBy(-1F, 0.2F));
+                    sqa2.addAction(Actions.rotateBy(0.5F, 0.2F));
+
+                    //rewardCards.addAction(sqa);
+
+                    rewardCards.getCells().get(0).getActor().addAction(sqa);
+                    rewardCards.getCells().get(1).getActor().addAction(sqa1);
+                    rewardCards.getCells().get(2).getActor().addAction(sqa2);
+
+                } else {
+                    // choice made
+                    Card chosenCard = cardManager.getCardList().getCard(((Card) rewardCards.getCells().get(chosenCardIndex[0]).getActor()).getId());
+                    chosenCard.setUpgraded(((Card) rewardCards.getCells().get(chosenCardIndex[0]).getActor()).isUpgraded());
+                    cardManager.addTo(chosenCard);
+
+                    endTurn.setVisible(true);
+                    cardManager.getHandTable().setVisible(true);
+                    gameScreen.getExhaustpile().setVisible(true);
+                    gameScreen.getDiscardpile().setVisible(true);
+                    gameScreen.getDrawpile().setVisible(true);
+                    cardManager.getVirusManager().getPlayer().setVisible(true);
+                    cardManager.getVirusManager().getPlayer().getEnergyManager().setVisible(true);
+
+                    fadeImage.setVisible(false);
+                    rewardWindow.setVisible(false);
+
+
+                    nextEvent();
+                }
+                return super.touchDown(event, x, y, pointer, button);
+            }
+        });
+
+        rewardWindow.add(confirmCardReward);
+
+
+
+    }
+
+    public void eventEnded() {
+        cardManager.getVirusManager().getPlayer().getEffectManager().getEffects().clear();
+        cardManager.getVirusManager().getPlayer().getEffectManager().getEffectTable().clearChildren();
+        // rewardScreen
+        switch (map.getMapBackground().getMapEvents().get(map.getMapBackground().getCurrentEvent()).getMapEventType()) {
+            case MONSTER:
+                endTurn.setVisible(false);
+                cardManager.getHandTable().setVisible(false);
+                gameScreen.getExhaustpile().setVisible(false);
+                gameScreen.getDiscardpile().setVisible(false);
+                gameScreen.getDrawpile().setVisible(false);
+                cardManager.getVirusManager().getPlayer().setVisible(false);
+                cardManager.getVirusManager().getPlayer().getEnergyManager().setVisible(false);
+
+                fadeImage.setVisible(true);
+                // show rewardScreen
+                generateRewards();
+
+
+                break;
+
+            default: nextEvent();
+        }
+
+
+        cardManager.resetFunction();
+
+
+    }
+
+    public static <T extends Enum<?>> T randomEnum(Class<T> enumClass){
+        Random random = new Random();
+        int x = random.nextInt(enumClass.getEnumConstants().length);
+        return enumClass.getEnumConstants()[x];
+    }
+
+    public void nextEvent() {
         map.setShowMap(true);
         map.setPreviousState(false);
         gameScreen.getGameScreenGroup().setVisible(false);
@@ -125,12 +291,20 @@ public class EventManager {
         map.setCurrentEvent(map.getCurrentEvent()+1);
         map.getMapBackground().setCurrentEvent(map.getCurrentEvent());
 
+        if (map.getMapBackground().getMapEvents().get(map.getMapBackground().getCurrentEvent()).getMapEventType().equals(MapEventType.RANDOM)) {
+            boolean notRandom = false;
+            while (!notRandom) {
+                MapEventType mapEventType = randomEnum(MapEventType.class);
+                if (mapEventType!=MapEventType.RANDOM); {
+                    notRandom = true;
+                    restReset(restTable);
+                    map.getMapBackground().getMapEvents().get(map.getMapBackground().getCurrentEvent()).setMapEventType(mapEventType);
+                }
+            }
+        }
+
         switch (map.getMapBackground().getMapEvents().get(map.getMapBackground().getCurrentEvent()).getMapEventType()) {
             case MONSTER:
-            case FILE:
-            case ELITE:
-            case RANDOM:
-            case SHOP:
                 cardManager.getMonsterManager().addMonster(0);
                 cardManager.resetHand();
                 turnManager = new TurnManager(game, stage, gameScreen.getGameScreenGroup(), endTurn, cardManager, null);
@@ -144,6 +318,7 @@ public class EventManager {
                 gameScreen.getDrawpile().setVisible(false);
                 cardManager.getVirusManager().getPlayer().setVisible(false);
                 cardManager.getVirusManager().getPlayer().getEnergyManager().setVisible(false);
+                cardManager.getCompileTable().setVisible(false);
 
                 restTable = new Table();
                 restTable.clear();
@@ -241,7 +416,7 @@ public class EventManager {
                 upgradeTable.add(windowTitle).row();
                 upgradeTable.add(scrollPane);
 
-                final Button returnButton = new Button(game.skin, "return");
+                returnButton = new Button(game.skin, "return");
                 returnButton.setVisible(false);
                 returnButton.setPosition(0, gameScreen.getStage().getHeight() - 870);
                 returnButton.addListener(new InputListener() {
@@ -259,6 +434,9 @@ public class EventManager {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         cardManager.getVirusManager().getPlayer().setHealth(cardManager.getVirusManager().getPlayer().getHealth() + 25);
+                        if (cardManager.getVirusManager().getPlayer().getHealth() > cardManager.getVirusManager().getPlayer().getMAX_HP()) {
+                            cardManager.getVirusManager().getPlayer().setHealth(cardManager.getVirusManager().getPlayer().getMAX_HP());
+                        }
                         restReset(restTable);
                         return super.touchDown(event, x, y, pointer, button);
                     }
@@ -276,15 +454,16 @@ public class EventManager {
                 });
 
 
-                gameScreen.getForGroundGroup().addActor(restTable);
+                gameScreen.getGameScreenGroup().addActor(restTable);
                 gameScreen.getGameScreenGroup().addActor(upgradeTable);
                 gameScreen.getGameScreenGroup().addActor(returnButton);
 
-                fadeImage.setVisible(true);
+                //fadeImage.setVisible(true);
 
         }
-
     }
+
+
 
     public void inspectCard(boolean show, final Card inspectCard) {
         fadeImage.setVisible(show);
@@ -321,8 +500,9 @@ public class EventManager {
         gameScreen.getDiscardpile().setVisible(true);
         gameScreen.getDrawpile().setVisible(true);
         cardManager.getVirusManager().getPlayer().setVisible(true);
+        cardManager.getCompileTable().setVisible(true);
         cardManager.getVirusManager().getPlayer().getEnergyManager().setVisible(true);
-
+        returnButton.setVisible(false);
         table.setVisible(false);
 
         fadeImage.setVisible(false);

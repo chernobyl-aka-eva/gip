@@ -63,7 +63,7 @@ public class GipGameProject extends Game {
         this.setScreen(new TitleScreen(this));
 
         sound =  Gdx.audio.newSound(Gdx.files.internal("sound/click_sound_1.mp3"));
-        music = Gdx.audio.newMusic(Gdx.files.internal("music/soundtrack.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/mediathreat.ogg"));
         music.setLooping(true);
 
     }

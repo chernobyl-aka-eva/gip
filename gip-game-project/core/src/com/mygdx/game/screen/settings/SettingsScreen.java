@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.*;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
@@ -40,6 +41,7 @@ public class SettingsScreen {
     private final Slider soundMusicSlider;
     private final CheckBox musicCheckbox;
     private final CheckBox soundEffectsCheckbox;
+
 
 
     private final Array<String> resolutionsArray;
@@ -156,13 +158,13 @@ public class SettingsScreen {
         volumeMusicSlider = new Slider(0f, 1f, 0.1f, false, skin);
         volumeMusicSlider.setValue(settings.getMusicVolume());
         String musicVolume = String.valueOf(settings.getSettings().getFloat(String.valueOf(settings.getMusicVolume())));
-        game.log.debug("MUSIC VOLUME: " + musicVolume);
+        //game.log.debug("MUSIC VOLUME: " + musicVolume);
         volumeMusicSlider.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
                 settings.setMusicVolume(volumeMusicSlider.getValue());
                 //settings.setMusicVolume(volumeMusicSlider.getValue());
-                game.log.debug(String.valueOf(volumeMusicSlider.getValue()));
+                //game.log.debug(String.valueOf(volumeMusicSlider.getValue()));
                 return false;
             }
         });
@@ -171,7 +173,7 @@ public class SettingsScreen {
         soundMusicSlider = new Slider(0f, 1f, 0.1f, false, skin);
         soundMusicSlider.setValue(settings.getSoundVolume());
         String soundVolume = String.valueOf(settings.getSettings().getFloat(String.valueOf(settings.getSoundVolume())));
-        game.log.debug("SOUND VOLUME: " + soundVolume);
+        //game.log.debug("SOUND VOLUME: " + soundVolume);
         soundMusicSlider.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
@@ -184,12 +186,12 @@ public class SettingsScreen {
         // music on/off
         musicCheckbox = new CheckBox(null, skin);
         musicCheckbox.setChecked(settings.isMusicEnabled());
-        musicCheckbox.addListener(new EventListener() {
+        musicCheckbox.addListener(new ClickListener() {
             @Override
             public boolean handle(Event event) {
                 boolean enabled = musicCheckbox.isChecked();
                 settings.setMusicEnabled(enabled);
-                game.log.debug(String.valueOf(musicCheckbox.isChecked()));
+                //game.log.debug(String.valueOf(musicCheckbox.isChecked()));
                 return false;
             }
         });
@@ -197,12 +199,12 @@ public class SettingsScreen {
         // sound on/off
         soundEffectsCheckbox = new CheckBox(null, skin);
         soundEffectsCheckbox.setChecked(settings.isSoundEffectsEnabled());
-        soundEffectsCheckbox.addListener(new EventListener() {
+        soundEffectsCheckbox.addListener(new ClickListener() {
             @Override
             public boolean handle(Event event) {
                 boolean enabled = soundEffectsCheckbox.isChecked();
                 settings.setSoundEffectsEnabled(enabled);
-                game.log.debug(String.valueOf(soundEffectsCheckbox.isChecked()));
+                //game.log.debug(String.valueOf(soundEffectsCheckbox.isChecked()));
                 return false;
             }
         });
@@ -231,13 +233,13 @@ public class SettingsScreen {
         // fullscreen on/off
         final CheckBox fullscreenCheckBox = new CheckBox(null, skin);
         fullscreenCheckBox.setChecked(settings.isFullscreenEnabled());
-        fullscreenCheckBox.addListener(new EventListener() {
+        fullscreenCheckBox.addListener(new ClickListener() {
             @Override
             public boolean handle(Event event) {
                 boolean enabled = fullscreenCheckBox.isChecked();
                 settings.setFullscreenEnabled(enabled);
-                game.log.debug(String.valueOf(fullscreenCheckBox.isChecked()));
-                game.log.debug("enabled fullscreen " + settings.isFullscreenEnabled());
+                //game.log.debug(String.valueOf(fullscreenCheckBox.isChecked()));
+                //game.log.debug("enabled fullscreen " + settings.isFullscreenEnabled());
                 return false;
             }
         });
@@ -356,7 +358,7 @@ public class SettingsScreen {
                     public boolean keyDown(int keycode) {
                         key = keycode;
                         keyboardController.changeKey(keyId, keycode);
-                        game.log.debug("test " + keyboardController.getKey(keyId));
+                        //game.log.debug("test " + keyboardController.getKey(keyId));
                         return true;
                     }
 
@@ -364,7 +366,7 @@ public class SettingsScreen {
                     public boolean keyUp(int keycode) {
                         inputTextButton.setChecked(false);
                         Gdx.input.setInputProcessor(settingsGroup.getStage());
-                        game.log.debug("up");
+                        //game.log.debug("up");
                         inputTextButton.setText(Input.Keys.toString(keyboardController.getKey(keyId)));
                         return true;
                     }

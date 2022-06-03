@@ -30,6 +30,9 @@ public class Monster extends Actor {
     // characterics
     //name
     private String name;
+
+    private int maxHealth;
+
     //health
     private int health;
     //block
@@ -44,6 +47,7 @@ public class Monster extends Actor {
     private ProgressBar monsterHealthBar;
     private Actor nameAreaMonster;
 
+    private Label healthLabel;
     private Label blockLabel;
     private boolean blockActive;
     private Image blockImage;
@@ -85,13 +89,13 @@ public class Monster extends Actor {
         monsterName.setVisible(false);
 
         initMonster();
-
+        maxHealth = health;
         // Health Bar
-        monsterHealthBar = new ProgressBar(0, 100, 1, false, game.skin, "red-knob");
+        monsterHealthBar = new ProgressBar(0, maxHealth, 1, false, game.skin, "red-knob");
         monsterHealthBar.setValue(health);
         monsterHealthBar.setPosition(positionX, stage.getHeight() - 730);
 
-        monsterBlockBar = new ProgressBar(0, 100, 1, false, game.skin, "blue-knob");
+        monsterBlockBar = new ProgressBar(0, maxHealth, 1, false, game.skin, "blue-knob");
         monsterBlockBar.setValue(health);
         monsterBlockBar.setPosition(monsterHealthBar.getX(), monsterHealthBar.getY());
 
@@ -113,6 +117,13 @@ public class Monster extends Actor {
         blockLabel.setColor(Color.PURPLE);
         blockActive = false;
 
+
+
+        healthLabel = new Label(getHealth() + "/" + maxHealth, game.skin);
+        healthLabel.setPosition(monsterHealthBar.getX() + monsterHealthBar.getWidth()/2 - 25, monsterHealthBar.getY() - 70);
+        healthLabel.setColor(Color.WHITE);
+
+
     }
 
     public void initMonster() {
@@ -123,6 +134,7 @@ public class Monster extends Actor {
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 if (pointer == -1) {
                     monsterName.setVisible(true);
+                    healthLabel.setVisible(true);
                     gameProject.log.debug("hovering monster " + monsterIdleAnimation.getKeyFrame(0).getRegionWidth() + " " + monsterIdleAnimation.getKeyFrame(0).getRegionHeight());
                 }
             }
@@ -131,6 +143,7 @@ public class Monster extends Actor {
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
                 if (pointer == -1) {
                     monsterName.setVisible(false);
+                    healthLabel.setVisible(false);
                     gameProject.log.debug("not hovering monster");
                 }
             }
@@ -172,6 +185,7 @@ public class Monster extends Actor {
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
         monsterHealthBar.setValue(health);
+        healthLabel.setText(getHealth() + "/" + maxHealth);
         if (blockActive) {
             monsterBlockBar.setValue(health);
             blockLabel.setText(String.valueOf(block));
@@ -179,7 +193,7 @@ public class Monster extends Actor {
         blockLabel.setText(block);
         if (this.isVisible()){
             monsterHealthBar.setValue(health);
-
+            healthLabel.setText(getHealth() + "/" + maxHealth);
             elapsed_time += Gdx.graphics.getDeltaTime();
             TextureRegion currentFrameMonster = monsterIdleAnimation.getKeyFrame(elapsed_time, true);
             game.batch.draw(currentFrameMonster,
@@ -190,6 +204,7 @@ public class Monster extends Actor {
 
             if (monsterName.isVisible()) {
                 monsterName.draw(batch, parentAlpha);
+                healthLabel.draw(batch, parentAlpha);
             }
 
             if (!blockActive) {
@@ -210,7 +225,6 @@ public class Monster extends Actor {
         super.act(delta);
         if (this.isVisible()) {
             monsterHealthBar.act(delta);
-
             nameAreaMonster.act(delta);
             if (monsterName.isVisible()) {
                 monsterName.act(delta);

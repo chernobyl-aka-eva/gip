@@ -61,7 +61,7 @@ public class MonsterManager {
                         game,
                         0,
                         "Enemy",
-                        20,
+                        35,
                         0,
                         stage,
                         gameScreenGroup

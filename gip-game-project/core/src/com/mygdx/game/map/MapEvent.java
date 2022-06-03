@@ -27,13 +27,8 @@ public class MapEvent extends Table {
     }
 
     private void init() {
-        if (mapEventType.equals(MapEventType.ELITE)) {
-            setBackground(new TextureRegionDrawable(atlas.findRegion("eliteField")));
-            setSize(atlas.findRegion("eliteField").getRegionWidth(), atlas.findRegion("eliteField").getRegionHeight());
-        } else {
-            setBackground(new TextureRegionDrawable(atlas.findRegion("normalField")));
-            setSize(atlas.findRegion("normalField").getRegionWidth(), atlas.findRegion("normalField").getRegionHeight());
-        }
+        setBackground(new TextureRegionDrawable(atlas.findRegion("normalField")));
+        setSize(atlas.findRegion("normalField").getRegionWidth(), atlas.findRegion("normalField").getRegionHeight());
         mapEvent = getEventTable();
         mapEvent.setOrigin(Align.center);
         add(mapEvent).size(mapEvent.getWidth(), mapEvent.getHeight());
@@ -43,10 +38,7 @@ public class MapEvent extends Table {
 
         Image mapEvent;
         switch (mapEventType) {
-            case FILE:      mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("file"))); break;
             case REST:      mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("rest"))); break;
-            case SHOP:      mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("shop"))); break;
-            case ELITE:     mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("elite"))); break;
             case RANDOM:    mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("random"))); break;
             default:        mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("monster"))); break;
         }

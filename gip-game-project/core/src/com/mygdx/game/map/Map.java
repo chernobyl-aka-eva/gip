@@ -118,6 +118,7 @@ public class Map extends Table {
         legend.add(monster);
         legend.add(new Label("Monster", gameScreen.getGame().skin)).row();
 
+        /*
         Image elite = new Image(new TextureRegionDrawable(atlas.findRegion("elite")));
         legend.add(elite);
         legend.add(new Label("Elite", gameScreen.getGame().skin)).row();
@@ -126,17 +127,23 @@ public class Map extends Table {
         legend.add(file);
         legend.add(new Label("File", gameScreen.getGame().skin)).row();
 
+         */
         Image random = new Image(new TextureRegionDrawable(atlas.findRegion("random")));
         legend.add(random);
         legend.add(new Label("Random", gameScreen.getGame().skin)).row();
+
+
 
         Image rest = new Image(new TextureRegionDrawable(atlas.findRegion("rest")));
         legend.add(rest);
         legend.add(new Label("Rest", gameScreen.getGame().skin)).row();
 
+        /*
         Image shop = new Image(new TextureRegionDrawable(atlas.findRegion("shop")));
         legend.add(shop);
         legend.add(new Label("Shop", gameScreen.getGame().skin)).row();
+
+         */
 
 
         mapScreenGroup.addActor(legend);
