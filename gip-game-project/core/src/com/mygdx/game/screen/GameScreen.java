@@ -156,8 +156,7 @@ public class GameScreen implements Screen {
         settingsScreen = new SettingsScreen(game, stage);
 
         // pause button
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // imports skin (json file)
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas")); // adds regions
+
 
         final Button pause = new Button(game.skin, "pause");
         pause.setPosition(stage.getWidth() - 50,
@@ -305,8 +304,6 @@ public class GameScreen implements Screen {
         });
         stage.addActor(deck);
 
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
         drawpile = new Button(game.skin, "drawpile");
         drawpile.setPosition(0 ,0);

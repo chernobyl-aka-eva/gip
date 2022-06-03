@@ -284,6 +284,20 @@ public class EventManager {
     }
 
     public void nextEvent() {
+        endTurn.setVisible(true);
+        cardManager.getHandTable().setVisible(true);
+        gameScreen.getExhaustpile().setVisible(true);
+        gameScreen.getDiscardpile().setVisible(true);
+        gameScreen.getDrawpile().setVisible(true);
+        cardManager.getVirusManager().getPlayer().setVisible(true);
+        cardManager.getCompileTable().setVisible(true);
+        cardManager.getVirusManager().getPlayer().getEnergyManager().setVisible(true);
+        if (returnButton != null) {
+            returnButton.setVisible(false);
+        }
+        restTable.setVisible(false);
+        fadeImage.setVisible(false);
+
         map.setShowMap(true);
         map.setPreviousState(false);
         gameScreen.getGameScreenGroup().setVisible(false);
@@ -291,17 +305,6 @@ public class EventManager {
         map.setCurrentEvent(map.getCurrentEvent()+1);
         map.getMapBackground().setCurrentEvent(map.getCurrentEvent());
 
-        if (map.getMapBackground().getMapEvents().get(map.getMapBackground().getCurrentEvent()).getMapEventType().equals(MapEventType.RANDOM)) {
-            boolean notRandom = false;
-            while (!notRandom) {
-                MapEventType mapEventType = randomEnum(MapEventType.class);
-                if (mapEventType!=MapEventType.RANDOM); {
-                    notRandom = true;
-                    restReset(restTable);
-                    map.getMapBackground().getMapEvents().get(map.getMapBackground().getCurrentEvent()).setMapEventType(mapEventType);
-                }
-            }
-        }
 
         switch (map.getMapBackground().getMapEvents().get(map.getMapBackground().getCurrentEvent()).getMapEventType()) {
             case MONSTER:
@@ -335,8 +338,7 @@ public class EventManager {
                 restTable.add(heal).pad(20);
                 restTable.add(upgrade).pad(20);
 
-                game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-                game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+
 
 
                 upgradeTable = new Table(game.skin);
@@ -423,7 +425,7 @@ public class EventManager {
                     @Override
                     public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                         upgradeTable.setVisible(false);
-                        fadeImage.setVisible(true);
+                        fadeImage.setVisible(false);
                         restTable.setVisible(true);
                         returnButton.setVisible(false);
                         return super.touchDown(event, x, y, pointer, button);
@@ -471,6 +473,7 @@ public class EventManager {
         confirmUpgrade.setVisible(show);
         if (show && inspectCard != null) {
             fadeTable.clear();
+            fadeTable.setVisible(true);
             fadeTable.setBounds(0, 0, stage.getWidth(), stage.getHeight()-60);
             fadeTable.align(Align.top);
             inspectCard.setScale(0.8F);
@@ -511,6 +514,7 @@ public class EventManager {
 
     public void dispose() {
         textureAtlas.dispose();
+        map.dispose();
     }
 
     public Map getMap() {

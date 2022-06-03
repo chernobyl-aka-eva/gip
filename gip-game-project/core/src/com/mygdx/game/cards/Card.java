@@ -62,13 +62,15 @@ public class Card extends Table {
     private boolean sequenceCard;
     private int sequenceIndex;
 
+    private TextureAtlas textureAtlas;
+
 
     private FreeTypeFontGenerator generator = null;
     private BitmapFont font = null;
 
-    public Card(int id, String title, String descriptionText, CardType cardType, String rarity, int cost, boolean exhaust, boolean upgraded, float timeAdded, GipGameProject game) {
+    public Card(int id, String title, String descriptionText, CardType cardType, String rarity, int cost, boolean exhaust, boolean upgraded, float timeAdded, GipGameProject game, TextureAtlas textureAtlas) {
         this.game = game;
-        game.textureAtlas = new TextureAtlas("cards/cards-empty.atlas");
+        this.textureAtlas = textureAtlas;
         this.title = title;
         this.description = descriptionText;
         this.id = id;
@@ -76,9 +78,9 @@ public class Card extends Table {
         this.cost = cost;
         this.rarity = rarity;
         if (cardType.equals(CardType.STATUS) && cost > 0) {
-            this.textureRegion = game.textureAtlas.findRegion(cardType.name().toLowerCase(Locale.ROOT) + "-" + "energy");
+            this.textureRegion = textureAtlas.findRegion(cardType.name().toLowerCase(Locale.ROOT) + "-" + "energy");
         } else {
-            this.textureRegion = game.textureAtlas.findRegion(cardType.name().toLowerCase(Locale.ROOT) + "-" + rarity);
+            this.textureRegion = textureAtlas.findRegion(cardType.name().toLowerCase(Locale.ROOT) + "-" + rarity);
         }
         this.cardImage = new Image(new TextureRegionDrawable(textureRegion));
         super.setBackground(cardImage.getDrawable());
@@ -105,7 +107,7 @@ public class Card extends Table {
         this.sequenceCard = true;
         this.sequenceIndex = sequenceIndex;
         this.functionCard = sequenceIndex == 3;
-
+        this.textureAtlas = card.getTextureAtlas();
         this.containingTable = containingTable;
         this.game = card.getGame();
         this.id = card.getId();
@@ -140,7 +142,7 @@ public class Card extends Table {
         this.game = card.getGame();
         this.inspect = inspect;
         //deckscreen card
-
+        this.textureAtlas = card.getTextureAtlas();
         this.deckDisplay = deckDisplay;
         this.id = card.getId();
         this.title = card.getTitle();
@@ -310,9 +312,8 @@ public class Card extends Table {
 
     public void changeBackground(CardType nextCardType) {
         if (nextCardType!=null) {
-            game.textureAtlas = new TextureAtlas("cards/cards-empty.atlas");
             this.cardType = nextCardType;
-            this.textureRegion = game.textureAtlas.findRegion(cardType.name().toLowerCase(Locale.ROOT) + "-" + rarity);
+            this.textureRegion = textureAtlas.findRegion(cardType.name().toLowerCase(Locale.ROOT) + "-" + rarity);
             this.cardImage = new Image(new TextureRegionDrawable(textureRegion));
             super.setBackground(cardImage.getDrawable());
         }
@@ -532,6 +533,14 @@ public class Card extends Table {
 
     public void setInspect(boolean inspect) {
         this.inspect = inspect;
+    }
+
+    public TextureAtlas getTextureAtlas() {
+        return textureAtlas;
+    }
+
+    public void setTextureAtlas(TextureAtlas textureAtlas) {
+        this.textureAtlas = textureAtlas;
     }
 
     public void setUniqueIdentifier(UUID uniqueIdentifier) {

@@ -13,7 +13,7 @@ public class InfoBox extends Window {
     private GipGameProject game;
     private Stage stage;
     public InfoBox(Skin skin, String type, GipGameProject game, Stage stage) {
-        super("", skin, "card-info");
+        super("", game.skin, "card-info");
         this.top().center().align(Align.center|Align.top);
         float height = 200;
         setSize(300, height);

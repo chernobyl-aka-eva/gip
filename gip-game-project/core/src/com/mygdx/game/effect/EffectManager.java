@@ -78,6 +78,10 @@ public class EffectManager {
         return stack;
     }
 
+    public void dispose() {
+        atlas.dispose();
+    }
+
     public Table getEffectTable() {
         return effectTable;
     }

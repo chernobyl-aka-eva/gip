@@ -1,13 +1,11 @@
 package com.mygdx.game.monster;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.GipGameProject;
@@ -47,9 +45,6 @@ public class MonsterManager {
         monsterGroup = new Group();
         gameScreenGroup.addActor(monsterGroup);
 
-        // Animation Textures
-        game.textureAtlas = new TextureAtlas(Gdx.files.internal("animation/enemyidle.atlas"));
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
 
 
     }
@@ -68,6 +63,15 @@ public class MonsterManager {
                 );
                 monsterGroup.addActor(enemy);
 
+        }
+    }
+
+    public void dispose() {
+        atlas.dispose();
+        for (Actor child : monsterGroup.getChildren()) {
+            if (child instanceof Monster) {
+                ((Monster) child).dispose();
+            }
         }
     }
 

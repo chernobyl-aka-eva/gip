@@ -39,7 +39,6 @@ public class MapEvent extends Table {
         Image mapEvent;
         switch (mapEventType) {
             case REST:      mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("rest"))); break;
-            case RANDOM:    mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("random"))); break;
             default:        mapEvent = new Image(new TextureRegionDrawable(atlas.findRegion("monster"))); break;
         }
         return mapEvent;

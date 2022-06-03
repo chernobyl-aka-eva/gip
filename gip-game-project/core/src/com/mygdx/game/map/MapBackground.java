@@ -1,6 +1,5 @@
 package com.mygdx.game.map;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -10,11 +9,9 @@ import com.badlogic.gdx.utils.Array;
 import com.mygdx.game.save.SavedMap;
 import com.mygdx.game.save.SavedState;
 
-import java.util.Random;
-
 public class MapBackground extends Table {
     private Array<MapEvent> mapEvents;
-    private TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("other/map-ui.atlas"));
+    private TextureAtlas atlas;
 
     private int currentEvent = 0;
 
@@ -26,8 +23,9 @@ public class MapBackground extends Table {
 
     private SavedState savedState;
 
-    public MapBackground(TextureRegion region, SavedState savedState) {
+    public MapBackground(TextureRegion region, SavedState savedState, TextureAtlas atlas) {
         //debug();
+        this.atlas = atlas;
         setBackground(new TextureRegionDrawable(region));
         setSize(region.getRegionWidth(), region.getRegionHeight());
         align(Align.top|Align.left);
@@ -49,7 +47,7 @@ public class MapBackground extends Table {
         MapEvent event3 = new MapEvent(atlas, MapEventType.MONSTER, 0, 2);
         MapEvent event4 = new MapEvent(atlas, MapEventType.REST, 0, 2);
         MapEvent event5 = new MapEvent(atlas, MapEventType.MONSTER, 0, 4);
-        MapEvent event6 = new MapEvent(atlas, MapEventType.RANDOM, 0, 2);
+        MapEvent event6 = new MapEvent(atlas, MapEventType.REST, 0, 2);
         MapEvent event7 = new MapEvent(atlas, MapEventType.MONSTER, 0, 2);
 
         mapEvents.add(event1, event2, event3, event4);

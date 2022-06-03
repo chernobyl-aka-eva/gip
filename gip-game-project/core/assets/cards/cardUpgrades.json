@@ -31,7 +31,67 @@
 }
 {
 	class: cardUpgrade
-	Test Card: " THIS IS AN \n [UPGRADED] TEST CARD \n EXHAUST. "
-	cost: 5
+	Bug Barrage: "GAIN [2] WOUNDS.\nCYCLE EACH STATUS,\nDEALING 7 DAMAGE\nFOR EACH."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Oil Spill: DEAL 20 DAMAGE.\nENCODE.\nCOMPILE ERROR -\nINSERT A SLIMED\nEXHAUST.
+	cost: 2
+}
+{
+	class: cardUpgrade
+	Wild Strike: "DEAL [17] DAMAGE.\nINSERT A WOUND."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Sticky Shield: "GAIN [14] BLOCK.\nINSERT 1 SLIMED."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Buggy Mess: INSERT A DAZED.\nGAIN 1 ENERGY.\nENCODE.
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Frontload: "GAIN [11] BLOCK.\nENCODE.\nCOMPILE - FUNCTION\nGAINS RETAIN."
+	cost: 2
+}
+{
+	class: cardUpgrade
+	Fragment: "DEAL [6] DAMAGE.\nGAIN [6] BLOCK.\nENCODE."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Mutator: "[RETAIN].\nGAIN 1 STRENGTH.\nTRANSFORM A STATUS\nINTO A COPY OF THIS."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Reboot: GAIN 2 ENERGY.
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Iterate: "DEAL 2 DAMAGE [5]\nTIMES.\nENCODE."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Boost: "GAIN 6 BLOCK.\nENCODE.\nCOMPILE - \nGAIN [3] STRENGTH."
+	cost: 2
+}
+{
+	class: cardUpgrade
+	Auto-Shields: "IF YOU HAVE NO BLOCK,\nGAIN [15] BLOCK."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Double Energy: DOUBLE YOUR ENERGY.\nEXHAUST.
+	cost: 0
 }
 ]

@@ -1,10 +1,7 @@
 package com.mygdx.game.virus;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.mygdx.game.GipGameProject;
 import com.mygdx.game.save.SavedState;
 
@@ -30,9 +27,11 @@ public class VirusManager {
         }
         gameScreenGroup.addActor(player);
 
-        // Animation Textures
-        game.textureAtlas = new TextureAtlas(Gdx.files.internal("animation/idle.atlas"));
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+
+    }
+
+    public void dispose() {
+        player.dispose();
     }
 
     public void drawVirus(){

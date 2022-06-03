@@ -43,6 +43,8 @@ public class TitleScreen implements Screen {
 
     private final Group titlescreenGroup;
 
+    private Skin skin;
+
 
     public TitleScreen(final GipGameProject game) {
         System.out.println(SaveManager.exists());
@@ -57,8 +59,8 @@ public class TitleScreen implements Screen {
         initBackground();
 
         // setup texture atlas and skin for buttons
-        game.skin = new Skin(Gdx.files.internal("skin/titlescreen-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/titlescreen-ui.atlas"));
+        skin = new Skin(Gdx.files.internal("skin/titlescreen-ui.json"));
+        skin.addRegions(new TextureAtlas("skin/titlescreen-ui.atlas"));
         initMenuButtons();
 
         Settings settings = new Settings(game);
@@ -82,19 +84,19 @@ public class TitleScreen implements Screen {
 
     private void initMenuButtons() { // initializes main menu buttons
         // creating button objects
-        play = new TextButton("Play", game.skin, "menu-button-big");
+        play = new TextButton("Play", skin, "menu-button-big");
         play.setSize(510, 80);
 
-        continueRun = new TextButton("Continue Run", game.skin, "menu-button-big");
+        continueRun = new TextButton("Continue Run", skin, "menu-button-big");
         continueRun.setSize(510, 80);
 
-        abandonRun = new TextButton("Abandon Run", game.skin, "menu-button-small");
+        abandonRun = new TextButton("Abandon Run", skin, "menu-button-small");
         abandonRun.setSize(510, 40);
 
-        settings = new TextButton("Settings", game.skin, "menu-button-small");
+        settings = new TextButton("Settings", skin, "menu-button-small");
         settings.setSize(510, 40);
 
-        quit = new TextButton("Quit", game.skin, "menu-button-exit");
+        quit = new TextButton("Quit", skin, "menu-button-exit");
         settings.setSize(510, 40);
 
         // setting position of button
@@ -310,7 +312,7 @@ public class TitleScreen implements Screen {
             BACKGROUNDS[i].getTexture().dispose();
         }
         settingsScreen.dispose();
-
+        skin.dispose();
     }
 
     @Override

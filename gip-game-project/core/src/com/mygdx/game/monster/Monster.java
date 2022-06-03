@@ -13,7 +13,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.mygdx.game.GipGameProject;
@@ -56,6 +55,9 @@ public class Monster extends Actor {
 
     private float elapsed_time;
 
+    private TextureAtlas monsterIdleSet;
+    private TextureAtlas atlas;
+
 
     public Monster(final GipGameProject game, int id, String name, int health, int block, Stage stage, Group gameScreenGroup) {
         this.id = id;
@@ -66,12 +68,10 @@ public class Monster extends Actor {
         this.stage = stage;
         this.gameScreenGroup = gameScreenGroup;
 
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
         elapsed_time = 0f;
         // Animation
-        TextureAtlas monsterIdleSet = new TextureAtlas(Gdx.files.internal("animation/enemyidle.atlas"));
+        monsterIdleSet = new TextureAtlas(Gdx.files.internal("animation/enemyidle.atlas"));
         monsterIdleAnimation = new Animation<TextureRegion>(1 / 10f, monsterIdleSet.findRegions("enemyidle"));
         monsterIdleAnimation.setFrameDuration(3 / 10f);
 
@@ -102,7 +102,7 @@ public class Monster extends Actor {
         this.effectManager = new EffectManager(this, game, stage);
 
         // Block Bar
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));
+        atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));
         //TextureRegion textureRegion = game.textureAtlas.findRegion("block");
         TextureRegion textureRegion = atlas.findRegion("block");
         blockImage = new Image(new TextureRegionDrawable(textureRegion));
@@ -149,6 +149,11 @@ public class Monster extends Actor {
             }
         });
         gameScreenGroup.addActor(nameAreaMonster);
+    }
+
+    public void dispose() {
+        monsterIdleSet.dispose();
+        atlas.dispose();
     }
 
     public void addEffect(int id) {

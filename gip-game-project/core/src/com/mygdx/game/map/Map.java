@@ -43,7 +43,7 @@ public class Map extends Table {
 
         // map texture region
         TextureRegion mapBackgroundRegion = atlas.findRegion("map-background");
-        mapBackground = new MapBackground(mapBackgroundRegion, savedState);
+        mapBackground = new MapBackground(mapBackgroundRegion, savedState, atlas);
         mapBackground.setPosition(0, 0);
         mapTable.add(mapBackground).size(mapBackground.getWidth(), mapBackground.getHeight());
 
@@ -52,10 +52,6 @@ public class Map extends Table {
         mapScreenGroup = new Group();
 
 
-        // game UI
-        gameScreen.getGame().textureAtlas = new TextureAtlas("skin/game-ui.atlas");
-        gameScreen.getGame().skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        gameScreen.getGame().skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
         mapButton = new Button(gameScreen.getGame().skin); // map button
         mapButton.setPosition(gameScreen.getStage().getWidth() - 215, gameScreen.getStage().getHeight() - mapButton.getHeight() - 5); // sets position for map button

@@ -57,6 +57,11 @@ public class SessionManager {
 
     }
 
+    public void dispose() {
+        cardManager.dispose();
+        eventManager.dispose();
+    }
+
     public void eventEnded() {
         eventManager.eventEnded();
     }

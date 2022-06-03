@@ -48,6 +48,10 @@ public class CardManager {
     private Table fadeTable = new Table();
     private float elapsed_time;
 
+    private TextureAtlas atlas;
+    private TextureAtlas atlas2;
+    private Skin skin;
+
     int totalFunctionCards = 0;
 
     private SessionManager sessionManager;
@@ -65,26 +69,24 @@ public class CardManager {
         virusManager = new VirusManager(game, stage, gameScreenGroup, savedState);
         monsterManager = new MonsterManager(game, stage, gameScreenGroup);
 
+        atlas = new TextureAtlas("cards/cards-empty.atlas");
+
         playerCards = new Array<>();
         hand = new Hand(this);
         drawPile = new Array<>();
         discardPile = new Array<>();
         exhaustPile = new Array<>();
-        cardList = new CardList(game, this);
-
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // skin
+        cardList = new CardList(game, this, atlas);
 
         compileTable = new Table();
         compileTable.setPosition(100, 700);
         compileTable.setSize(500, 100);
         //compileTable.debug();
 
-
-        game.textureAtlas = new TextureAtlas("cards/cards-empty.atlas");
         //Image emptySlot1 = new Image(new TextureRegionDrawable(game.textureAtlas.findRegion("attack-green")));
         //Image emptySlot2 = new Image(new TextureRegionDrawable(game.textureAtlas.findRegion("attack-green")));
         //Image emptySlot3 = new Image(new TextureRegionDrawable(game.textureAtlas.findRegion("attack-green")));
-        Card emptyCard = new Card(0, "empty", "", CardType.ATTACK, "green", 0, false, false, 0, game);
+        Card emptyCard = new Card(0, "empty", "", CardType.ATTACK, "green", 0, false, false, 0, game, atlas);
         Card emptySlot1 = new Card(emptyCard, compileTable, 0);
         Card emptySlot2 = new Card(emptyCard, compileTable, 1);
         Card emptySlot3 = new Card(emptyCard, compileTable, 2);
@@ -98,7 +100,7 @@ public class CardManager {
         emptySlot2.addAction(Actions.alpha(0.5F));
         emptySlot3.addAction(Actions.alpha(0.5F));
 
-        Card emptyFunction = new Card(0, "function(" + totalFunctionCards + ")", "", CardType.SKILL, "purple", 1, false, false, 0, game);
+        Card emptyFunction = new Card(0, "function(" + totalFunctionCards + ")", "", CardType.SKILL, "purple", 1, false, false, 0, game, atlas);
         Card function = new Card(emptyFunction, compileTable, 3);
         function.setSize(function.getWidth()*scale/1.5F, function.getHeight()*scale/1.5F);
 
@@ -124,8 +126,8 @@ public class CardManager {
         handTable.setName("handTable");
         gameScreenGroup.addActor(handTable);
 
-        game.textureAtlas = new TextureAtlas("other/game-ui-2.atlas");
-        inspectCardBackGround = new Image(new TextureRegionDrawable(game.textureAtlas.findRegion("card-inspect-fade")));
+        atlas2 = new TextureAtlas("other/game-ui-2.atlas");
+        inspectCardBackGround = new Image(new TextureRegionDrawable(atlas2.findRegion("card-inspect-fade")));
         inspectCardBackGround.setPosition(0, -60);
         inspectCardBackGround.addAction(Actions.alpha(0.8F));
         inspectCardBackGround.setVisible(false);
@@ -174,7 +176,7 @@ public class CardManager {
                     playerCard.isExhaust(),
                     playerCard.isUpgraded(),
                     elapsed_time,
-                    game);
+                    game, atlas);
             playerCards.add(card);
         }
         for (SavedCard drawCard : savedState.getDrawCards()) {
@@ -188,7 +190,7 @@ public class CardManager {
                     drawCard.isExhaust(),
                     drawCard.isUpgraded(),
                     elapsed_time,
-                    game);
+                    game, atlas);
             drawPile.add(card);
         }
         for (SavedCard handCard : savedState.getHandCards()) {
@@ -202,7 +204,7 @@ public class CardManager {
                     handCard.isExhaust(),
                     handCard.isUpgraded(),
                     elapsed_time,
-                    game);
+                    game, atlas);
             hand.add(card);
         }
         for (SavedCard discardedCard : savedState.getDiscardedCards()) {
@@ -216,7 +218,7 @@ public class CardManager {
                     discardedCard.isExhaust(),
                     discardedCard.isUpgraded(),
                     elapsed_time,
-                    game);
+                    game, atlas);
             discardPile.add(card);
         }
         for (SavedCard exhaustedCard : savedState.getExhaustedCards()) {
@@ -230,7 +232,7 @@ public class CardManager {
                     exhaustedCard.isExhaust(),
                     exhaustedCard.isUpgraded(),
                     elapsed_time,
-                    game);
+                    game, atlas);
             exhaustPile.add(card);
         }
         refreshDisplayTable(0);
@@ -245,10 +247,10 @@ public class CardManager {
         int damage;
         int block;
         boolean encode = false;
-        Card burn = new Card(12, "Burn", "UNPLAYABLE.\nAt the end\nof your turn,\ntake 2 Damage.", CardType.STATUS, "", 0,  false, false, elapsed_time, game);
-        Card wound = new Card(13, "Wound", "UNPLAYABLE.", CardType.STATUS, "", 0, false, false, elapsed_time, game);
-        Card slimed = new Card(14, "Slimed", "EXHAUST.", CardType.STATUS, "", 1, true, false, elapsed_time, game);
-        Card dazed = new Card(29, "Dazed", "UNPLAYABLE.\nETHEREAL.", CardType.STATUS, "", 0, false, false, elapsed_time, game);
+        Card burn = new Card(12, "Burn", "UNPLAYABLE.\nAt the end\nof your turn,\ntake 2 Damage.", CardType.STATUS, "", 0,  false, false, elapsed_time, game, atlas);
+        Card wound = new Card(13, "Wound", "UNPLAYABLE.", CardType.STATUS, "", 0, false, false, elapsed_time, game, atlas);
+        Card slimed = new Card(14, "Slimed", "EXHAUST.", CardType.STATUS, "", 1, true, false, elapsed_time, game, atlas);
+        Card dazed = new Card(29, "Dazed", "UNPLAYABLE.\nETHEREAL.", CardType.STATUS, "", 0, false, false, elapsed_time, game, atlas);
         dazed.setEthereal(true);
         if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() < 1 && card.getCost() <= virusManager.getPlayer().getEnergyManager().getEnergy()){
             if (!card.isFunctionCard()) {
@@ -277,7 +279,7 @@ public class CardManager {
                         }
                         playAttackCard(damage, monster);
                         encode = true;
-                        Card replicate = new Card(2, "Replicate", " Deal 4 Damage.\nENCODE.\nadd a copy\nof this card in the\nDISCARD_PILE. ", CardType.ATTACK, "green", 0,  false, false, elapsed_time, game);
+                        Card replicate = new Card(2, "Replicate", " Deal 4 Damage.\nENCODE.\nadd a copy\nof this card in the\nDISCARD_PILE. ", CardType.ATTACK, "green", 0,  false, false, elapsed_time, game, atlas);
                         discardPile.add(replicate);
                         refreshDisplayTable(2);
                         break;
@@ -393,7 +395,7 @@ public class CardManager {
                             int upperbound = indexes.size;
                             int randomint = rand.nextInt(upperbound);
                             hand.removeIndex(indexes.get(randomint));
-                            Card mutator = new Card(21, "Mutator", "Gain 1 STRENGTH.\nTransform a STATUS\ninto a copy of this.", CardType.POWER, "gold", 1,  false, false, elapsed_time, game);
+                            Card mutator = new Card(21, "Mutator", "Gain 1 STRENGTH.\nTransform a STATUS\ninto a copy of this.", CardType.POWER, "gold", 1,  false, false, elapsed_time, game, atlas);
                             hand.add(mutator);
                         }
                         break;
@@ -592,13 +594,13 @@ public class CardManager {
             functionCard.initCard();
 
             totalFunctionCards++;
-            Card emptyFunction = new Card(0, "function(" + totalFunctionCards + ")", "", CardType.SKILL, "purple", 1, false, false, 0, game);
+            Card emptyFunction = new Card(0, "function(" + totalFunctionCards + ")", "", CardType.SKILL, "purple", 1, false, false, 0, game, atlas);
             Card function = new Card(emptyFunction, compileTable, 3);
             function.setSize(function.getWidth()*scale/1.5F, function.getHeight()*scale/1.5F);
 
             compileTable.getCell(functionCard).setActor(function);
 
-            Card slimed = new Card(14, "Slimed", "EXHAUST.", CardType.STATUS, "", 1, true, false, elapsed_time, game);
+            Card slimed = new Card(14, "Slimed", "EXHAUST.", CardType.STATUS, "", 1, true, false, elapsed_time, game, atlas);
             for (Integer compiledCardsId : functionCard.getCompiledCardsIds()) {
                 Card targetCard = null;
                 for (Cell cell : compileTable.getCells()) {
@@ -641,7 +643,7 @@ public class CardManager {
                 }
             }
 
-            Card emptyCard = new Card(0, "empty", "", CardType.ATTACK, "green", 0, false, false, 0, game);
+            Card emptyCard = new Card(0, "empty", "", CardType.ATTACK, "green", 0, false, false, 0, game, atlas);
             for (Cell cell : compileTable.getCells()) {
                 if (cell.getActor() instanceof Card) {
                     Card encodedCard = (Card) cell.getActor();
@@ -660,8 +662,8 @@ public class CardManager {
 
     public void resetFunction() {
         float scale = 0.45F;
-        Card emptyFunction = new Card(0, "function(" + totalFunctionCards + ")", "", CardType.SKILL, "purple", 1, false, false, 0,  game);
-        Card emptyCard = new Card(0, "empty", "", CardType.ATTACK, "green", 0, false, false, 0, game);
+        Card emptyFunction = new Card(0, "function(" + totalFunctionCards + ")", "", CardType.SKILL, "purple", 1, false, false, 0,  game, atlas);
+        Card emptyCard = new Card(0, "empty", "", CardType.ATTACK, "green", 0, false, false, 0, game, atlas);
 
         for (Cell cell : compileTable.getCells()) {
             if (cell.getActor() instanceof Card) {
@@ -774,41 +776,43 @@ public class CardManager {
                 card.addAction(sequenceAction);
                 boolean failedDrag = true;
 
-                try {
-                    Monster monster = (Monster) monsterManager.getMonsterGroup().getChildren().get(0);
-                    //System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
-                    if (card.getX() + 250 >= monster.getNameAreaMonster().getX()) {
-                        if (card.getY() + 150 <= monster.getNameAreaMonster().getY()) {
-                            if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() == 0) {
-                                hand.removeIndex(hand.indexOf(card, false));
-                                //handTable.removeActor(card);
-                                double padWidth = 0 - card.getWidth() / 2.5;
-                                handTable.invalidate();
-                                handTable.validate();
-                                failedDrag = false;
-                                playCard(card, virusManager.getPlayer(), monster);
+                if (card.getCost() <= virusManager.getPlayer().getEnergyManager().getEnergy()) {
+                    try {
+                        Monster monster = (Monster) monsterManager.getMonsterGroup().getChildren().get(0);
+                        //System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
+                        if (card.getX() + 250 >= monster.getNameAreaMonster().getX()) {
+                            if (card.getY() + 150 <= monster.getNameAreaMonster().getY()) {
+                                if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() == 0) {
+                                    hand.removeIndex(hand.indexOf(card, false));
+                                    //handTable.removeActor(card);
+                                    double padWidth = 0 - card.getWidth() / 2.5;
+                                    handTable.invalidate();
+                                    handTable.validate();
+                                    failedDrag = false;
+                                    playCard(card, virusManager.getPlayer(), monster);
+                                }
                             }
                         }
-                    }
-                    if (!(card.getCardType().equals(CardType.ATTACK)) && !card.isFunctionCard()) {
-                        Virus player = virusManager.getPlayer();
-                        //System.out.println("Card: " + card.getX() + " " + card.getY());
-                        //System.out.println("Virus X:\t" + player.getNameAreaVirus().getX() + " max x:\t" + (player.getNameAreaVirus().getX() + player.getNameAreaVirus().getWidth()));
-                        //System.out.print("Virus Y:\t" + player.getNameAreaVirus().getY() + " max y:\t" + (player.getNameAreaVirus().getY() + player.getNameAreaVirus().getHeight()));
-                        if (card.getX() <= 280 && card.getY() <= 280) {
-                            if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() == 0) {
-                                hand.removeIndex(hand.indexOf(card, false));
-                                double padWidth = 0 - card.getWidth() / 2.5;
-                                handTable.invalidate();
-                                handTable.validate();
-                                discardPile.add(card);
-                                failedDrag = false;
-                                playCard(card, virusManager.getPlayer(), null);
+                        if (!(card.getCardType().equals(CardType.ATTACK)) && !card.isFunctionCard()) {
+                            Virus player = virusManager.getPlayer();
+                            //System.out.println("Card: " + card.getX() + " " + card.getY());
+                            //System.out.println("Virus X:\t" + player.getNameAreaVirus().getX() + " max x:\t" + (player.getNameAreaVirus().getX() + player.getNameAreaVirus().getWidth()));
+                            //System.out.print("Virus Y:\t" + player.getNameAreaVirus().getY() + " max y:\t" + (player.getNameAreaVirus().getY() + player.getNameAreaVirus().getHeight()));
+                            if (card.getX() <= 280 && card.getY() <= 280) {
+                                if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() == 0) {
+                                    hand.removeIndex(hand.indexOf(card, false));
+                                    double padWidth = 0 - card.getWidth() / 2.5;
+                                    handTable.invalidate();
+                                    handTable.validate();
+                                    discardPile.add(card);
+                                    failedDrag = false;
+                                    playCard(card, virusManager.getPlayer(), null);
+                                }
                             }
                         }
+                    } catch (IndexOutOfBoundsException e) {
+                        e.printStackTrace();
                     }
-                } catch (IndexOutOfBoundsException e) {
-                    e.printStackTrace();
                 }
 
 
@@ -822,6 +826,7 @@ public class CardManager {
                     allCards.setDragging(false);
                 }
             }
+
         });
     }
 
@@ -838,8 +843,7 @@ public class CardManager {
     }
 
     public void initTables() {
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+
 
 
         deckScreenGroup = new Group();
@@ -876,8 +880,6 @@ public class CardManager {
     public Table displayCards(int type)  {
         boolean exists = true;
 
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
         Table table = new Table(game.skin);
         table.setVisible(false);
         table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -947,6 +949,8 @@ public class CardManager {
         displayDeck.center().top().align(Align.center).clip(true);
         //displayDeck.debugActor();
 
+        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
         displayDeck.add().padTop(70F).row();
         InfoBoxManager infoBoxManager = new InfoBoxManager(game, stage, displayDeck);
@@ -955,7 +959,6 @@ public class CardManager {
             final Card cardCopy = new Card(displayList.get(i-1), true, false);
             cardCopy.setScale(0.6F);
             Card previousCard = null;
-
 
             //cardCopy.debug();
             cardCopy.setOrigin(Align.bottomLeft);
@@ -1025,9 +1028,9 @@ public class CardManager {
             //Label previewUpgrade = new Label("Preview upgrade", game.skin);
             //fadeTable.add(previewUpgrade);
 
-            game.skin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
+            skin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
             //game.skin.addRegions(new TextureAtlas("skin/settings-ui.json"));
-            final CheckBox checkBox = new CheckBox(" Preview upgrade", game.skin);
+            final CheckBox checkBox = new CheckBox(" Preview upgrade", skin);
             checkBox.addListener(new EventListener() {
                 @Override
                 public boolean handle(Event event) {
@@ -1041,8 +1044,6 @@ public class CardManager {
 
 
 
-            game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-            game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
         } else if (!show) {
             fadeTable.clear();
         }
@@ -1225,6 +1226,17 @@ public class CardManager {
         scollWindow.add().row();
 
         return scollWindow;
+    }
+
+    public void dispose() {
+        cardList.dispose();
+        if (skin != null) {
+            skin.dispose();
+        }
+        atlas.dispose();
+        atlas2.dispose();
+        virusManager.dispose();
+        monsterManager.dispose();
     }
 
     //getters & setters

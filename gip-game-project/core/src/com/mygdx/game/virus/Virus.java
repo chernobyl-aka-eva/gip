@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
@@ -69,6 +68,12 @@ public class Virus extends Actor {
 
     private SavedState savedState;
 
+    private TextureAtlas idleSet;
+    private TextureAtlas atlas;
+
+    private FreeTypeFontGenerator generator;
+    private BitmapFont font;
+
     // constructor
     public Virus(GipGameProject game, String name, int health, int block, Stage stage, Group gameScreenGroup, SavedState savedState) {
         this.name = name;
@@ -83,15 +88,14 @@ public class Virus extends Actor {
             this.money = savedState.getMoney();
         }
         this.savedState = savedState;
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+
 
         positionX = 400;
         positionY = stage.getHeight() - 700;
 
         elapsed_time = 0f;
         // Animation
-        TextureAtlas idleSet = new TextureAtlas(Gdx.files.internal("animation/idle.atlas"));
+        idleSet = new TextureAtlas(Gdx.files.internal("animation/idle.atlas"));
         idleAnimation = new Animation<TextureRegion>(1 / 10f, idleSet.findRegions("idle"));
         idleAnimation.setFrameDuration(3 / 10f);
 
@@ -121,7 +125,7 @@ public class Virus extends Actor {
 
         this.effectManager = new EffectManager(this, game, stage);
 
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));
+        atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));
         //TextureRegion textureRegion = game.textureAtlas.findRegion("block");
         TextureRegion textureRegion = atlas.findRegion("block");
         blockImage = new Image(new TextureRegionDrawable(textureRegion));
@@ -145,10 +149,9 @@ public class Virus extends Actor {
         healthLabel.setColor(Color.WHITE);
 
         // Energy
-        FreeTypeFontGenerator generator = game.generator;
+        generator = game.generator;
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = game.parameter;
         parameter.size = 50;
-        BitmapFont font;
         font = generator.generateFont(parameter);
 
         energyManager = new EnergyManager(game, stage, energy, font);
@@ -281,7 +284,12 @@ public class Virus extends Actor {
     }
 
     public void dispose() {
-
+        idleSet.dispose();
+        atlas.dispose();
+        itemManager.dispose();
+        effectManager.dispose();
+        generator.dispose();
+        font.dispose();
     }
 
     // getters and setters
