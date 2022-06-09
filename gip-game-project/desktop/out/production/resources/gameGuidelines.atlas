@@ -1,0 +1,13 @@
+
+gameGuidelines.png
+size: 2048, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+guidelines
+  rotate: false
+  xy: 0, 0
+  size: 1919, 1079
+  orig: 1919, 1079
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,37 @@
+[
+{
+	class: cardUpgrade
+	Strike: " DEAL [9] DAMAGE "
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Defend: " GAIN [8] BLOCK "
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Replicate: " DEAL [6] DAMAGE.\n ENCODE. \n ADD A COPY \n OF THIS CARD IN THE \n DISCARD_PILE. "
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Go To: " DRAW 1 CARD. \n ENCODE. \n COMPILE - DRAW 1 CARD. "
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Piercing Shot: " DEAL [12] DAMAGE TO \n ALL ENEMIES. \n EXHAUST. "
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Fine Tuning: " GAIN [2] DEXTERITY. \n ENCODE. \n COMPILE - GAIN [2] \n DEXTERITY. \n \n EXHAUST. "
+	cost: 2
+}
+{
+	class: cardUpgrade
+	Test Card: " THIS IS AN \n [UPGRADED] TEST CARD \n EXHAUST. "
+	cost: 5
+}
+]

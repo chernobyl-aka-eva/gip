@@ -1,0 +1,111 @@
+{
+com.badlogic.gdx.graphics.g2d.BitmapFont: {
+	pcsenior: {
+		file: pcsenior.fnt
+	}
+}
+com.badlogic.gdx.graphics.Color: {
+	ff: {
+		r: 1
+		g: 1
+		b: 1
+		a: 1
+	}
+	RGBA_0_0_0_255: {
+		r: 0.05490196
+		g: 0.05882353
+		b: 0.09803922
+		a: 1
+	}
+	RGBA_255_255_255_255: {
+		r: 1
+		g: 0
+		b: 0.8543334
+		a: 0.68
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Skin$TintedDrawable: {
+	uyg8: {
+		name: white-pixel
+		color: RGBA_255_255_255_255
+		minWidth: 0
+		minHeight: 0
+	}
+	aa: {
+		name: white-pixel
+		color: RGBA_0_0_0_255
+		minWidth: 0
+		minHeight: 0
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Button$ButtonStyle: {
+	default: {
+		up: settings-0
+		checked: settings-1
+	}
+	settings-input: {
+		up: input-0
+		checked: input-1
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.CheckBox$CheckBoxStyle: {
+	default: {
+		checkboxOn: grey_boxCheckmark
+		checkboxOff: grey_box
+		font: pcsenior
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Label$LabelStyle: {
+	default: {
+		font: pcsenior
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.List$ListStyle: {
+	default: {
+		font: pcsenior
+		fontColorSelected: ff
+		fontColorUnselected: ff
+		selection: bg-selected
+		background: bg-no
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.ScrollPane$ScrollPaneStyle: {
+	default: {
+		background: bg-no
+	}
+	inputScrollPane: {
+		vScrollKnob: vscrollknob
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.SelectBox$SelectBoxStyle: {
+	default: {
+		font: pcsenior
+		fontColor: ff
+		background: bg
+		scrollStyle: default
+		listStyle: default
+		backgroundOver: bg-over
+		backgroundOpen: bg-over
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.Slider$SliderStyle: {
+	default-horizontal: {
+		background: grey_sliderHorizontal
+		knob: grey_sliderUp
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextButton$TextButtonStyle: {
+	default: {
+		font: pcsenior
+		fontColor: RGBA_0_0_0_255
+		up: back
+		over: back_over
+		checked: back_over
+	}
+}
+com.badlogic.gdx.scenes.scene2d.ui.TextTooltip$TextTooltipStyle: {
+	default: {
+		label: default
+	}
+}
+}

@@ -1,0 +1,55 @@
+
+titlescreen-ui.png
+size: 512, 512
+format: RGBA8888
+filter: Linear, Linear
+repeat: none
+exit-button-0
+  rotate: false
+  xy: 1, 469
+  size: 510, 40
+  orig: 510, 40
+  offset: 0, 0
+  index: -1
+exit-button-1
+  rotate: false
+  xy: 1, 427
+  size: 510, 40
+  orig: 510, 40
+  offset: 0, 0
+  index: -1
+menu-button-big-0
+  rotate: false
+  xy: 1, 345
+  size: 510, 80
+  orig: 510, 80
+  offset: 0, 0
+  index: -1
+menu-button-big-1
+  rotate: false
+  xy: 1, 263
+  size: 510, 80
+  orig: 510, 80
+  offset: 0, 0
+  index: -1
+menu-button-small-0
+  rotate: false
+  xy: 1, 221
+  size: 510, 40
+  orig: 510, 40
+  offset: 0, 0
+  index: -1
+menu-button-small-1
+  rotate: false
+  xy: 1, 179
+  size: 510, 40
+  orig: 510, 40
+  offset: 0, 0
+  index: -1
+pcsenior
+  rotate: false
+  xy: 1, 100
+  size: 505, 77
+  orig: 505, 77
+  offset: 0, 0
+  index: -1
