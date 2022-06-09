@@ -51,6 +51,7 @@ public class CardManager {
     private TextureAtlas atlas;
     private TextureAtlas atlas2;
     private Skin skin;
+    private Skin settingsSkin;
 
     int totalFunctionCards = 0;
 
@@ -949,8 +950,6 @@ public class CardManager {
         displayDeck.center().top().align(Align.center).clip(true);
         //displayDeck.debugActor();
 
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
         displayDeck.add().padTop(70F).row();
         InfoBoxManager infoBoxManager = new InfoBoxManager(game, stage, displayDeck);
@@ -1028,9 +1027,9 @@ public class CardManager {
             //Label previewUpgrade = new Label("Preview upgrade", game.skin);
             //fadeTable.add(previewUpgrade);
 
-            skin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
+            settingsSkin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
             //game.skin.addRegions(new TextureAtlas("skin/settings-ui.json"));
-            final CheckBox checkBox = new CheckBox(" Preview upgrade", skin);
+            final CheckBox checkBox = new CheckBox(" Preview upgrade", settingsSkin);
             checkBox.addListener(new EventListener() {
                 @Override
                 public boolean handle(Event event) {
@@ -1232,6 +1231,9 @@ public class CardManager {
         cardList.dispose();
         if (skin != null) {
             skin.dispose();
+        }
+        if (settingsSkin != null) {
+            settingsSkin.dispose();
         }
         atlas.dispose();
         atlas2.dispose();

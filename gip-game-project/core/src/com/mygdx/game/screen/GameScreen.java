@@ -92,8 +92,7 @@ public class GameScreen implements Screen {
 
         // game UI
         game.textureAtlas = new TextureAtlas("skin/game-ui.atlas");
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+
 
 
         // groups determine which UI should be shown on screen

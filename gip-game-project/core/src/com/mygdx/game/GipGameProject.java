@@ -66,6 +66,11 @@ public class GipGameProject extends Game {
         music = Gdx.audio.newMusic(Gdx.files.internal("music/mediathreat.ogg"));
         music.setLooping(true);
 
+
+        skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+        skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+
+
     }
 
     @Override
