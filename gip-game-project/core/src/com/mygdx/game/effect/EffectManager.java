@@ -77,4 +77,56 @@ public class EffectManager {
         }
         return stack;
     }
+
+    public void dispose() {
+        atlas.dispose();
+    }
+
+    public Table getEffectTable() {
+        return effectTable;
+    }
+
+    public void setEffectTable(Table effectTable) {
+        this.effectTable = effectTable;
+    }
+
+    public GipGameProject getGame() {
+        return game;
+    }
+
+    public void setGame(GipGameProject game) {
+        this.game = game;
+    }
+
+    public Actor getTarget() {
+        return target;
+    }
+
+    public void setTarget(Actor target) {
+        this.target = target;
+    }
+
+    public Array<Effect> getEffects() {
+        return effects;
+    }
+
+    public void setEffects(Array<Effect> effects) {
+        this.effects = effects;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    public TextureAtlas getAtlas() {
+        return atlas;
+    }
+
+    public void setAtlas(TextureAtlas atlas) {
+        this.atlas = atlas;
+    }
 }

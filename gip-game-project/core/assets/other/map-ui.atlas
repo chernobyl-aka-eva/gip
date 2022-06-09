@@ -1,0 +1,76 @@
+
+map-ui.png
+size: 1527, 2164
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+elite
+  rotate: false
+  xy: 1027, 1432
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+eliteField
+  rotate: false
+  xy: 925, 1846
+  size: 600, 157
+  orig: 600, 157
+  offset: 0, 0
+  index: -1
+file
+  rotate: false
+  xy: 925, 1432
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+legenda
+  rotate: false
+  xy: 925, 1534
+  size: 335, 310
+  orig: 335, 310
+  offset: 0, 0
+  index: -1
+map-background
+  rotate: false
+  xy: 2, 2
+  size: 921, 2160
+  orig: 921, 2160
+  offset: 0, 0
+  index: -1
+monster
+  rotate: false
+  xy: 1262, 1744
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+normalField
+  rotate: false
+  xy: 925, 2005
+  size: 600, 157
+  orig: 600, 157
+  offset: 0, 0
+  index: -1
+random
+  rotate: false
+  xy: 1262, 1642
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+rest
+  rotate: false
+  xy: 1364, 1744
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+shop
+  rotate: false
+  xy: 925, 1330
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1

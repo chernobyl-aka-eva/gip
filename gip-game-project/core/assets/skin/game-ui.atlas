@@ -1,195 +1,229 @@
 
 game-ui.png
-size: 4096, 2048
+size: 2048, 2048
 format: RGBA8888
-filter: Nearest, Nearest
+filter: Linear, Linear
+repeat: none
+deck-sort-background
+  rotate: false
+  xy: 1, 755
+  size: 1772, 82
+  orig: 1772, 82
+  offset: 0, 0
+  index: -1
+new turn rectangle
+  rotate: false
+  xy: 1, 839
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+
+game-ui2.png
+size: 2048, 2048
+format: RGBA8888
+filter: Linear, Linear
 repeat: none
 attack
   rotate: false
-  xy: 2734, 1718
+  xy: 150, 147
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 background
   rotate: false
-  xy: 2201, 1319
+  xy: 1626, 1927
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
 block
   rotate: false
-  xy: 2201, 1285
+  xy: 1626, 1731
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 card-infobox
   rotate: false
-  xy: 2723, 1770
+  xy: 1, 50
   size: 147, 147
   orig: 147, 147
   offset: 0, 0
   index: -1
 deck-background
   rotate: false
-  xy: 2, 81
+  xy: 1, 1162
   size: 1623, 883
   orig: 1623, 883
   offset: 0, 0
   index: -1
 deck-button-00
   rotate: false
-  xy: 1751, 801
+  xy: 695, 517
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 deck-button-01
   rotate: false
-  xy: 1627, 639
+  xy: 228, 220
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 defend
   rotate: false
-  xy: 2048, 1163
+  xy: 1494, 948
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 discardpile
   rotate: false
-  xy: 1924, 1053
+  xy: 1494, 1000
   size: 122, 160
   orig: 122, 160
   offset: 0, 0
   index: -1
 drawpile
   rotate: false
-  xy: 1627, 692
+  xy: 1626, 1765
   size: 122, 160
   orig: 122, 160
   offset: 0, 0
   index: -1
 end turn button
   rotate: false
-  xy: 1627, 854
+  xy: 1626, 1935
   size: 275, 110
   orig: 275, 110
   offset: 0, 0
   index: -1
 end turn hover
   rotate: false
-  xy: 1924, 1215
+  xy: 800, 832
   size: 275, 110
   orig: 275, 110
   offset: 0, 0
   index: -1
 exhaust_pile
   rotate: false
-  xy: 3417, 1975
+  xy: 1903, 1974
   size: 133, 71
   orig: 133, 71
   offset: 0, 0
   index: -1
 knob
   rotate: false
-  xy: 736, 73
+  xy: 800, 824
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
 knob-block
   rotate: false
-  xy: 2872, 1911
+  xy: 1077, 936
   size: 186, 6
   orig: 186, 6
   offset: 0, 0
   index: -1
 map-button-00
   rotate: false
-  xy: 2618, 1403
+  xy: 800, 771
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 map-button-01
   rotate: false
-  xy: 1924, 1000
+  xy: 1077, 883
   size: 51, 51
   orig: 51, 51
   offset: 0, 0
   index: -1
 melted-block
   rotate: false
-  xy: 736, 39
+  xy: 1750, 1893
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-new turn rectangle
-  rotate: false
-  xy: 2, 966
-  size: 1920, 1080
-  orig: 1920, 1080
-  offset: 0, 0
-  index: -1
 pause-0
   rotate: false
-  xy: 3417, 1939
+  xy: 1, 14
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pause-1
   rotate: false
-  xy: 3552, 2012
+  xy: 1903, 1938
   size: 34, 34
   orig: 34, 34
   offset: 0, 0
   index: -1
 pause-button-0
   rotate: false
-  xy: 2723, 1919
+  xy: 1, 441
   size: 692, 127
   orig: 692, 127
   offset: 0, 0
   index: -1
 pause-button-1
   rotate: false
-  xy: 1924, 1327
+  xy: 800, 1033
   size: 692, 127
   orig: 692, 127
   offset: 0, 0
   index: -1
+pause-button-small-0
+  rotate: false
+  xy: 1, 352
+  size: 692, 87
+  orig: 692, 87
+  offset: 0, 0
+  index: -1
+pause-button-small-1
+  rotate: false
+  xy: 800, 944
+  size: 692, 87
+  orig: 692, 87
+  offset: 0, 0
+  index: -1
 pausescreen-background
   rotate: false
-  xy: 1924, 1456
+  xy: 1, 570
   size: 797, 590
   orig: 797, 590
   offset: 0, 0
   index: -1
 pcsenior
   rotate: false
-  xy: 2, 2
+  xy: 1, 273
   size: 505, 77
   orig: 505, 77
   offset: 0, 0
   index: -1
 return-button
   rotate: false
-  xy: 509, 7
+  xy: 1, 199
   size: 225, 72
   orig: 225, 72
   offset: 0, 0
   index: -1
 scrollBar
   rotate: false
-  xy: 2723, 1498
+  xy: 2038, 1775
   size: 9, 270
   orig: 9, 270
+  offset: 0, 0
+  index: -1
+restButton
+  rotate: false
+  xy: 508, 293
+  size: 176, 57
+  orig: 176, 57
   offset: 0, 0
   index: -1

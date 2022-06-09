@@ -1,0 +1,97 @@
+[
+{
+	class: cardUpgrade
+	Strike: " DEAL [9] DAMAGE "
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Defend: " GAIN [8] BLOCK "
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Replicate: " DEAL [6] DAMAGE.\n ENCODE. \n ADD A COPY \n OF THIS CARD IN THE \n DISCARD_PILE. "
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Go To: " DRAW 1 CARD. \n ENCODE. \n COMPILE - DRAW 1 CARD. "
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Piercing Shot: " DEAL [12] DAMAGE TO \n ALL ENEMIES. \n EXHAUST. "
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Fine Tuning: " GAIN [2] DEXTERITY. \n ENCODE. \n COMPILE - GAIN [2] \n DEXTERITY. \n \n EXHAUST. "
+	cost: 2
+}
+{
+	class: cardUpgrade
+	Bug Barrage: "GAIN [2] WOUNDS.\nCYCLE EACH STATUS,\nDEALING 7 DAMAGE\nFOR EACH."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Oil Spill: DEAL 20 DAMAGE.\nENCODE.\nCOMPILE ERROR -\nINSERT A SLIMED\nEXHAUST.
+	cost: 2
+}
+{
+	class: cardUpgrade
+	Wild Strike: "DEAL [17] DAMAGE.\nINSERT A WOUND."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Sticky Shield: "GAIN [14] BLOCK.\nINSERT 1 SLIMED."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Buggy Mess: INSERT A DAZED.\nGAIN 1 ENERGY.\nENCODE.
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Frontload: "GAIN [11] BLOCK.\nENCODE.\nCOMPILE - FUNCTION\nGAINS RETAIN."
+	cost: 2
+}
+{
+	class: cardUpgrade
+	Fragment: "DEAL [6] DAMAGE.\nGAIN [6] BLOCK.\nENCODE."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Mutator: "[RETAIN].\nGAIN 1 STRENGTH.\nTRANSFORM A STATUS\nINTO A COPY OF THIS."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Reboot: GAIN 2 ENERGY.
+	cost: 0
+}
+{
+	class: cardUpgrade
+	Iterate: "DEAL 2 DAMAGE [5]\nTIMES.\nENCODE."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Boost: "GAIN 6 BLOCK.\nENCODE.\nCOMPILE - \nGAIN [3] STRENGTH."
+	cost: 2
+}
+{
+	class: cardUpgrade
+	Auto-Shields: "IF YOU HAVE NO BLOCK,\nGAIN [15] BLOCK."
+	cost: 1
+}
+{
+	class: cardUpgrade
+	Double Energy: DOUBLE YOUR ENERGY.\nEXHAUST.
+	cost: 0
+}
+]

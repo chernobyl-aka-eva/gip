@@ -5,7 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
@@ -14,12 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.GipGameProject;
 import com.mygdx.game.SessionManager;
-import com.mygdx.game.effect.Effect;
-import com.mygdx.game.item.Item;
+import com.mygdx.game.save.SaveManager;
+import com.mygdx.game.screen.settings.Settings;
+import com.mygdx.game.screen.settings.SettingsScreen;
 
 
 // class where all game logic goes
@@ -31,35 +30,6 @@ public class GameScreen implements Screen {
     // variable for tracking elapsed time
     private float elapsed_time;
 
-    private Image gameBackground; // background texture region
-    private Image hudbar; // hud bar texture region
-    private Image mapBackground; // map texture region
-
-    private boolean showMap; // determines whether map should be shown
-    private boolean previousState = true; // previous state of map button
-
-    private Table table;
-    private Table drawTable;
-    private Table discardTable;
-
-    // virus
-    private Array<Effect> effects = new Array<>(); // buffs and debuffs arraylist
-    private Array<Image> icons = new Array<>();
-    private Array<Image> iconsEnem = new Array<>();
-
-    private Array<Item> items= new Array<>(); // items arraylist
-    private Array<Image> itemIcons = new Array<>();
-
-    // enemy
-    private final Array<Effect> effectsEnemy = new Array<>(); // buffs and debuffs arraylist
-
-
-    // effects
-    //private final Effect strength = new Effect("strength", 1, 1, 5); // strength buff
-    //private final Effect dexterity = new Effect("dexterity", 1, 1, 5); // dexterity buff
-
-    // item
-    private final Item dataDisk = new Item("data-disk", "common", "Gain 100 megabytes after every combat");
 
     // stage for drawing actors
     private final Stage stage;
@@ -67,43 +37,34 @@ public class GameScreen implements Screen {
     // group for adding actors
     private Group gameScreenGroup;
     private Group mapScreenGroup;
+    private Group forGroundGroup;
     private Group backgroundGroup;
-    private ImageTextButton exhaustpile;
+    private final ImageTextButton exhaustpile;
+    private final Button drawpile;
+    private final Button discardpile;
 
-    // icons health & money texture regions
-    private final Image healthIcon;
-    private final Image moneyIcon;
 
     // currency & health value
     private final Label healthVirus;
     private final Label moneyValue;
-
-    private int money;
     private final Label sessionTimer;
 
     // group for UI so they can be shown and hidden
     private final Group pauseGroup;
-    private final TextureRegion pausescreenBackground;
     private boolean pausescreen; // decides whether pause screen should be shown
-    private final Settings settingsScreen;
+    private final SettingsScreen settingsScreen;
 
     // turnmanager (later sessionmanager) ☻
-    // private TurnManager turnManager;
 
     private final SessionManager sessionManager;
 
+    Settings settingsPref;
+
     public GameScreen(final GipGameProject game) {
         this.game = game;
-
-        // adding effects (later this will be added by playing cards or having certain items)
-        //effects.add(strength);
-        //effects.add(dexterity);
-
-        //effectsEnemy.add(dexterity);
-        //effectsEnemy.add(strength);
-
-        // adding items
-        items.add(dataDisk);
+        settingsPref = new Settings(game);
+        settingsPref.setMusicEnabled(settingsPref.isMusicEnabled());
+        settingsPref.setMusicVolume(settingsPref.getMusicVolume());
 
         // game stage
         stage = new Stage(new ScreenViewport());
@@ -112,143 +73,56 @@ public class GameScreen implements Screen {
 
         Gdx.input.setInputProcessor(stage); // allows stage to take input
 
+
         // groups determine which UI should be shown on screen
         gameScreenGroup = new Group();
         mapScreenGroup = new Group();
-
-        // initialize turnmanager
-        // turnManager = new TurnManager(game, stage, gameScreenGroup);
+        forGroundGroup = new Group();
 
 
         // game background
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("other/game-ui-2.atlas"));
 
-        TextureRegion gameBackgroundRegion = atlas.findRegion("guidelines");
+        /*TextureRegion gameBackgroundRegion = atlas.findRegion("guidelines");
         Image background = new Image(new TextureRegionDrawable(gameBackgroundRegion));
         background.setPosition(0, 0);
         background.setSize(stage.getWidth(), stage.getHeight());
-        backgroundGroup.addActor(background);
+        backgroundGroup.addActor(background);*/
 
-        // map texture region
-        TextureRegion mapBackgroundRegion = atlas.findRegion("map-background");
-        Image mapBackground = new Image(new TextureRegionDrawable(mapBackgroundRegion)) {
-            @Override
-            public void draw(Batch batch, float parentAlpha) {
-                if (showMap) {
-                    super.draw(batch, parentAlpha);
-                }
-            }
-        };
-        mapBackground.setPosition(0, 0);
-        backgroundGroup.addActor(mapBackground);
-
-        // hudbar texture region
-        TextureRegion hudbarRegion = atlas.findRegion("hud-bar");
-        final Image hudbar = new Image(new TextureRegionDrawable(hudbarRegion));
-        hudbar.setPosition(0, stage.getHeight() - hudbar.getHeight());
-        backgroundGroup.addActor(hudbar);
-
-        // effect icons
-        for (int i = 0; i < effects.size; i++) { // adds names of regions to textureregion arraylist (virus)
-            //TextureRegion iconRegion = atlas.findRegion(effects.get(i).getEffectName());
-            //Image effectIcon = new Image(new TextureRegionDrawable(iconRegion));
-           // icons.add(effectIcon);
-           // backgroundGroup.addActor(effectIcon);
-        }
-
-
-        for (int i = 0; i < effectsEnemy.size; i++) { // adds names of regions to textureregion arraylist (enemy)
-            //TextureRegion iconRegion = atlas.findRegion(effects.get(i).getEffectName());
-            //Image effectIcon = new Image(new TextureRegionDrawable(iconRegion));
-           // iconsEnemy.add(effectIcon);
-           // backgroundGroup.addActor(effectIcon);
-        }
-
-        // item icons
-        for (int i = 0; i < items.size; i++) { // adds names of regions to textureregion arraylist (items)
-          //  TextureRegion iconRegion = atlas.findRegion(items.get(i).getItemName());
-          //  Image itemIcon = new Image(new TextureRegionDrawable(iconRegion));
-           // itemIcons.add(itemIcon);
-         //   backgroundGroup.addActor(itemIcon);
-        }
-
-
-        // groups determine which UI should be shown on screen
-        gameScreenGroup = new Group();
-        mapScreenGroup = new Group();
-
-        // initialize sessionmanager
-        sessionManager = new SessionManager(game, stage, gameScreenGroup);
 
         // game UI
         game.textureAtlas = new TextureAtlas("skin/game-ui.atlas");
         game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
         game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
-        Button map = new Button(game.skin); // map button
-        map.setPosition(stage.getWidth() - 215, stage.getHeight() - map.getHeight() - 5); // sets position for map button
 
-        map.addListener(new InputListener() { // enables the map button to toggle and enables/disables game/map groups
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (!settingsScreen.getSettingsGroup().isVisible() && !pausescreen) {
-                    if (!sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(0).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(1).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(2).isVisible() && !sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(3).isVisible()){
-                        if (previousState) {
-                            showMap = true;
-                            previousState = false;
-                            gameScreenGroup.setVisible(false);
-                            mapScreenGroup.setVisible(true);
-                        } else {
-                            showMap = false;
-                            previousState = true;
-                            gameScreenGroup.setVisible(true);
-                            mapScreenGroup.setVisible(false);
-                        }
-                    }
-                }
-                return true;
-            }
-        });
+        // groups determine which UI should be shown on screen
+        gameScreenGroup = new Group();
 
-        // adds actor to stage
-        stage.addActor(map);
 
-        Button mapReturn = new Button(game.skin, "return"); // return button in map screen
-        mapReturn.setPosition(0, stage.getHeight() - 870);
-        mapScreenGroup.setVisible(false); // makes map invisible by default
-        mapReturn.addListener(new InputListener() { // allows going back to game screen from map
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                showMap = false;
-                previousState = true;
-                mapScreenGroup.setVisible(false);
-                gameScreenGroup.setVisible(true);
-                //sessionManager.getTurnManager().getCardManager().getMonsterManager().setVisible(true);
-                //sessionManager.getTurnManager().getCardManager().getVirusManager().setVisible(true);
-                return true;
-            }
-        });
+        // hudbar texture region
+        TextureRegion hudbarRegion = atlas.findRegion("hud-bar");
+        final Image hudbar = new Image(new TextureRegionDrawable(hudbarRegion));
+        hudbar.setPosition(0, stage.getHeight() - hudbar.getHeight());
+        backgroundGroup.addActor(hudbar);
+        // initialize sessionmanager
+        sessionManager = new SessionManager(game, stage, forGroundGroup, this);
 
-        mapScreenGroup.addActor(mapReturn); // adds return button to group
-        stage.addActor(mapScreenGroup); // adds group to stage
+
+
+
+
+
 
         stage.addActor(gameScreenGroup); // adds group to stage
 
         // money
         int money = 3; // sets money
 
-        // imports texture atlas and sets text for health and money
-
-
-        // health
-
         //healthVirus = new Label(String.valueOf((int) virusManager.getPlayer().gethealth()), new Label.LabelStyle(game.font, Color.RED));
-        healthVirus = new Label(String.valueOf(sessionManager.getTurnManager().getCardManager().getVirusManager().getPlayer().getHealth()), new Label.LabelStyle(game.font, Color.RED));
-        healthIcon = new Image(new TextureRegionDrawable(atlas.findRegion("health")));
+        healthVirus = new Label(String.valueOf(sessionManager.getEventManager().getCardManager().getVirusManager().getPlayer().getHealth()), new Label.LabelStyle(game.font, Color.RED));
+        // icons health & money texture regions
+        Image healthIcon = new Image(new TextureRegionDrawable(atlas.findRegion("health")));
         healthIcon.setPosition(healthVirus.getX() + healthVirus.getWidth() + 10,
                 stage.getHeight() - healthIcon.getHeight() + healthIcon.getHeight() / 4 - 30);
         healthVirus.setPosition(100, stage.getHeight() - healthIcon.getHeight() / 2 - 30);
@@ -258,7 +132,7 @@ public class GameScreen implements Screen {
 
         // money
         moneyValue = new Label(money + "\t MB", new Label.LabelStyle(game.font, Color.GOLD));
-        moneyIcon = new Image(new TextureRegionDrawable(atlas.findRegion("data")));
+        Image moneyIcon = new Image(new TextureRegionDrawable(atlas.findRegion("data")));
         moneyValue.setPosition(healthVirus.getX() + healthVirus.getWidth() + 50 + 10, stage.getHeight() - healthIcon.getHeight() / 2 - 30);
         moneyIcon.setPosition(moneyValue.getX() + moneyValue.getWidth() + 10,
                 stage.getHeight() - moneyIcon.getHeight() + moneyIcon.getHeight() / 4 - 30);
@@ -268,7 +142,7 @@ public class GameScreen implements Screen {
 
         // session timer
         sessionTimer = new Label("00:" + (int) elapsed_time, new Label.LabelStyle(game.font, Color.WHITE));
-        sessionTimer.setPosition(map.getX()-100, map.getY());
+        sessionTimer.setPosition(sessionManager.getEventManager().getMap().getMapButton().getX()-100, sessionManager.getEventManager().getMap().getMapButton().getY());
 
         backgroundGroup.addActor(sessionTimer);
 
@@ -279,11 +153,10 @@ public class GameScreen implements Screen {
 
         // actor group
         pauseGroup = new Group();
-        settingsScreen = new Settings(game, stage);
+        settingsScreen = new SettingsScreen(game, stage);
 
         // pause button
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json")); // imports skin (json file)
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas")); // adds regions
+
 
         final Button pause = new Button(game.skin, "pause");
         pause.setPosition(stage.getWidth() - 50,
@@ -304,7 +177,7 @@ public class GameScreen implements Screen {
         stage.addActor(pause); // adds actor to stage
 
         // pause menu
-        pausescreenBackground = game.skin.getRegion("pausescreen-background"); // sets region for pause screen background
+        TextureRegion pausescreenBackground = game.skin.getRegion("pausescreen-background"); // sets region for pause screen background
         Window pauseScreenWindow = new Window("",game.skin);
         pauseScreenWindow.setPosition((stage.getWidth() - pausescreenBackground.getRegionWidth()) / 2,
                 (stage.getHeight() - pausescreenBackground.getRegionHeight()) / 2);
@@ -328,11 +201,15 @@ public class GameScreen implements Screen {
                 (stage.getWidth() - pausescreenBackground.getRegionWidth()) / 2 + (pausescreenBackground.getRegionWidth() - resume.getWidth()) / 2,
                 ((stage.getHeight() - pausescreenBackground.getRegionHeight()) / 2 - 50) + pausescreenBackground.getRegionHeight() - resume.getHeight());
 
-        final Button settings = new TextButton("Settings", game.skin, "pausescreen-button"); // settings button in pause menu
+        final Button settings = new TextButton("Settings", game.skin, "pausescreen-button-small"); // settings button in pause menu
         settings.setPosition(resume.getX(), resume.getY() - resume.getHeight() - 35); // sets position of settings button
 
-        Button quit = new TextButton("Main Menu", game.skin, "pausescreen-button"); // quit button in pause menu
-        quit.setPosition(settings.getX(), settings.getY() - resume.getHeight() - 35); // sets position of quit button
+        Button quitAbandon = new TextButton("Abandon Run", game.skin, "pausescreen-button-small");
+        quitAbandon.setPosition(settings.getX(), settings.getY() - resume.getHeight() - 35);
+
+        Button quitSave = new TextButton("Save & Quit", game.skin, "pausescreen-button-small"); // quit button in pause menu
+        quitSave.setPosition(settings.getX(), settings.getY() - quitAbandon.getHeight() - 35); // sets position of quit button
+
 
         // pause menu button listeners
         resume.addListener(new InputListener() { // detects click and closes pause screen
@@ -356,20 +233,29 @@ public class GameScreen implements Screen {
                 pauseGroup.setVisible(false);
                 gameScreenGroup.setVisible(false);
                 settingsScreen.getSettingsGroup().setVisible(true);
-                //turnManager.getCardManager().getMonsterManager().setVisible(false);
-                //turnManager.getCardManager().getVirusManager().setVisible(false);
-                mapScreenGroup.setVisible(false);
-                showMap = false;
-                previousState = true;
+                sessionManager.getEventManager().getMap().getMapScreenGroup().setVisible(false);
+                sessionManager.getEventManager().getMap().setShowMap(false);
+                sessionManager.getEventManager().getMap().setPreviousState(true);
                 return true;
             }
         });
 
-        quit.addListener(new InputListener() { // detects click and quits to main menu
+        quitAbandon.addListener(new InputListener() {
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                SaveManager.abandon();
+                game.setScreen(new TitleScreen(game));
+                dispose();
+                return true;
+            }
+        });
+
+        quitSave.addListener(new InputListener() { // detects click and quits to main menu
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {}
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                sessionManager.getSaveManager().save();
                 game.setScreen(new TitleScreen(game));
                 dispose();
                 return true;
@@ -379,7 +265,8 @@ public class GameScreen implements Screen {
         // adding pausescreen buttons to actor group
         pauseScreenWindow.add(resume).pad(20).row();
         pauseScreenWindow.add(settings).pad(20).row();
-        pauseScreenWindow.add(quit).pad(20).row();
+        pauseScreenWindow.add(quitAbandon).pad(20).row();
+        pauseScreenWindow.add(quitSave).pad(20).row();
         //pauseScreenWindow.setVisible(false); // makes pausescreen invisible by default
         pauseGroup.setVisible(false);
 
@@ -387,7 +274,7 @@ public class GameScreen implements Screen {
         stage.addActor(pauseGroup);
 
         final Button deck = new Button(game.skin, "deck");
-        deck.setPosition(map.getX() + map.getWidth() + 5, map.getY());
+        deck.setPosition(sessionManager.getEventManager().getMap().getMapButton().getX() + sessionManager.getEventManager().getMap().getMapButton().getWidth() + 5, sessionManager.getEventManager().getMap().getMapButton().getY());
 
         deck.addListener(new InputListener() {
             boolean showDeck = false;
@@ -400,15 +287,15 @@ public class GameScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (showDeck) {
                     showDeck = false;
-                    sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(0).setVisible(false);
-                    sessionManager.getTurnManager().getCardManager().getDeckScreenGroup().setVisible(false);
+                    sessionManager.getEventManager().getCardManager().getTableGroup().getChild(0).setVisible(false);
+                    sessionManager.getEventManager().getCardManager().getDeckScreenGroup().setVisible(false);
                     gameScreenGroup.setVisible(true);
 
                 } else {
-                    if (!mapScreenGroup.isVisible()) {
+                    if (!sessionManager.getEventManager().getMap().getMapScreenGroup().isVisible()) {
                         showDeck = true;
-                        sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(0).setVisible(true);
-                        sessionManager.getTurnManager().getCardManager().getDeckScreenGroup().setVisible(true);
+                        sessionManager.getEventManager().getCardManager().getTableGroup().getChild(0).setVisible(true);
+                        sessionManager.getEventManager().getCardManager().getDeckScreenGroup().setVisible(true);
                         gameScreenGroup.setVisible(false);
                     }
                 }
@@ -417,10 +304,8 @@ public class GameScreen implements Screen {
         });
         stage.addActor(deck);
 
-        game.skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
 
-        Button drawpile = new Button(game.skin, "drawpile");
+        drawpile = new Button(game.skin, "drawpile");
         drawpile.setPosition(0 ,0);
         gameScreenGroup.addActor(drawpile);
         drawpile.addListener(new InputListener() {
@@ -432,10 +317,10 @@ public class GameScreen implements Screen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (!mapScreenGroup.isVisible()) {
+                if (!sessionManager.getEventManager().getMap().getMapScreenGroup().isVisible()) {
                     showDeck = true;
-                    sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(1).setVisible(true);
-                    sessionManager.getTurnManager().getCardManager().getDeckScreenGroup().setVisible(true);
+                    sessionManager.getEventManager().getCardManager().getTableGroup().getChild(1).setVisible(true);
+                    sessionManager.getEventManager().getCardManager().getDeckScreenGroup().setVisible(true);
                     gameScreenGroup.setVisible(false);
                 }
 
@@ -445,9 +330,7 @@ public class GameScreen implements Screen {
 
         gameScreenGroup.addActor(drawpile);
 
-        final Button discardpile = new Button(game.skin, "discardpile");
-        //discardpile.setScale(0.17F);
-        //discardpile.setSize(discardpile.getWidth()*discardpile.getScaleX(), discardpile.getHeight()*discardpile.getScaleY());
+        discardpile = new Button(game.skin, "discardpile");
         System.out.println("Width " + discardpile.getWidth() + " Height " + discardpile.getHeight());
         discardpile.setPosition(stage.getWidth()-discardpile.getWidth(), 0);
         gameScreenGroup.addActor(discardpile);
@@ -461,17 +344,17 @@ public class GameScreen implements Screen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (!mapScreenGroup.isVisible()) {
+                if (!sessionManager.getEventManager().getMap().getMapScreenGroup().isVisible()) {
                     showDeck = true;
-                    sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(2).setVisible(true);
-                    sessionManager.getTurnManager().getCardManager().getDeckScreenGroup().setVisible(true);
+                    sessionManager.getEventManager().getCardManager().getTableGroup().getChild(2).setVisible(true);
+                    sessionManager.getEventManager().getCardManager().getDeckScreenGroup().setVisible(true);
                     gameScreenGroup.setVisible(false);
                 }
 
                 return true;
             }
         });
-        exhaustpile = new ImageTextButton(String.valueOf(sessionManager.getTurnManager().getCardManager().getExhaustPile().size), game.skin);
+        exhaustpile = new ImageTextButton(String.valueOf(sessionManager.getEventManager().getCardManager().getExhaustPile().size), game.skin);
         exhaustpile.setPosition(stage.getWidth()-exhaustpile.getWidth() ,discardpile.getY()+discardpile.getHeight());
         gameScreenGroup.addActor(exhaustpile);
         exhaustpile.addListener(new InputListener() {
@@ -483,18 +366,22 @@ public class GameScreen implements Screen {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (!mapScreenGroup.isVisible()) {
+                if (!sessionManager.getEventManager().getMap().getMapScreenGroup().isVisible()) {
                     showDeck = true;
-                    sessionManager.getTurnManager().getCardManager().getTableGroup().getChild(3).setVisible(true);
-                    sessionManager.getTurnManager().getCardManager().getDeckScreenGroup().setVisible(true);
+                    sessionManager.getEventManager().getCardManager().getTableGroup().getChild(3).setVisible(true);
+                    sessionManager.getEventManager().getCardManager().getDeckScreenGroup().setVisible(true);
                     gameScreenGroup.setVisible(false);
                 }
+
 
                 return true;
             }
         });
 
         gameScreenGroup.addActor(exhaustpile);
+        stage.addActor(forGroundGroup);
+        stage.addActor(mapScreenGroup);
+
     }
 
     @Override
@@ -505,7 +392,7 @@ public class GameScreen implements Screen {
         // delta = the time in seconds since last render
         elapsed_time += delta;
 
-        sessionManager.getTurnManager().getCardManager().setElapsed_time(elapsed_time);
+        sessionManager.getEventManager().getCardManager().setElapsed_time(elapsed_time);
 
         int mins = (int) elapsed_time/60;
         int secs = (int) elapsed_time%60;
@@ -517,18 +404,18 @@ public class GameScreen implements Screen {
         }
 
 
-        exhaustpile.setText(String.valueOf(sessionManager.getTurnManager().getCardManager().getExhaustPile().size));
-        moneyValue.setText(sessionManager.getTurnManager().getCardManager().getVirusManager().getPlayer().getSTARTING_MONEY());
+        exhaustpile.setText(String.valueOf(sessionManager.getEventManager().getCardManager().getExhaustPile().size));
+        moneyValue.setText(sessionManager.getEventManager().getCardManager().getVirusManager().getPlayer().getSTARTING_MONEY());
 
 
         game.batch.begin();
 
 
-        healthVirus.setText(sessionManager.getTurnManager().getCardManager().getVirusManager().getPlayer().getHealth());
+        healthVirus.setText(sessionManager.getEventManager().getCardManager().getVirusManager().getPlayer().getHealth());
         game.batch.end();
 
-        sessionManager.getTurnManager().getCardManager().getMonsterManager().drawMonster();
-        sessionManager.getTurnManager().getCardManager().getVirusManager().drawVirus();
+        sessionManager.getEventManager().getCardManager().getMonsterManager().drawMonster();
+        sessionManager.getEventManager().getCardManager().getVirusManager().drawVirus();
 
 
         game.batch.begin();
@@ -539,7 +426,7 @@ public class GameScreen implements Screen {
 
         game.batch.end();
 
-        sessionManager.getTurnManager().getCardManager().renderHand();
+        sessionManager.getEventManager().getCardManager().renderHand();
 
         // renders settingsscreen if enabled
         if (settingsScreen.getSettingsGroup().isVisible()) {
@@ -576,7 +463,101 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+
         stage.dispose();
         settingsScreen.dispose();
+    }
+
+
+    public GipGameProject getGame() {
+        return game;
+    }
+
+    public float getElapsed_time() {
+        return elapsed_time;
+    }
+
+    public void setElapsed_time(float elapsed_time) {
+        this.elapsed_time = elapsed_time;
+    }
+
+    public Stage getStage() {
+        return stage;
+    }
+
+    public Group getGameScreenGroup() {
+        return gameScreenGroup;
+    }
+
+    public void setGameScreenGroup(Group gameScreenGroup) {
+        this.gameScreenGroup = gameScreenGroup;
+    }
+
+    public Group getMapScreenGroup() {
+        return mapScreenGroup;
+    }
+
+    public void setMapScreenGroup(Group mapScreenGroup) {
+        this.mapScreenGroup = mapScreenGroup;
+    }
+
+    public Group getForGroundGroup() {
+        return forGroundGroup;
+    }
+
+    public void setForGroundGroup(Group forGroundGroup) {
+        this.forGroundGroup = forGroundGroup;
+    }
+
+    public Group getBackgroundGroup() {
+        return backgroundGroup;
+    }
+
+    public void setBackgroundGroup(Group backgroundGroup) {
+        this.backgroundGroup = backgroundGroup;
+    }
+
+    public ImageTextButton getExhaustpile() {
+        return exhaustpile;
+    }
+
+    public Button getDrawpile() {
+        return drawpile;
+    }
+
+    public Button getDiscardpile() {
+        return discardpile;
+    }
+
+    public Label getHealthVirus() {
+        return healthVirus;
+    }
+
+    public Label getMoneyValue() {
+        return moneyValue;
+    }
+
+    public Label getSessionTimer() {
+        return sessionTimer;
+    }
+
+    public Group getPauseGroup() {
+        return pauseGroup;
+    }
+
+    public boolean isPausescreen() {
+        return pausescreen;
+    }
+
+    public void setPausescreen(boolean pausescreen) {
+        this.pausescreen = pausescreen;
+    }
+
+    public SettingsScreen getSettingsScreen() {
+        return settingsScreen;
+    }
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
     }
 }

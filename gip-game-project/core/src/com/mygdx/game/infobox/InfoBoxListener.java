@@ -7,8 +7,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
 public class InfoBoxListener extends ClickListener {
     private Table infoBoxTable;
-    public InfoBoxListener(Table infoBoxTable) {
+    private boolean isCard;
+
+    public InfoBoxListener(Table infoBoxTable, boolean isCard) {
         this.infoBoxTable = infoBoxTable;
+        this.isCard = isCard;
     }
 
     @Override
@@ -24,6 +27,11 @@ public class InfoBoxListener extends ClickListener {
         super.exit(event, x, y, pointer, toActor);
         if (pointer == -1) {
             infoBoxTable.setVisible(false);
+            if (!isCard) {
+                infoBoxTable.setPosition(0, 0);
+            }
         }
     }
+
+
 }
