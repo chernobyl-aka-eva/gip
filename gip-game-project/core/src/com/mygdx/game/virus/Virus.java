@@ -123,7 +123,7 @@ public class Virus extends Actor {
         virusBlockBar.setValue(health);
         virusBlockBar.setPosition(virusHealthBar.getX(), virusHealthBar.getY());
 
-        this.effectManager = new EffectManager(this, game, stage);
+        this.effectManager = new EffectManager(this, game, stage, gameScreenGroup);
 
         atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));
         //TextureRegion textureRegion = game.textureAtlas.findRegion("block");
@@ -170,7 +170,6 @@ public class Virus extends Actor {
         startingDeck.add(2);
         startingDeck.add(3);
         startingDeck.add(5);
-        startingDeck.add(7);
 
         // Items
         Group itemGroup = new Group();

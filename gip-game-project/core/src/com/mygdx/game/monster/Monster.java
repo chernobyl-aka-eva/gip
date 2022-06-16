@@ -99,7 +99,7 @@ public class Monster extends Actor {
         monsterBlockBar.setValue(health);
         monsterBlockBar.setPosition(monsterHealthBar.getX(), monsterHealthBar.getY());
 
-        this.effectManager = new EffectManager(this, game, stage);
+        this.effectManager = new EffectManager(this, game, stage, gameScreenGroup);
 
         // Block Bar
         atlas = new TextureAtlas(Gdx.files.internal("skin/game-ui.atlas"));

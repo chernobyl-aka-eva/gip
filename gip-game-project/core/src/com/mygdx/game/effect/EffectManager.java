@@ -3,6 +3,7 @@ package com.mygdx.game.effect;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -24,7 +25,7 @@ public class EffectManager {
 
     private TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("other/game-ui-2.atlas"));
 
-    public EffectManager(Actor target, GipGameProject game, Stage stage) {
+    public EffectManager(Actor target, GipGameProject game, Stage stage, Group gameScreenGroup) {
         this.game = game;
         this.target = target;
         this.stage = stage;
@@ -41,7 +42,7 @@ public class EffectManager {
         }
         //effectTable.setPosition(200, 200);
 
-        stage.addActor(effectTable);
+        gameScreenGroup.addActor(effectTable);
     }
 
     public void addEffect(int id) {
@@ -55,7 +56,7 @@ public class EffectManager {
         for (Effect effect : effects) {
             if (effect.getId() == id) {
                 if (addedEffect.isStacks()) {
-                    effect.setStack(addedEffect.getStack()+1); effectFound = true; break;
+                    effect.setStack(effect.getStack()+1); effectFound = true; break;
                 }
             }
         }
