@@ -178,6 +178,7 @@ public class CardManager {
                     playerCard.isUpgraded(),
                     elapsed_time,
                     game, atlas);
+            card.setUnplayable(playerCard.isUnplayable());
             playerCards.add(card);
         }
         for (SavedCard drawCard : savedState.getDrawCards()) {
@@ -192,6 +193,7 @@ public class CardManager {
                     drawCard.isUpgraded(),
                     elapsed_time,
                     game, atlas);
+            card.setUnplayable(drawCard.isUnplayable());
             drawPile.add(card);
         }
         for (SavedCard handCard : savedState.getHandCards()) {
@@ -206,6 +208,7 @@ public class CardManager {
                     handCard.isUpgraded(),
                     elapsed_time,
                     game, atlas);
+            card.setUnplayable(handCard.isUnplayable());
             hand.add(card);
         }
         for (SavedCard discardedCard : savedState.getDiscardedCards()) {
@@ -220,6 +223,7 @@ public class CardManager {
                     discardedCard.isUpgraded(),
                     elapsed_time,
                     game, atlas);
+            card.setUnplayable(discardedCard.isUnplayable());
             discardPile.add(card);
         }
         for (SavedCard exhaustedCard : savedState.getExhaustedCards()) {
@@ -234,6 +238,7 @@ public class CardManager {
                     exhaustedCard.isUpgraded(),
                     elapsed_time,
                     game, atlas);
+            card.setUnplayable(exhaustedCard.isUnplayable());
             exhaustPile.add(card);
         }
         refreshDisplayTable(0);
@@ -253,16 +258,19 @@ public class CardManager {
         Card slimed = new Card(14, "Slimed", "EXHAUST.", CardType.STATUS, "", 1, true, false, elapsed_time, game, atlas);
         Card dazed = new Card(29, "Dazed", "UNPLAYABLE.\nETHEREAL.", CardType.STATUS, "", 0, false, false, elapsed_time, game, atlas);
         dazed.setEthereal(true);
+        wound.setUnplayable(true);
+        dazed.setUnplayable(true);
+
         if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() < 1 && card.getCost() <= virusManager.getPlayer().getEnergyManager().getEnergy()){
             if (!card.isFunctionCard()) {
                 switch (card.getId()) {
                     case 0: // Strike
-                        if (card.isUpgraded()){ // upgraded
+                        if (card.isUpgraded()) { // upgraded
                             damage = 9;
-                        }else{
+                        } else {
                             damage = 6;
                         }
-                        playAttackCard(damage,monster);
+                        playAttackCard(damage, monster);
                         break;
                     case 1: // Defend
                         if (card.isUpgraded()) { // upgraded
@@ -280,7 +288,7 @@ public class CardManager {
                         }
                         playAttackCard(damage, monster);
                         encode = true;
-                        Card replicate = new Card(2, "Replicate", " Deal 4 Damage.\nENCODE.\nadd a copy\nof this card in the\nDISCARD_PILE. ", CardType.ATTACK, "green", 0,  false, false, elapsed_time, game, atlas);
+                        Card replicate = new Card(2, "Replicate", " Deal 4 Damage.\nENCODE.\nadd a copy\nof this card in the\nDISCARD_PILE. ", CardType.ATTACK, "green", 0, false, false, elapsed_time, game, atlas);
                         discardPile.add(replicate);
                         refreshDisplayTable(2);
                         break;
@@ -290,7 +298,7 @@ public class CardManager {
                         encode = true;
                         break;
                     case 4: // Piercing Shot
-                        if (card.isUpgraded()){ // upgraded
+                        if (card.isUpgraded()) { // upgraded
                             damage = 12;
                         } else {
                             damage = 10;
@@ -315,13 +323,16 @@ public class CardManager {
                     case 7: // Bug Barrage
                         if (card.isUpgraded()) { // upgraded
                             hand.add(wound);
+                            Card wound2 = new Card(wound.getId(), wound.getTitle(), wound.getDescription(), wound.getCardType(), wound.getRarity(), wound.getCost(), wound.isExhaust(), wound.isUpgraded(), wound.getTimeAdded(), game, wound.getTextureAtlas());
+                            wound2.setUnplayable(true);
                             hand.add(wound);
+                            hand.add(wound2);
                         } else {
                             hand.add(wound);
                         }
                         damage = 7;
                         for (int c = 0; c < hand.size; c++) {
-                            if (hand.get(c).getCardType().equals(CardType.STATUS)){
+                            if (hand.get(c).getCardType().equals(CardType.STATUS)) {
                                 System.out.println("before hit " + c + " " + monster.getHealth());
                                 playAttackCard(damage, monster);
                                 System.out.println("after hit " + c + " " + monster.getHealth());
@@ -355,7 +366,7 @@ public class CardManager {
                     case 15: // Buggy Mess
                         // upgraded cost 2->1
                         hand.add(dazed);
-                        player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy()+1);
+                        player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy() + 1);
                         encode = true;
                         break;
                     case 17: // Frontload
@@ -396,7 +407,7 @@ public class CardManager {
                             int upperbound = indexes.size;
                             int randomint = rand.nextInt(upperbound);
                             hand.removeIndex(indexes.get(randomint));
-                            Card mutator = new Card(21, "Mutator", "Gain 1 STRENGTH.\nTransform a STATUS\ninto a copy of this.", CardType.POWER, "gold", 1,  false, false, elapsed_time, game, atlas);
+                            Card mutator = new Card(21, "Mutator", "Gain 1 STRENGTH.\nTransform a STATUS\ninto a copy of this.", CardType.POWER, "gold", 1, false, false, elapsed_time, game, atlas);
                             hand.add(mutator);
                         }
                         break;
@@ -404,7 +415,7 @@ public class CardManager {
                         if (card.isUpgraded()) { // upgraded
                             card.setExhaust(false);
                         }
-                        player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy()+2);
+                        player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy() + 2);
                         break;
                     case 25: // Iterate
                         if (card.isUpgraded()) { // upgraded
@@ -412,7 +423,7 @@ public class CardManager {
                         } else {
                             damage = 3;
                         }
-                        playAttackCard(2*damage, monster);
+                        playAttackCard(2 * damage, monster);
                         encode = true;
                         break;
                     case 26: // Boost
@@ -433,7 +444,7 @@ public class CardManager {
                     case 28: // Double Energy
                         // upgraded cost 1->0
                         player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy() - card.getCost());
-                        player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy()*2);
+                        player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy() * 2);
                         break;
 
                 }
@@ -461,7 +472,7 @@ public class CardManager {
                             break;
                         case 15:
                             hand.add(dazed);
-                            player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy()+1);
+                            player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy() + 1);
                             break;
                         case 17:
                             if (card.isUpgraded()) { // upgraded
@@ -488,7 +499,7 @@ public class CardManager {
                             } else {
                                 damage = 3;
                             }
-                            playAttackCard(2*damage, monster);
+                            playAttackCard(2 * damage, monster);
                             break;
                     }
                 }
@@ -500,27 +511,28 @@ public class CardManager {
             }
 
             // is enemy ded?
-            if (monster!=null) {
-                if (monster.getHealth() <= 0){
+            if (monster != null) {
+                if (monster.getHealth() <= 0) {
                     monster.remove();
                     monsterManager.setIntentVisible(false);
                     sessionManager.eventEnded();
                 }
             }
 
-            if (!card.isExhaust()){
+            if (!card.isExhaust()) {
                 discardPile.add(card);
                 refreshDisplayTable(2);
-            }else{
+            } else {
                 exhaustPile.add(card);
                 refreshDisplayTable(3);
             }
 
             if (card.getId() != 28) {
-                player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy()-card.getCost());
+                player.getEnergyManager().setEnergy(player.getEnergyManager().getEnergy() - card.getCost());
             }
 
         }
+
     }
 
     public void playAttackCard(int damage, Monster monster){
@@ -778,41 +790,43 @@ public class CardManager {
                 boolean failedDrag = true;
 
                 if (card.getCost() <= virusManager.getPlayer().getEnergyManager().getEnergy()) {
-                    try {
-                        Monster monster = (Monster) monsterManager.getMonsterGroup().getChildren().get(0);
-                        //System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
-                        if (card.getX() + 250 >= monster.getNameAreaMonster().getX()) {
-                            if (card.getY() + 150 <= monster.getNameAreaMonster().getY()) {
-                                if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() == 0) {
-                                    hand.removeIndex(hand.indexOf(card, false));
-                                    //handTable.removeActor(card);
-                                    double padWidth = 0 - card.getWidth() / 2.5;
-                                    handTable.invalidate();
-                                    handTable.validate();
-                                    failedDrag = false;
-                                    playCard(card, virusManager.getPlayer(), monster);
+                    if (!card.isUnplayable()) {
+                        try {
+                            Monster monster = (Monster) monsterManager.getMonsterGroup().getChildren().get(0);
+                            //System.out.println(monster.getNameAreaMonster().getX() + " " + monster.getNameAreaMonster().getY());
+                            if (card.getX() + 250 >= monster.getNameAreaMonster().getX()) {
+                                if (card.getY() + 150 <= monster.getNameAreaMonster().getY()) {
+                                    if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() == 0) {
+                                        hand.removeIndex(hand.indexOf(card, false));
+                                        //handTable.removeActor(card);
+                                        double padWidth = 0 - card.getWidth() / 2.5;
+                                        handTable.invalidate();
+                                        handTable.validate();
+                                        failedDrag = false;
+                                        playCard(card, virusManager.getPlayer(), monster);
+                                    }
                                 }
                             }
-                        }
-                        if (!(card.getCardType().equals(CardType.ATTACK)) && !card.isFunctionCard()) {
-                            Virus player = virusManager.getPlayer();
-                            //System.out.println("Card: " + card.getX() + " " + card.getY());
-                            //System.out.println("Virus X:\t" + player.getNameAreaVirus().getX() + " max x:\t" + (player.getNameAreaVirus().getX() + player.getNameAreaVirus().getWidth()));
-                            //System.out.print("Virus Y:\t" + player.getNameAreaVirus().getY() + " max y:\t" + (player.getNameAreaVirus().getY() + player.getNameAreaVirus().getHeight()));
-                            if (card.getX() <= 280 && card.getY() <= 280) {
-                                if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() == 0) {
-                                    hand.removeIndex(hand.indexOf(card, false));
-                                    double padWidth = 0 - card.getWidth() / 2.5;
-                                    handTable.invalidate();
-                                    handTable.validate();
-                                    discardPile.add(card);
-                                    failedDrag = false;
-                                    playCard(card, virusManager.getPlayer(), null);
+                            if (!(card.getCardType().equals(CardType.ATTACK)) && !card.isFunctionCard()) {
+                                Virus player = virusManager.getPlayer();
+                                //System.out.println("Card: " + card.getX() + " " + card.getY());
+                                //System.out.println("Virus X:\t" + player.getNameAreaVirus().getX() + " max x:\t" + (player.getNameAreaVirus().getX() + player.getNameAreaVirus().getWidth()));
+                                //System.out.print("Virus Y:\t" + player.getNameAreaVirus().getY() + " max y:\t" + (player.getNameAreaVirus().getY() + player.getNameAreaVirus().getHeight()));
+                                if (card.getX() <= 280 && card.getY() <= 280) {
+                                    if (virusManager.getPlayer().getEnergyManager().getEnergy() != 0 || card.getCost() == 0) {
+                                        hand.removeIndex(hand.indexOf(card, false));
+                                        double padWidth = 0 - card.getWidth() / 2.5;
+                                        handTable.invalidate();
+                                        handTable.validate();
+                                        discardPile.add(card);
+                                        failedDrag = false;
+                                        playCard(card, virusManager.getPlayer(), null);
+                                    }
                                 }
                             }
+                        } catch (IndexOutOfBoundsException e) {
+                            e.printStackTrace();
                         }
-                    } catch (IndexOutOfBoundsException e) {
-                        e.printStackTrace();
                     }
                 }
 
@@ -854,7 +868,7 @@ public class CardManager {
         }
 
 
-        Button deckReturn = new Button(game.skin, "return");
+        Button deckReturn = new Button(game.skin(), "return");
         deckReturn.setPosition(stage.getWidth()-deckReturn.getWidth(), 100);
         deckReturn.addListener(new InputListener() {
             @Override
@@ -881,7 +895,7 @@ public class CardManager {
     public Table displayCards(int type)  {
         boolean exists = true;
 
-        Table table = new Table(game.skin);
+        Table table = new Table(game.skin());
         table.setVisible(false);
         table.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         table.setSize(stage.getWidth(), stage.getHeight()-60);
@@ -906,7 +920,7 @@ public class CardManager {
                 title = "Exhaust pile";
                 displayList = exhaustPile; break;
         }
-        Table scollWindow = new Table(game.skin);
+        Table scollWindow = new Table(game.skin());
 
         if (displayList == playerCards) {
             scollWindow = getDeckSortWindow(scollWindow);
@@ -915,7 +929,7 @@ public class CardManager {
 
         scollWindow.add(displayDeck);
 
-        final ScrollPane scrollPane = new ScrollPane(scollWindow, game.skin);
+        final ScrollPane scrollPane = new ScrollPane(scollWindow, game.skin());
         scrollPane.setSize(stage.getWidth(), stage.getHeight());
         scrollPane.setOrigin(Align.center);
 
@@ -1024,11 +1038,11 @@ public class CardManager {
 
             fadeTable.row();
 
-            //Label previewUpgrade = new Label("Preview upgrade", game.skin);
+            //Label previewUpgrade = new Label("Preview upgrade", game.skin());
             //fadeTable.add(previewUpgrade);
 
             settingsSkin = new Skin(Gdx.files.internal("skin/settings-ui.json"));
-            //game.skin.addRegions(new TextureAtlas("skin/settings-ui.json"));
+            //game.skin().addRegions(new TextureAtlas("skin/settings-ui.json"));
             final CheckBox checkBox = new CheckBox(" Preview upgrade", settingsSkin);
             checkBox.addListener(new EventListener() {
                 @Override
@@ -1051,16 +1065,16 @@ public class CardManager {
 
     private Table getDeckSortWindow(Table scollWindow) {
         scollWindow.add().padTop(40F).row();
-        final Window deckSortBackground = new Window( "",game.skin, "deck-sort-background");
+        final Window deckSortBackground = new Window( "",game.skin(), "deck-sort-background");
         deckSortBackground.align(Align.center);
         deckSortBackground.setSize(1770, 80);
 
-        Label sort = new Label("Sort:", game.skin);
+        Label sort = new Label("Sort:", game.skin());
 
         GlyphLayout glyphord = new GlyphLayout(game.font, sort.getText());
         deckSortBackground.add(sort).size(glyphord.width).pad(150);
 
-        final TextButton sortObtained = new TextButton("Obtained", game.skin, "deck-sorting");
+        final TextButton sortObtained = new TextButton("Obtained", game.skin(), "deck-sorting");
         sortObtained.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -1095,7 +1109,7 @@ public class CardManager {
         deckSortBackground.add(sortObtained).pad(150).size(sortObtained.getWidth(), sortObtained.getHeight());
 
 
-        final TextButton sortType = new TextButton("Type", game.skin, "deck-sorting");
+        final TextButton sortType = new TextButton("Type", game.skin(), "deck-sorting");
         sortType.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -1150,7 +1164,7 @@ public class CardManager {
         deckSortBackground.add(sortType).pad(150).size(sortType.getWidth(), sortType.getHeight());
 
 
-        final TextButton sortCost = new TextButton("Cost", game.skin, "deck-sorting");
+        final TextButton sortCost = new TextButton("Cost", game.skin(), "deck-sorting");
         sortCost.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -1187,7 +1201,7 @@ public class CardManager {
         deckSortBackground.add(sortCost).pad(150).size(sortCost.getWidth(), sortCost.getHeight());
 
 
-        final TextButton sortAZ = new TextButton("A-Z", game.skin, "deck-sorting");
+        final TextButton sortAZ = new TextButton("A-Z", game.skin(), "deck-sorting");
         sortAZ.addListener(new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {

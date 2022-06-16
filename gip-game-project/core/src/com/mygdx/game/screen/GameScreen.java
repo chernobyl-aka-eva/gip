@@ -157,7 +157,7 @@ public class GameScreen implements Screen {
         // pause button
 
 
-        final Button pause = new Button(game.skin, "pause");
+        final Button pause = new Button(game.skin(), "pause");
         pause.setPosition(stage.getWidth() - 50,
                 stage.getHeight() - pause.getHeight() / 2 - 30);
 
@@ -176,8 +176,8 @@ public class GameScreen implements Screen {
         stage.addActor(pause); // adds actor to stage
 
         // pause menu
-        TextureRegion pausescreenBackground = game.skin.getRegion("pausescreen-background"); // sets region for pause screen background
-        Window pauseScreenWindow = new Window("",game.skin);
+        TextureRegion pausescreenBackground = game.skin().getRegion("pausescreen-background"); // sets region for pause screen background
+        Window pauseScreenWindow = new Window("",game.skin());
         pauseScreenWindow.setPosition((stage.getWidth() - pausescreenBackground.getRegionWidth()) / 2,
                 (stage.getHeight() - pausescreenBackground.getRegionHeight()) / 2);
         pauseScreenWindow.setSize(pausescreenBackground.getRegionWidth(), pausescreenBackground.getRegionHeight());
@@ -195,18 +195,18 @@ public class GameScreen implements Screen {
         });
 
 
-        Button resume = new TextButton("Resume", game.skin, "pausescreen-button"); // pause screen button
+        Button resume = new TextButton("Resume", game.skin(), "pausescreen-button"); // pause screen button
         resume.setPosition(
                 (stage.getWidth() - pausescreenBackground.getRegionWidth()) / 2 + (pausescreenBackground.getRegionWidth() - resume.getWidth()) / 2,
                 ((stage.getHeight() - pausescreenBackground.getRegionHeight()) / 2 - 50) + pausescreenBackground.getRegionHeight() - resume.getHeight());
 
-        final Button settings = new TextButton("Settings", game.skin, "pausescreen-button-small"); // settings button in pause menu
+        final Button settings = new TextButton("Settings", game.skin(), "pausescreen-button-small"); // settings button in pause menu
         settings.setPosition(resume.getX(), resume.getY() - resume.getHeight() - 35); // sets position of settings button
 
-        Button quitAbandon = new TextButton("Abandon Run", game.skin, "pausescreen-button-small");
+        Button quitAbandon = new TextButton("Abandon Run", game.skin(), "pausescreen-button-small");
         quitAbandon.setPosition(settings.getX(), settings.getY() - resume.getHeight() - 35);
 
-        Button quitSave = new TextButton("Save & Quit", game.skin, "pausescreen-button-small"); // quit button in pause menu
+        Button quitSave = new TextButton("Save & Quit", game.skin(), "pausescreen-button-small"); // quit button in pause menu
         quitSave.setPosition(settings.getX(), settings.getY() - quitAbandon.getHeight() - 35); // sets position of quit button
 
 
@@ -272,7 +272,7 @@ public class GameScreen implements Screen {
         // adding group to stage
         stage.addActor(pauseGroup);
 
-        final Button deck = new Button(game.skin, "deck");
+        final Button deck = new Button(game.skin(), "deck");
         deck.setPosition(sessionManager.getEventManager().getMap().getMapButton().getX() + sessionManager.getEventManager().getMap().getMapButton().getWidth() + 5, sessionManager.getEventManager().getMap().getMapButton().getY());
 
         deck.addListener(new InputListener() {
@@ -304,7 +304,7 @@ public class GameScreen implements Screen {
         stage.addActor(deck);
 
 
-        drawpile = new Button(game.skin, "drawpile");
+        drawpile = new Button(game.skin(), "drawpile");
         drawpile.setPosition(0 ,0);
         gameScreenGroup.addActor(drawpile);
         drawpile.addListener(new InputListener() {
@@ -329,7 +329,7 @@ public class GameScreen implements Screen {
 
         gameScreenGroup.addActor(drawpile);
 
-        discardpile = new Button(game.skin, "discardpile");
+        discardpile = new Button(game.skin(), "discardpile");
         System.out.println("Width " + discardpile.getWidth() + " Height " + discardpile.getHeight());
         discardpile.setPosition(stage.getWidth()-discardpile.getWidth(), 0);
         gameScreenGroup.addActor(discardpile);
@@ -353,7 +353,7 @@ public class GameScreen implements Screen {
                 return true;
             }
         });
-        exhaustpile = new ImageTextButton(String.valueOf(sessionManager.getEventManager().getCardManager().getExhaustPile().size), game.skin);
+        exhaustpile = new ImageTextButton(String.valueOf(sessionManager.getEventManager().getCardManager().getExhaustPile().size), game.skin());
         exhaustpile.setPosition(stage.getWidth()-exhaustpile.getWidth() ,discardpile.getY()+discardpile.getHeight());
         gameScreenGroup.addActor(exhaustpile);
         exhaustpile.addListener(new InputListener() {

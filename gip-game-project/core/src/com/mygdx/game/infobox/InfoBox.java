@@ -13,7 +13,7 @@ public class InfoBox extends Window {
     private GipGameProject game;
     private Stage stage;
     public InfoBox(Skin skin, String type, GipGameProject game, Stage stage) {
-        super("", game.skin, "card-info");
+        super("", game.skin(), "card-info");
         this.top().center().align(Align.center|Align.top);
         float height = 200;
         setSize(300, height);
@@ -79,13 +79,13 @@ public class InfoBox extends Window {
                 }
             }
             type = type.replace("_", " ");
-            Label infoLabelTitle = new Label(type, game.skin);
+            Label infoLabelTitle = new Label(type, game.skin());
             infoLabelTitle.setColor(Color.GOLDENROD);
 
             GlyphLayout glyphLayout = new GlyphLayout(game.font, type);
             float titleHeight = glyphLayout.height;
 
-            Label infoLabel = new Label(words, game.skin);
+            Label infoLabel = new Label(words, game.skin());
             infoLabel.setColor(Color.BLACK);
 
             glyphLayout.setText(game.font, words);

@@ -91,11 +91,11 @@ public class Monster extends Actor {
         initMonster();
         maxHealth = health;
         // Health Bar
-        monsterHealthBar = new ProgressBar(0, maxHealth, 1, false, game.skin, "red-knob");
+        monsterHealthBar = new ProgressBar(0, maxHealth, 1, false, game.skin(), "red-knob");
         monsterHealthBar.setValue(health);
         monsterHealthBar.setPosition(positionX, stage.getHeight() - 730);
 
-        monsterBlockBar = new ProgressBar(0, maxHealth, 1, false, game.skin, "blue-knob");
+        monsterBlockBar = new ProgressBar(0, maxHealth, 1, false, game.skin(), "blue-knob");
         monsterBlockBar.setValue(health);
         monsterBlockBar.setPosition(monsterHealthBar.getX(), monsterHealthBar.getY());
 
@@ -109,7 +109,7 @@ public class Monster extends Actor {
         blockImage.setPosition(monsterHealthBar.getX() - blockImage.getWidth() + 3, monsterHealthBar.getY() - (blockImage.getHeight() / 2));
         //blockImage.setPosition(500,500);
 
-        blockLabel = new Label(String.valueOf(block), game.skin);
+        blockLabel = new Label(String.valueOf(block), game.skin());
         blockLabel.setPosition(blockImage.getX(), blockImage.getY());
         //Color color = Color.rgba8888(57.0F, 45.0F, 63.0F, 1.0F);
         //color.set(57, 45, 63, 1);
@@ -119,7 +119,7 @@ public class Monster extends Actor {
 
 
 
-        healthLabel = new Label(getHealth() + "/" + maxHealth, game.skin);
+        healthLabel = new Label(getHealth() + "/" + maxHealth, game.skin());
         healthLabel.setPosition(monsterHealthBar.getX() + monsterHealthBar.getWidth()/2 - 25, monsterHealthBar.getY() - 70);
         healthLabel.setColor(Color.WHITE);
 

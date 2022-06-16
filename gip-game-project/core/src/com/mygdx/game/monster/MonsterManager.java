@@ -36,7 +36,7 @@ public class MonsterManager {
         atlas = new TextureAtlas("skin/game-ui.atlas");
         attackIntent = new Image(new TextureRegionDrawable(atlas.findRegion("attack")));
         defendIntent = new Image(new TextureRegionDrawable(atlas.findRegion("defend")));
-        intentLabel = new Label("", game.skin);
+        intentLabel = new Label("", game.skin());
         gameScreenGroup.addActor(attackIntent);
         gameScreenGroup.addActor(defendIntent);
         gameScreenGroup.addActor(intentLabel);

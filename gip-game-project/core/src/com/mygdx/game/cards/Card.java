@@ -46,6 +46,7 @@ public class Card extends Table {
     private boolean upgraded;
     private boolean ethereal;
     private boolean retain;
+    private boolean unplayable;
     private boolean preview;
     private boolean inspect = false;
     private boolean deckDisplay = false;
@@ -513,6 +514,14 @@ public class Card extends Table {
 
     public void setCompiledCardsIds(Array<Integer> compiledCardsIds) {
         this.compiledCardsIds = compiledCardsIds;
+    }
+
+    public boolean isUnplayable() {
+        return unplayable;
+    }
+
+    public void setUnplayable(boolean unplayable) {
+        this.unplayable = unplayable;
     }
 
     public Image getCardImage() {

@@ -83,9 +83,10 @@ public class SaveManager {
             int cost = playerCard.getCost();
             boolean upgraded = playerCard.isUpgraded();
             boolean exhaust = playerCard.isExhaust();
+            boolean isUnplayable = playerCard.isUnplayable();
             float elapsed_time = playerCard.getTimeAdded();
 
-            SavedCard savedCard = new SavedCard(cardId, title, description, cardType, rarity, cost, upgraded, exhaust, elapsed_time);
+            SavedCard savedCard = new SavedCard(cardId, title, description, cardType, rarity, cost, upgraded, exhaust, isUnplayable, elapsed_time);
             savedCards.add(savedCard);
         }
         return savedCards;

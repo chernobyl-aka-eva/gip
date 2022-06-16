@@ -51,14 +51,14 @@ public class InfoBoxManager {
             for (InfoboxTypes.CardInfoType value : InfoboxTypes.CardInfoType.values()) {
                 if (value.name().equals(word)) {
                     found = true;
-                    final InfoBox infoBox = new InfoBox(game.skin, word, game, stage);
+                    final InfoBox infoBox = new InfoBox(game.skin(), word, game, stage);
                     infoBoxes.add(infoBox);
                 }
             }
             for (InfoboxTypes.ItemInfoType itemInfoType : InfoboxTypes.ItemInfoType.values()) {
                 if (itemInfoType.name().equals(word)) {
                     found = true;
-                    final InfoBox infoBox = new InfoBox(game.skin, word, game, stage);
+                    final InfoBox infoBox = new InfoBox(game.skin(), word, game, stage);
                     infoBoxes.add(infoBox);
                 }
             }

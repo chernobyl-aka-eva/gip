@@ -115,11 +115,11 @@ public class Virus extends Actor {
         initVirus();
 
         // Health Bar
-        virusHealthBar = new ProgressBar(0, 100, 1, false, game.skin, "red-knob");
+        virusHealthBar = new ProgressBar(0, 100, 1, false, game.skin(), "red-knob");
         virusHealthBar.setValue(health);
         virusHealthBar.setPosition(positionX, stage.getHeight() - 730);
 
-        virusBlockBar = new ProgressBar(0, 100, 1, false, game.skin, "blue-knob");
+        virusBlockBar = new ProgressBar(0, 100, 1, false, game.skin(), "blue-knob");
         virusBlockBar.setValue(health);
         virusBlockBar.setPosition(virusHealthBar.getX(), virusHealthBar.getY());
 
@@ -132,7 +132,7 @@ public class Virus extends Actor {
         blockImage.setPosition(virusHealthBar.getX() - blockImage.getWidth() + 3, virusHealthBar.getY() - (blockImage.getHeight() / 2));
         //blockImage.setPosition(500,500);
 
-        blockLabel = new Label(String.valueOf(block), game.skin);
+        blockLabel = new Label(String.valueOf(block), game.skin());
         blockLabel.setPosition(blockImage.getX(), blockImage.getY());
         //Color color = Color.rgba8888(57.0F, 45.0F, 63.0F, 1.0F);
         //color.set(57, 45, 63, 1);
@@ -144,7 +144,7 @@ public class Virus extends Actor {
 
 
         MAX_HP = health;
-        healthLabel = new Label(getHealth() + "/" + MAX_HP, game.skin);
+        healthLabel = new Label(getHealth() + "/" + MAX_HP, game.skin());
         healthLabel.setPosition(virusHealthBar.getX() + virusHealthBar.getWidth()/2 - 25, virusHealthBar.getY() - 70);
         healthLabel.setColor(Color.WHITE);
 
@@ -170,6 +170,7 @@ public class Virus extends Actor {
         startingDeck.add(2);
         startingDeck.add(3);
         startingDeck.add(5);
+        startingDeck.add(7);
 
         // Items
         Group itemGroup = new Group();

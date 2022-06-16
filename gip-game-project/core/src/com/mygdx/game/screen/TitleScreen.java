@@ -319,5 +319,9 @@ public class TitleScreen implements Screen {
     public void show() {
 
     }
+
+    public Skin getSkin() {
+        return skin;
+    }
 }
 

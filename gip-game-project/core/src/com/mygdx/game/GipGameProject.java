@@ -31,7 +31,8 @@ public class GipGameProject extends Game {
     public BitmapFont font;
 
     // loading public skin for all buttons
-    public Skin skin;
+    private Skin skin;
+    private String skinString;
 
     // graphics
     public TextureAtlas textureAtlas;
@@ -45,6 +46,7 @@ public class GipGameProject extends Game {
 
     public Sound sound;
     public Music music;
+
 
     @Override
     public void create() {
@@ -69,8 +71,19 @@ public class GipGameProject extends Game {
 
         skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
         skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+        skinString = skin.toString();
 
 
+    }
+
+    public Skin skin() {
+        if (!skinString.equals(skin.toString())) {
+            skin = new Skin(Gdx.files.internal("skin/game-ui.json"));
+            skin.addRegions(new TextureAtlas("skin/game-ui.atlas"));
+            skinString = skin.toString();
+            System.out.println("Gotcha");
+        }
+        return skin;
     }
 
     @Override

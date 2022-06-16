@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.mygdx.game.GipGameProject;
@@ -33,6 +32,7 @@ public class DeathScreen implements Screen {
     private final BitmapFont font;
     private Button mainMenu;
     private Button quit;
+    
 
     // stage
     private final Stage deathStage;
@@ -42,6 +42,7 @@ public class DeathScreen implements Screen {
 
     public DeathScreen(GipGameProject game) {
         this.game = game;
+
 
         titleScreen = new TitleScreen(game);
 
@@ -66,8 +67,7 @@ public class DeathScreen implements Screen {
 
 
         // setup texture atlas and skin for buttons
-        game.skin = new Skin(Gdx.files.internal("skin/titlescreen-ui.json"));
-        game.skin.addRegions(new TextureAtlas("skin/titlescreen-ui.atlas"));
+        
         initButton();
 
     }
@@ -83,10 +83,10 @@ public class DeathScreen implements Screen {
     private void initButton(){
 
         // initializing Main Menu button
-        mainMenu = new TextButton("Main Menu", game.skin, "menu-button-small");
+        mainMenu = new TextButton("Main Menu", titleScreen.getSkin(), "menu-button-small");
         mainMenu.setSize(400, 80);
 
-        quit = new TextButton("Quit", game.skin, "menu-button-exit");
+        quit = new TextButton("Quit", titleScreen.getSkin(), "menu-button-exit");
         quit.setSize(400, 40);
 
         mainMenu.setPosition((deathStage.getWidth() / 2) - 220, deathStage.getHeight() - 700);

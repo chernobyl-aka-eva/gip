@@ -53,7 +53,7 @@ public class Map extends Table {
 
 
 
-        mapButton = new Button(gameScreen.getGame().skin); // map button
+        mapButton = new Button(gameScreen.getGame().skin()); // map button
         mapButton.setPosition(gameScreen.getStage().getWidth() - 215, gameScreen.getStage().getHeight() - mapButton.getHeight() - 5); // sets position for map button
 
         mapButton.addListener(new InputListener() { // enables the map button to toggle and enables/disables game/map groups
@@ -83,7 +83,7 @@ public class Map extends Table {
         // adds actor to stage
         gameScreen.getStage().addActor(mapButton);
 
-        Button mapReturn = new Button(gameScreen.getGame().skin, "return"); // return button in map screen
+        Button mapReturn = new Button(gameScreen.getGame().skin(), "return"); // return button in map screen
         mapReturn.setPosition(0, gameScreen.getStage().getHeight() - 870);
         mapScreenGroup.setVisible(false); // makes map invisible by default
         mapReturn.addListener(new InputListener() { // allows going back to game screen from map
@@ -112,7 +112,7 @@ public class Map extends Table {
 
         Image monster = new Image(new TextureRegionDrawable(atlas.findRegion("monster")));
         legend.add(monster);
-        legend.add(new Label("Monster", gameScreen.getGame().skin)).row();
+        legend.add(new Label("Monster", gameScreen.getGame().skin())).row();
 
         /*
         Image elite = new Image(new TextureRegionDrawable(atlas.findRegion("elite")));
@@ -126,13 +126,13 @@ public class Map extends Table {
          */
         Image random = new Image(new TextureRegionDrawable(atlas.findRegion("random")));
         legend.add(random);
-        legend.add(new Label("Random", gameScreen.getGame().skin)).row();
+        legend.add(new Label("Random", gameScreen.getGame().skin())).row();
 
 
 
         Image rest = new Image(new TextureRegionDrawable(atlas.findRegion("rest")));
         legend.add(rest);
-        legend.add(new Label("Rest", gameScreen.getGame().skin)).row();
+        legend.add(new Label("Rest", gameScreen.getGame().skin())).row();
 
         /*
         Image shop = new Image(new TextureRegionDrawable(atlas.findRegion("shop")));
@@ -145,7 +145,7 @@ public class Map extends Table {
         mapScreenGroup.addActor(legend);
 
         //mapTable.add(mapScreenGroup);
-        scrollPane = new ScrollPane(mapTable, gameScreen.getGame().skin);
+        scrollPane = new ScrollPane(mapTable, gameScreen.getGame().skin());
         scrollPane.layout();
         scrollPane.scrollTo(0, 0, 0, 0);
         scrollPane.setFlickScroll(false);

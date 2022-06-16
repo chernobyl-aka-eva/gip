@@ -77,11 +77,11 @@ public class EventManager {
             }
         });
 
-        endTurn = new Button(game.skin, "end-turn");
+        endTurn = new Button(game.skin(), "end-turn");
         endTurn.setPosition(stage.getWidth()-120-endTurn.getWidth(), 150);
         gameScreen.getGameScreenGroup().addActor(endTurn);
 
-        confirmUpgrade = new TextButton("Confirm", game.skin, "restButton");
+        confirmUpgrade = new TextButton("Confirm", game.skin(), "restButton");
         confirmUpgrade.setVisible(false);
         //confirmUpgrade.setPosition(stage.getWidth()-confirmUpgrade.getWidth(), gameScreen.getStage().getHeight() - 870);
         confirmUpgrade.addListener(new InputListener() {
@@ -126,7 +126,7 @@ public class EventManager {
     }
 
     public void generateRewards() {
-        rewardWindow = new Window("", game.skin);
+        rewardWindow = new Window("", game.skin());
         rewardWindow.align(Align.top|Align.center);
         rewardWindow.setSize(1000, 700);
         rewardWindow.setPosition((stage.getWidth() - rewardWindow.getWidth()) / 2, (stage.getHeight() - rewardWindow.getHeight()) / 2);
@@ -189,7 +189,7 @@ public class EventManager {
             rewardCards.add(cardCopy).size(cardCopy.getWidth(), cardCopy.getHeight()).pad(-100);
         }
         rewardWindow.row();
-        TextButton confirmCardReward = new TextButton("Confirm", game.skin, "restButton");
+        TextButton confirmCardReward = new TextButton("Confirm", game.skin(), "restButton");
         confirmCardReward.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
@@ -302,6 +302,9 @@ public class EventManager {
         map.setPreviousState(false);
         gameScreen.getGameScreenGroup().setVisible(false);
         map.getMapScreenGroup().setVisible(true);
+        if (map.getCurrentEvent() == 6) {
+            System.out.println();
+        }
         map.setCurrentEvent(map.getCurrentEvent()+1);
         map.getMapBackground().setCurrentEvent(map.getCurrentEvent());
 
@@ -328,11 +331,11 @@ public class EventManager {
                 restTable.setBounds(0, 0, stage.getWidth(), stage.getHeight()-60);
                 restTable.align(Align.top);
                 Group restGroup = new Group();
-                Label restTitle = new Label("REST SITE",game.skin);
+                Label restTitle = new Label("REST SITE",game.skin());
                 restGroup.addActor(restTitle);
                 restGroup.scaleBy(1.5F);
-                TextButton heal = new TextButton("HEAL", game.skin, "restButton");
-                TextButton upgrade = new TextButton("UPGRADE", game.skin, "restButton");
+                TextButton heal = new TextButton("HEAL", game.skin(), "restButton");
+                TextButton upgrade = new TextButton("UPGRADE", game.skin(), "restButton");
                 GlyphLayout glyphord = new GlyphLayout(getGame().font, restTitle.getText());
                 restTable.add(restGroup).size(glyphord.width*1.5F/2, glyphord.height).pad(100).row();
                 restTable.add(heal).pad(20);
@@ -341,14 +344,14 @@ public class EventManager {
 
 
 
-                upgradeTable = new Table(game.skin);
+                upgradeTable = new Table(game.skin());
                 upgradeTable.setBounds(0,0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
                 upgradeTable.setSize(stage.getWidth(), stage.getHeight()-60);
                 upgradeTable.setVisible(false);
                 Array<Card> displayList = cardManager.getPlayerCards();
 
                 String windowTitle = "DECK";
-                Table scrollWindow = new Table(game.skin);
+                Table scrollWindow = new Table(game.skin());
 
                 Table displayDeck = new Table();
                 displayDeck.center().top().align(Align.center).clip(true);
@@ -392,7 +395,7 @@ public class EventManager {
 
                 scrollWindow.add(displayDeck);
 
-                final ScrollPane scrollPane = new ScrollPane(scrollWindow, game.skin);
+                final ScrollPane scrollPane = new ScrollPane(scrollWindow, game.skin());
                 scrollPane.setSize(stage.getWidth(), stage.getHeight());
                 scrollPane.setOrigin(Align.center);
 
@@ -418,7 +421,7 @@ public class EventManager {
                 upgradeTable.add(windowTitle).row();
                 upgradeTable.add(scrollPane);
 
-                returnButton = new Button(game.skin, "return");
+                returnButton = new Button(game.skin(), "return");
                 returnButton.setVisible(false);
                 returnButton.setPosition(0, gameScreen.getStage().getHeight() - 870);
                 returnButton.addListener(new InputListener() {
